@@ -183,7 +183,38 @@ msfReportsApp
         }
 
         function arrangeDataX(stageData,attrData,allattr){
+            
+            var parentname=[];
+            for (var i=0;i<attrData.height;i++){
+                parentname.push(attrData.rows[i][7]);
+            }
 
+            var uniqueNames = [];
+            $.each(parentname, function(i, el){
+                if($.inArray(el, uniqueNames) === -1) uniqueNames.push(el);
+            });
+
+
+            var Ls_parentname=[]
+            for(var x=0;x<uniqueNames.length;x++)
+            {
+                var ou_new=uniqueNames[x];
+                $.ajax({
+                    type: "GET",
+                    dataType: "json",
+                    contentType: "application/json",
+                    async:false,
+                    url: "../../organisationUnits/"+ou_new+".json?fields=parent[name]",
+                    success: function (data) {
+                      
+                        Ls_parentname[ou_new]=data.parent.name;
+                    }                
+                });
+            
+
+            }
+            
+        
             var report = [{
                 teiuid : ""
             }]
@@ -221,25 +252,19 @@ msfReportsApp
            
             for (var i=0;i<attrData.height;i++){
                 
-                var orgUnitUid=attrData.rows[i][7];
-                var parentname;
-                $.ajax({
-                    type: "GET",
-                    dataType: "json",
-                    contentType: "application/json",
-                    async:false,
-                    url: "../../organisationUnits/"+orgUnitUid+".json?fields=parent[name]",
-                    success: function (data) {
-                      
-                         parentname=data.parent.name;
-                    }                
-                });
+                var parent=attrData.rows[i][7];
+               for(var key in Ls_parentname)
+               {
+                  if(parent==key) {
+                      var ouname = Ls_parentname[key];}
+               }
+               
+               
 
                 var teiuid = attrData.rows[i][index_tei];
                 var attruid = attrData.rows[i][index_attruid];
                 var attrvalue = attrData.rows[i][index_attrvalue];
-                var ouname = parentname;
-                var enrollDate = attrData.rows[i][index_enrollmentDate]; // enrollment date
+                 var enrollDate = attrData.rows[i][index_enrollmentDate]; // enrollment date
                 enrollDate = enrollDate.substring(0, 10);
 
                // if (allattr.length > 0) {
