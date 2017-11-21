@@ -218,14 +218,27 @@ msfReportsApp
             const index_ev = 3;
             const index_evDate = 4;
             const index_ou = 8;
-
-
+           
             for (var i=0;i<attrData.height;i++){
+                
+                var orgUnitUid=attrData.rows[i][7];
+                var parentname;
+                $.ajax({
+                    type: "GET",
+                    dataType: "json",
+                    contentType: "application/json",
+                    async:false,
+                    url: "../../organisationUnits/"+orgUnitUid+".json?fields=parent[name]",
+                    success: function (data) {
+                      
+                         parentname=data.parent.name;
+                    }                
+                });
 
                 var teiuid = attrData.rows[i][index_tei];
                 var attruid = attrData.rows[i][index_attruid];
                 var attrvalue = attrData.rows[i][index_attrvalue];
-                var ouname = attrData.rows[0][index_ouname];
+                var ouname = parentname;
                 var enrollDate = attrData.rows[i][index_enrollmentDate]; // enrollment date
                 enrollDate = enrollDate.substring(0, 10);
 

@@ -3,7 +3,7 @@
  */
 
     const Anonymous_Attribute_Code = "Anonymous?";
-const SQLQUERY_TEI_ATTR = "select tei.uid tei ,min(tea.name) attrname,tea.uid attruid,min(teav.value) attrvalue,ou.name,tei.created,pi.enrollmentdate enrolldate\
+const SQLQUERY_TEI_ATTR = "select tei.uid tei ,min(tea.name) attrname,tea.uid attruid,min(teav.value) attrvalue,ou.name,tei.created,pi.enrollmentdate,ou.uid  enrolldate\
  from programstageinstance psi\
  INNER JOIN programinstance pi ON  psi.programinstanceid = pi.programinstanceid\
  INNER JOIN trackedentityinstance tei ON  pi.trackedentityinstanceid = tei.trackedentityinstanceid\
@@ -19,7 +19,7 @@ const SQLQUERY_TEI_ATTR = "select tei.uid tei ,min(tea.name) attrname,tea.uid at
  from organisationunit\
  where path like '%${orgunit}%')\
  and pi.enrollmentdate between '${startdate}' and '${enddate}'\
- group by tei.uid,pi.enrollmentdate,tea.uid,ou.name,tei.created\
+ group by tei.uid,pi.enrollmentdate,tea.uid,ou.name,tei.created,ou.uid\
  order by pi.enrollmentdate,tei.uid";
 
 const SQLQUERY_TEI_ATTR_NAME = "TRACKER_REPORTS_TEI_ATTR_V1";
