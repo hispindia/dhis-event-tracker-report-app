@@ -23,7 +23,7 @@ const SQLQUERY_TEI_ATTR = "select tei.uid tei ,min(tea.name) attrname,tea.uid at
 
 const SQLQUERY_TEI_ATTR_NAME = "TRACKER_REPORTS_TEI_ATTR_V1";
 
-const SQLQUERY_TEI_DATA_VALUE = "select tei.uid tei,ps.uid psuid,min(ps.name) psname,psi.uid ev ,psi.executiondate evdate,de.uid deuid,min(de.name) dename,min(tedv.value) devalue,ou.name, pi.enrollmentdate enrollDate\
+const SQLQUERY_TEI_DATA_VALUE = "select tei.uid tei,ps.uid psuid,min(ps.name) psname,psi.uid ev ,psi.executiondate evdate,de.uid deuid,min(de.name) dename,min(tedv.value) devalue,ou.name, pi.enrollmentdate enrollDate,ou.hierarchylevel\
  from programstageinstance psi\
  INNER JOIN programinstance pi ON  psi.programinstanceid = pi.programinstanceid\
  INNER JOIN trackedentityinstance tei ON  pi.trackedentityinstanceid = tei.trackedentityinstanceid\
@@ -39,12 +39,12 @@ const SQLQUERY_TEI_DATA_VALUE = "select tei.uid tei,ps.uid psuid,min(ps.name) ps
  from organisationunit\
  where path like '%${orgunit}%')\
  and pi.enrollmentdate between '${startdate}' and '${enddate}'\
- group by tei.uid,ps.uid,psi.uid,psi.executiondate,de.uid,ou.name, pi.enrollmentdate\
+ group by tei.uid,ps.uid,psi.uid,psi.executiondate,de.uid,ou.name, pi.enrollmentdate,ou.hierarchylevel\
  order by pi.enrollmentdate,tei.uid,psi.executiondate";
 
 const SQLQUERY_TEI_DATA_VALUE_NAME = "TRACKER_REPORTS_TEI_DATA_VALUE_V1";
 
-const SQLQUERY_EVENT= "select ps.uid psuid,min(ps.name) psname,psi.uid ev ,psi.executiondate evdate,de.uid deuid,min(de.name) dename,min(tedv.value) devalue,ou.name, psi.executiondate::DATE,ou.uid\
+const SQLQUERY_EVENT= "select ps.uid psuid,min(ps.name) psname,psi.uid ev ,psi.executiondate evdate,de.uid deuid,min(de.name) dename,min(tedv.value) devalue,ou.name, psi.executiondate::DATE,ou.uid,ou.hierarchylevel\
  from programstageinstance psi\
  INNER JOIN programinstance pi ON  psi.programinstanceid = pi.programinstanceid\
  INNER JOIN trackedentitydatavalue tedv ON tedv.programstageinstanceid = psi.programstageinstanceid\
@@ -59,7 +59,7 @@ const SQLQUERY_EVENT= "select ps.uid psuid,min(ps.name) psname,psi.uid ev ,psi.e
  from organisationunit\
  where path like '%${orgunit}%')\
  and psi.executiondate between '${startdate}' and '${enddate}'\
- group by ps.uid,psi.uid,psi.executiondate,de.uid,ou.name, psi.executiondate,ou.uid\
+ group by ps.uid,psi.uid,psi.executiondate,de.uid,ou.name, psi.executiondate,ou.uid,ou.hierarchylevel\
  order by psi.executiondate";
 
 const SQLQUERY_EVENT_NAME = "TRACKER_REPORTS_EVENT_V1";

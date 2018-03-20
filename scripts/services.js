@@ -10,6 +10,7 @@ var trackerReportsAppServices = angular.module('trackerReportsAppServices', [])
                $.ajax({
                    type: "GET",
                    dataType: "json",
+                   async: false,
                    contentType: "application/json",
                    //url: '../../organisationUnits/'+id+".json?fields=id,name,programs[id,name,programTrackedEntityAttributes[*],programStages[id,name,programStageDataElements[id,dataElement[id,name],sortOrder]]]",
                   // url: '../../organisationUnits/'+id+".json?fields=id,name,programs[id,name,programTrackedEntityAttributes[*],programStages[id,name,programStageDataElements[id,dataElement[id,name,optionSet[options[code,displayName]]],sortOrder]]]&paging=false",
@@ -25,6 +26,7 @@ var trackerReportsAppServices = angular.module('trackerReportsAppServices', [])
                $.ajax({
                    type: "GET",
                    dataType: "json",
+                   async: false,
                    contentType: "application/json",
                    url: '../../programs.json?fields=id,name,withoutRegistration,programTrackedEntityAttributes[*],programStages[id,name,programStageDataElements[id,dataElement[id,name,optionSet[options[code,displayName]],sortOrder]]]&paging=false',
                    success: function (data) {
@@ -33,10 +35,67 @@ var trackerReportsAppServices = angular.module('trackerReportsAppServices', [])
                });
                return def;
            },
+           remakreport : function (param) {
+            var def = $.Deferred();
+            $.ajax({
+                type: "GET",
+                async: false,
+                dataType: "json",
+                contentType: "application/json",
+                url: '../../programs/'+param+'.json?fields=id,name,withoutRegistration,programTrackedEntityAttributes[*],programStages[id,name,programStageDataElements[id,dataElement[id,name,optionSet[options[code,displayName]],sortOrder]]]&paging=false',
+                success: function (data) {
+                    def.resolve(data);
+                }
+            });
+            return def;
+        },
+        getAggregatedata : function(param){
+            var def = $.Deferred();
+            $.ajax({
+                type: "GET",
+                async: false,
+                dataType: "json",
+                contentType: "application/json",
+                url: '../../programs/'+param+'.json?fields=id,name,withoutRegistration,programTrackedEntityAttributes[*],programStages[id,name,programStageDataElements[id,dataElement[id,name,optionSet[options[code,displayName]],sortOrder]]]&paging=false',
+                success: function (data) {
+                    def.resolve(data);
+                }
+            });
+            return def;
+        },
+        getheirarchyname : function(param){
+            var def = $.Deferred();
+            $.ajax({
+                type: "GET",
+                async: false,
+                dataType: "json",
+                contentType: "application/json",
+                url: "../../organisationUnits/"+param+".json?fields=name,level,parent[name,level,parent[id,name,level,parent[name,level,parent[name,level,parent[name,level,parent[name,level,parent[name,level,parent[name,level]]]]]",
+                success: function (data) {
+                    def.resolve(data);
+                }
+            });
+            return def;
+        },
+        getheirarchynameprac : function(param){
+            var def = $.Deferred();
+            $.ajax({
+                type: "GET",
+                async: false,
+                dataType: "json",
+                contentType: "application/json",
+                url: "../../organisationUnits/"+param+".json?fields=path",
+                success: function (data) {
+                    def.resolve(data);
+                }
+            });
+            return def;
+        },
            getSQLView : function(sqlViewUID,param){
                var def = $.Deferred();
                $.ajax({
                    type: "GET",
+                   async: false,
                    dataType: "json",
                    contentType: "application/json",
                    url: '../../sqlViews/'+sqlViewUID+"/data?"+param,
@@ -47,11 +106,13 @@ var trackerReportsAppServices = angular.module('trackerReportsAppServices', [])
                return def;
            },
 
+
            getEnrollmentsBetweenDateProgramAndOu : function(ou,prog,start,end){
                var def = $.Deferred();
                $.ajax({
                    type: "GET",
                    dataType: "json",
+                   async: false,
                    contentType: "application/json",
                    url: '../../enrollments.json?ou='+ou+'&ouMode=DESCENDANTS&program='+prog+'&programStartDate='+start+'&programEndDate='+end+'&skipPaging=true',
                    success: function (data) {
@@ -61,4 +122,15 @@ var trackerReportsAppServices = angular.module('trackerReportsAppServices', [])
                return def;
            }
        }
-    });
+    }).service('sqlviewservice',  function ($http){
+        return {
+            getAll: function () {
+                var promise = $http.get('../../sqlViews.json?fields=[id,name]&paging=false').then(function (response) {
+		
+                    return response.data ;
+                });
+                return promise;
+            }
+         
+        }
+    })

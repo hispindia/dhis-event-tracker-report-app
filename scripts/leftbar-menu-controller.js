@@ -8,6 +8,9 @@ msfReportsApp.controller('LeftBarMenuController',
             $scope.showEventReport = function(){
                 $location.path('/event-report').search();
             };
+            $scope.showPerformanceIndicator = function(){
+                $location.path('/performance-report').search();
+            };
 
 
         });
