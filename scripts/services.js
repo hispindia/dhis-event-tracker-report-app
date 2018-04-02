@@ -20,13 +20,27 @@ var trackerReportsAppServices = angular.module('trackerReportsAppServices', [])
                });
                return def;
            },
+           geteventsval : function(id){
+            var def = $.Deferred();
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                async:false,
+                contentType: "application/json",
+                   url: '../../events.json?fields=trackedEntityInstance,dataValues&trackedEntityInstance='+id+'&programStage=vXu87PSdhWq&skipPaging=true',
+                success: function (data) {
+                    def.resolve(data);
+                }
+            });
+            return def;
+        },
            getAllPrograms : function () {
                var def = $.Deferred();
                $.ajax({
                    type: "GET",
                    dataType: "json",
                    contentType: "application/json",
-                   url: '../../programs.json?fields=id,name,withoutRegistration,programTrackedEntityAttributes[*],programStages[id,name,programStageDataElements[id,dataElement[id,name,optionSet[options[code,displayName]],sortOrder]]]&paging=false',
+                   url: '../../programs.json?fields=id,name,withoutRegistration,programTrackedEntityAttributes[*],programStages[id,name,programStageDataElements[id,dataElement[id,name,optionSet[options[code,displayName,id]],sortOrder]]]&paging=false',
                    success: function (data) {
                        def.resolve(data);
                    }

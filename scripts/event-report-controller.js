@@ -1,5 +1,5 @@
 /**
- * Created by hisp on 2/12/15.
+ * Created by hisp on 2/12/15...........Durgamoni Tanti
  */
 msfReportsApp.directive('calendar', function () {
     return {
@@ -91,10 +91,16 @@ msfReportsApp
             $scope.selectedStartDate = $scope.startdateSelected;
             $scope.selectedEndDate = $scope.enddateSelected;
             $scope.program = program;
-
+            
+            var str_new;
             for(var i=0; i<$scope.program.programTrackedEntityAttributes.length;i++){
                 var str = $scope.program.programTrackedEntityAttributes[i].displayName;
-                var str_new=str.split("AES Enhanced Surveillance");
+                if($scope.program.id=='a9cQSlDVI2n')
+                str_new=str.split("AES Enhanced Surveillance");
+               
+                if($scope.program.id=='eV13Hfo7qiv')
+                str_new=str.split("AMES Surveillance");
+
                 var n = str_new[1].lastIndexOf('-');
                 $scope.program.programTrackedEntityAttributes[i].displayName = str_new[1].substring(n + 1);
 
@@ -155,6 +161,7 @@ msfReportsApp
                     })
                 })
             })
+
 
 
         }
@@ -312,10 +319,14 @@ msfReportsApp
             var TheRows = [];
             var psDes = $scope.psDEs;
 
+          
             for (key in teiList){
                 var teiuid = key;
                 $scope.eventList[teiuid] = [];
-
+                
+           
+                
+                
                 var maxEventCount = teiPerPsEventListMap[teiuid].max;
 
                 if (maxEventCount == 0){debugger}
@@ -339,25 +350,44 @@ msfReportsApp
                             val = eventToMiscMap[evuid].evDate;//debugger
                         }
                         if($scope.psDEs[x].dataElement.optionSet != undefined){
-
                             if($scope.psDEs[x].dataElement.optionSet.options != undefined){
 
                                 val = $scope.Options[val+'_index'];
-                                if (!val)
-                                    val="";
-                                //  dataValues.push(value);
 
+
+                                if (!val)
+                                val="";
+
+                                if(val=="true")
+                                {
+                                    val="yes";
+                                }
+                                if(val=="false")
+                                {
+                                    val="no";
+                                } 
                             }
-                        }
-                        if(val=="true")
-                        {
-                            val="yes";
-                        }
-                        if(val=="false")
-                        {
-                            val="no";
+                              
+                           
                         }
                         TheRows.push(val?val:"");
+                            
+                    }
+
+
+                    for(var i=0;i<TheRows.length;i++)
+                    {
+                        
+                        if(TheRows[i]=="true")
+                        {
+                            TheRows[i]="yes";
+                        }
+                        if(TheRows[i]=="false")
+                        {
+                            TheRows[i]="no";
+                        }  
+
+                        
                     }
                     $scope.eventList[teiuid].push(TheRows);
                 }
