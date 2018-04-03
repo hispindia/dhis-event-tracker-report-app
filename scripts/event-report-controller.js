@@ -87,6 +87,7 @@ msfReportsApp
         };
 
         $scope.generateReport = function(program){
+            $scope.selectedOrgUnitName_level=$scope.selectedOrgUnit.level;
             $scope.selectedOrgUnitName = $scope.selectedOrgUnit.name;
             $scope.selectedStartDate = $scope.startdateSelected;
             $scope.selectedEndDate = $scope.enddateSelected;
@@ -146,8 +147,21 @@ msfReportsApp
             }
 
 
+
+            if($scope.selectedOrgUnitName_level==5)
+            {
+                $scope.selectedOrgUnitName_level_id=$scope.selectedOrgUnit.parent.parent.parent.id;
+            }
+            else if($scope.selectedOrgUnitName_level==4)
+            {
+                $scope.selectedOrgUnitName_level_id=$scope.selectedOrgUnit.parent.parent.id;
+            }
+            else{
+                $scope.selectedOrgUnitName_level_id=$scope.selectedOrgUnit.id;
+            }
+
             //  var param = "var=program:"+program.id + "&var=orgunit:"+$scope.selectedOrgUnit.id+"&var=startdate:"+moment($scope.date.startDate).format("YYYY-MM-DD")+"&var=enddate:"+moment($scope.date.endDate).format("YYYY-MM-DD");
-            var param = "var=program:"+program.id + "&var=orgunit:"+$scope.selectedOrgUnit.id+"&var=startdate:"+$scope.startdateSelected+"&var=enddate:"+$scope.enddateSelected;
+            var param = "var=program:"+program.id + "&var=orgunit:"+$scope.selectedOrgUnitName_level_id+"&var=startdate:"+$scope.startdateSelected+"&var=enddate:"+$scope.enddateSelected;
 
             MetadataService.getSQLView(SQLViewsName2IdMap[SQLQUERY_TEI_DATA_VALUE_NAME], param).then(function (stageData) {
                 $scope.stageData = stageData;
@@ -186,6 +200,28 @@ msfReportsApp
 
         }
         function arrangeDataX(stageData,attrData,allenrollments){
+            
+            var allteid=[]
+            for(var t=0;t<allenrollments.enrollments.length;t++)
+            {
+                allteid.push(allenrollments.enrollments[t].trackedEntityInstance) 
+            }
+
+            var final_rows=[]
+            for(var i=0;i<allteid.length;i++)
+            {
+                for(var j=0;j<stageData.height;j++)
+                {
+                    var gg=stageData.rows[j][0]
+                    if(stageData.rows[j][0]==allteid[i])
+                    {
+                        final_rows.push(stageData.rows[j])
+                    }
+                }
+            }
+            
+            stageData.rows=final_rows;
+            stageData.height=final_rows.length
 
             var report = [{
                 teiuid : ""
@@ -358,14 +394,7 @@ msfReportsApp
                                 if (!val)
                                 val="";
 
-                                if(val=="true")
-                                {
-                                    val="yes";
-                                }
-                                if(val=="false")
-                                {
-                                    val="no";
-                                } 
+                                
                             }
                               
                            
@@ -378,18 +407,19 @@ msfReportsApp
                     for(var i=0;i<TheRows.length;i++)
                     {
                         
-                        if(TheRows[i]=="true")
-                        {
-                            TheRows[i]="yes";
-                        }
-                        if(TheRows[i]=="false")
-                        {
-                            TheRows[i]="no";
-                        }  
+                            if(TheRows[i]=="true")
+                            {
+                                TheRows[i]="Yes";
+                            }
+                            if(TheRows[i]=="false")
+                            {
+                                TheRows[i]="No";
+                            } 
 
+                            
+                        }
                         
-                    }
-                    $scope.eventList[teiuid].push(TheRows);
+                        $scope.eventList[teiuid].push(TheRows);
                 }
             }
 
