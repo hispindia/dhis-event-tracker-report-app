@@ -272,11 +272,11 @@ msfReportsApp
                 // $scope.attrMap[teiuid+"-"+attruid] = ouname;
                 if(attrvalue=="true")
                 {
-                    attrvalue="yes";
+                    attrvalue="Yes";
                 }
                 else if( attrvalue=="false")
                 {
-                    attrvalue="no";
+                    attrvalue="No";
                 }
                 $scope.attrMap[teiuid+"-"+attruid] = attrvalue;
 
