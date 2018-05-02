@@ -52,73 +52,46 @@
 
 </div>
 
-<div id ="divId">
-    <!--<table class="table-bordered" border="1" style="float:left" >-->
-        <!--<tr style="border-color: white">-->
-            <!--<th colspan="3">{{org}}{{selectedOrgUnitName}}</th>-->
-            <!--<th colspan="3">{{start}}{{startdateSelected}}</th>-->
-            <!--<th colspan="3">{{end}}{{enddateSelected}}</th>-->
-        <!--</tr>-->
-    <!--</table>-->
-    <table id="tableid" class="table-bordered" border="2" style="float:left" >
-
+<div id ="divId" class=fixedElement>
+    <div id="sticky" >
+    <table id="tableid" class="table-bordered custom" style="float:left;" >
+      <thead id="tbhead" >
         <tr style="outline: thin">
-            <th colspan="3">{{org}}{{selectedOrgUnitName}}</th>
+            <th colspan="3" >{{org}}{{selectedOrgUnitName}}</th>
             <th colspan="3">{{start}}{{selectedStartDate}}</th>
-            <th colspan="3">{{end}}{{selectedEndDate}}</th>
+            <th colspan="3" >{{end}}{{selectedEndDate}}</th>
         </tr>
-        <tr>
+        <tr style="outline: thin;">
             <th colspan="{{program.programTrackedEntityAttributes.length+2}}">{{attribute}}</th>
             <th ng-repeat="ps in program.programStages"
                 colspan="{{ps.programStageDataElements.length+2}}">{{ps.name}}</th>
 
         </tr>
-        <tr>
+        <tr style="outline: thin;background-color:white;">
             <th ng-repeat="enrol in enrollment">{{enrol}}</th>
             <th ng-repeat="attr in program.programTrackedEntityAttributes">{{attr.displayName}}</th>
             <th ng-repeat="de in psDEs">{{de.dataElement.name}}</th>
 
         </tr>
-        <!--merged tei and attributes, do not repeat tei for all its events-->
-
-    <!--    <tbody ng-repeat="tei in teiList">
-        <tr>
-            <td rowspan="{{teiPerPsEventListMap[tei].max+1}}">{{teiEnrollMap[tei+"-enrollDate"]}}</td>
-            <td rowspan="{{teiPerPsEventListMap[tei].max+1}}">{{teiEnrollOrgMap[tei+"-ouname"]}}</td>
-            <td rowspan="{{teiPerPsEventListMap[tei].max+1}}" ng-repeat="attr in program.programTrackedEntityAttributes">{{attrMap[tei+"-"+attr.trackedEntityAttribute.id]}} </td>
-        </tr>
-        <tr ng-repeat="event in eventList[tei] track by $index">
-            <td ng-repeat="value in event track by $index">{{value}}</td>
-        </tr>-->
-
-        <!--for unmerged tei and attributes-- repeat tei for all its events -->
-
-
-
-
-        <tbody ng-repeat="tei in teiList">
-
-        <tr  ng-repeat="event in eventList[tei] track by $index" >
-            <td>{{teiEnrollMap[tei+"-enrollDate"]}}</td>
-            <td>{{teiEnrollOrgMap[tei+"-ouname"]}}</td>
-            <td  ng-repeat="attr in program.programTrackedEntityAttributes">{{attrMap[tei+"-"+attr.trackedEntityAttribute.id]}} </td>
-
-            <td ng-repeat="value in event track by $index">{{value}}</td>
-        </tr>
-
-
-       <!-- <tr><td colspan = "{{program.programTrackedEntityAttributes.length + psDEs.length+2}}">.</td></tr>
--->
-        </tbody>
-
+    </thead>
+</table>
+</div>
+<div style="padding-bottom:2000px">
+    <table class="table-bordered custom" border="2">
+        <tbody  ng-repeat="tei in teiList">
+            <tr  ng-repeat="event in eventList[tei] track by $index" >
+                <td>{{teiEnrollMap[tei+"-enrollDate"]}}</td>
+                <td>{{teiEnrollOrgMap[tei+"-ouname"]}}</td>
+                <td  ng-repeat="attr in program.programTrackedEntityAttributes">{{attrMap[tei+"-"+attr.trackedEntityAttribute.id]}} </td>
+                <td ng-repeat="value in event track by $index">{{value}}</td>
+            </tr>
+     </tbody>
     </table>
 </div>
+   
+</div>
     </div>
-<!--<div class="row" ng-if="selectedOrgUnit.programs.length < 1">
-    <div class="col-sm-8 col-md-6 vertical-spacing">
-        <div class="alert alert-warning">{{'no_program_exists_report'| translate}}</div> 
-    </div>
-</div> -->
+
 <div class="row" ng-if="selectedOrgUnit.programs.length > 0 && !selectedProgram">
     <div class="col-sm-8 col-md-6 vertical-spacing">
         <div class="alert alert-warning">{{'please_select_program_report'| translate}}</div> 

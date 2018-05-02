@@ -352,7 +352,7 @@ msfReportsApp
                 eventToMiscMap[evuid] = {ou : ou , evDate : evDate};
                 teiPsEventDeMap[teiuid + "-" + evuid + "-" + deuid] = devalue;
             }
-            var TheRows = [];
+            $scope.TheRows = [];
             var psDes = $scope.psDEs;
 
           
@@ -368,7 +368,7 @@ msfReportsApp
                 if (maxEventCount == 0){debugger}
                 for (var y=0;y<maxEventCount;y++){
 
-                    TheRows = [];
+                    $scope.TheRows = [];
                     for (var x=0;x<psDes.length;x++){
                         var psuid = psDes[x].dataElement.ps;
                         var deuid = psDes[x].dataElement.id;
@@ -399,27 +399,27 @@ msfReportsApp
                               
                            
                         }
-                        TheRows.push(val?val:"");
+                        $scope.TheRows.push(val?val:"");
                             
                     }
 
 
-                    for(var i=0;i<TheRows.length;i++)
+                    for(var i=0;i<$scope.TheRows.length;i++)
                     {
                         
-                            if(TheRows[i]=="true")
+                            if($scope.TheRows[i]=="true")
                             {
-                                TheRows[i]="Yes";
+                                $scope.TheRows[i]="Yes";
                             }
-                            if(TheRows[i]=="false")
+                            if($scope.TheRows[i]=="false")
                             {
-                                TheRows[i]="No";
+                                $scope.TheRows[i]="No";
                             } 
 
                             
                         }
                         
-                        $scope.eventList[teiuid].push(TheRows);
+                        $scope.eventList[teiuid].push($scope.TheRows);
                 }
             }
 
