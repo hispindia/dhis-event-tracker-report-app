@@ -79,10 +79,33 @@ msfReportsApp
 
         $scope.fnExcelReport = function(){
 
-            var blob = new Blob([document.getElementById('divId').innerHTML], {
-                type: 'text/plain;charset=utf-8'
-            });
-            saveAs(blob, "Report.xls");
+            str="";
+
+            var myTableHead = document.getElementById('tbhead');
+            var rowCount = myTableHead.rows.length;
+            var colCount = myTableHead.getElementsByTagName("tr")[0].getElementsByTagName("th").length; 
+
+            var ExcelApp = new ActiveXObject("Excel.Application");
+            var ExcelSheet = new ActiveXObject("Excel.Sheet");
+            ExcelSheet.Application.Visible = true;
+
+            for(var i=0; i<rowCount; i++) 
+            {   
+                for(var j=0; j<colCount; j++) 
+                {           
+                    str= myTableHead.getElementsByTagName("tr")[i].getElementsByTagName("th")[j].innerHTML;
+                    ExcelSheet.ActiveSheet.Cells(i+1,j+1).Value = str;
+                }
+            }
+        
+            // var blob = new Blob([document.getElementById('sticky').innerHTML], {
+            //     type: 'text/plain;charset=utf-8',
+            //     endings: 'native' 
+            // });
+            // console.log(blob.size);
+            // setTimeout(() => {
+            //     saveAs(blob, "Report.xls");
+            // }, 2000);
 
         };
 
