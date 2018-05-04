@@ -79,7 +79,7 @@ msfReportsApp
 
         $scope.fnExcelReport = function(){
 
-            str="";
+           /* str="";
 
             var myTableHead = document.getElementById('tbhead');
             var rowCount = myTableHead.rows.length;
@@ -96,17 +96,14 @@ msfReportsApp
                     str= myTableHead.getElementsByTagName("tr")[i].getElementsByTagName("th")[j].innerHTML;
                     ExcelSheet.ActiveSheet.Cells(i+1,j+1).Value = str;
                 }
-            }
+            }*/
         
-            // var blob = new Blob([document.getElementById('sticky').innerHTML], {
-            //     type: 'text/plain;charset=utf-8',
-            //     endings: 'native' 
-            // });
-            // console.log(blob.size);
-            // setTimeout(() => {
-            //     saveAs(blob, "Report.xls");
-            // }, 2000);
-
+            var blob = new Blob([document.getElementById('divId').innerHTML], {
+                 type: 'text/plain;charset=utf-8',
+                 endings: 'native' 
+             });
+                saveAs(blob, "AES/AMES-Report.xls");
+             
         };
 
         $scope.generateReport = function(program){

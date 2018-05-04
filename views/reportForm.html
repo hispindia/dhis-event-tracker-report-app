@@ -33,7 +33,7 @@
             <button type="button" class="btn btn-primary" ng-click="generateReport(selectedProgram, report, selectedOuMode);" ng-disabled="!selectedProgram">{{'generate_report'| translate}}</button>
         </div>
         <div class="col-md-6 trim">
-        <button id="btnExport" class="btn btn-primary"  ng-disabled="!selectedProgram"> Export To Excel </button>
+        <button id="btnExport" class="btn btn-primary" ng-click="fnExcelReport()"  ng-disabled="!selectedProgram"> Export To Excel </button>
     </div>
 
 </div>
@@ -86,12 +86,3 @@
     </div>
 </div>
 
-
-<script>
-
-    $("#btnExport").on('click',function(event){
-        debugger;
-        fnExportHTML('tableid|tableid1','#ffffff','Export Excel');
-    })
-
-</script>
