@@ -36,13 +36,15 @@
 
         <input calendar ng-model='startdate' ng-change="updateStartDate(startdate);" required />
         <input calendar ng-model='enddate'  ng-change="updateEndDate(enddate);" required/>
-
+      
         <div class="col-md-6 trim">
             <button type="button" class="btn btn-primary" ng-click="generateReport(selectedProgram, report, selectedOuMode);showLoad();" ng-disabled="!selectedProgram">{{'generate_report'| translate}}</button>
         </div>
         <div class="col-md-6 trim">
             <button id="btnExport" class="btn btn-primary" ng-click="fnExcelReport();" ng-disabled="!selectedProgram"> Export To Excel </button>
         </div>
+       
+       
 
     </div>
 
@@ -62,8 +64,8 @@
             </tr>
             <tr>
                 <th ng-repeat="de in psDEs1" style="background-color: #2980B9    ;">{{de.dataElement.name}}</th>
-                <th ng-repeat="de in psDEs" colspan="3" style="background-color: #2980B9    ;">{{de.dataElement.name}}</th>
-            </tr>
+                <th ng-repeat="de in psDEs" colspan="{{colspanval}}" style="background-color: #2980B9    ;">{{de.dataElement.name}}</th>
+                </tr>
             <tr>
                 <th ng-repeat="he in header track by $index " style="background-color: #85C1E9  ;">{{he}}</th>
             </tr>
@@ -88,3 +90,29 @@
         <div class="alert alert-warning">{{'please_select_program_report'| translate}}</div>
     </div>
 </div>
+
+ <!--<div ng-switch="selectedProgram.id" >
+        <div ng-switch-when="HTCqTWEF1XS">
+            <div class="col-md-6 trim">
+                    <button type="button" class="btn btn-primary" ng-click="generateReport(selectedProgram, report, selectedOuMode);" ng-disabled="!selectedProgram">{{'generate_report'| translate}}</button>
+                </div>
+                <div class="col-md-6 trim">
+                <button id="btnExport" class="btn btn-primary" ng-click="fnExcelReport()"  ng-disabled="!selectedProgram"> Export To Excel </button>
+            </div></div>
+            <div ng-switch-when="K3XysZ53B4r">
+                    <div class="col-md-6 trim">
+                            <button type="button" class="btn btn-primary" ng-click="generateReport(selectedProgram, report, selectedOuMode);" ng-disabled="!selectedProgram">{{'generate_report'| translate}}</button>
+                        </div>
+                        <div class="col-md-6 trim">
+                        <button id="btnExport" class="btn btn-primary" ng-click="fnExcelReport()"  ng-disabled="!selectedProgram"> Export To Excel </button>
+            </div></div>
+            <div ng-switch-when="CsEmq8UNA6z">
+                <div class="col-md-6 trim">
+                        <button type="button" class="btn btn-primary" ng-click="generateReport(selectedProgram, report, selectedOuMode);" ng-disabled="!selectedProgram">{{'generate_report'| translate}}</button>
+                    </div>
+                    <div class="col-md-6 trim">
+                    <button id="btnExport" class="btn btn-primary" ng-click="fnExcelReport()"  ng-disabled="!selectedProgram"> Export To Excel </button>
+           </div></div>
+
+          
+        </div>-->

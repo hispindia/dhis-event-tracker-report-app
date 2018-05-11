@@ -12,15 +12,27 @@ var trackerReportsAppServices = angular.module('trackerReportsAppServices', [])
                    dataType: "json",
                    async: false,
                    contentType: "application/json",
-                   //url: '../../organisationUnits/'+id+".json?fields=id,name,programs[id,name,programTrackedEntityAttributes[*],programStages[id,name,programStageDataElements[id,dataElement[id,name],sortOrder]]]",
-                  // url: '../../organisationUnits/'+id+".json?fields=id,name,programs[id,name,programTrackedEntityAttributes[*],programStages[id,name,programStageDataElements[id,dataElement[id,name,optionSet[options[code,displayName]]],sortOrder]]]&paging=false",
-                    url: '../../organisationUnits/'+id+".json?fields=id,name,programs[id,name,programTrackedEntityAttributes[*],programStages[id,name,programStageDataElements[id,dataElement[id,name,optionSet[options[code,displayName]]],sortOrder]]]&paging=false",
+                   url: '../../organisationUnits/'+id+".json?fields=id,name,programs[id,name,programTrackedEntityAttributes[*],programStages[id,name,programStageDataElements[id,dataElement[id,name,optionSet[options[code,displayName]]],sortOrder]]]&paging=false",
                    success: function (data) {
                        def.resolve(data);
                    }
                });
                return def;
            },
+           filterCMO_CMS : function(sqlViewUID,orgUnitid){
+            var def = $.Deferred();
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                async: false,
+                contentType: "application/json",
+                url: '../../sqlViews/'+sqlViewUID+'/data?var=orgunitid:'+orgUnitid+'',
+                success: function (data) {
+                    def.resolve(data);
+                }
+            });
+            return def;
+        },
            getAllPrograms : function () {
                var def = $.Deferred();
                $.ajax({
@@ -35,35 +47,7 @@ var trackerReportsAppServices = angular.module('trackerReportsAppServices', [])
                });
                return def;
            },
-           remakreport : function (param) {
-            var def = $.Deferred();
-            $.ajax({
-                type: "GET",
-                async: false,
-                dataType: "json",
-                contentType: "application/json",
-                url: '../../programs/'+param+'.json?fields=id,name,withoutRegistration,programTrackedEntityAttributes[*],programStages[id,name,programStageDataElements[id,dataElement[id,name,optionSet[options[code,displayName]],sortOrder]]]&paging=false',
-                success: function (data) {
-                    def.resolve(data);
-                }
-            });
-            return def;
-        },
-        getAggregatedata : function(param){
-            var def = $.Deferred();
-            $.ajax({
-                type: "GET",
-                async: false,
-                dataType: "json",
-                contentType: "application/json",
-                url: '../../programs/'+param+'.json?fields=id,name,withoutRegistration,programTrackedEntityAttributes[*],programStages[id,name,programStageDataElements[id,dataElement[id,name,optionSet[options[code,displayName]],sortOrder]]]&paging=false',
-                success: function (data) {
-                    def.resolve(data);
-                }
-            });
-            return def;
-        },
-        getheirarchyname : function(param){
+           getheirarchyname : function(param){
             var def = $.Deferred();
             $.ajax({
                 type: "GET",
@@ -125,11 +109,19 @@ var trackerReportsAppServices = angular.module('trackerReportsAppServices', [])
     }).service('sqlviewservice',  function ($http){
         return {
             getAll: function () {
-                var promise = $http.get('../../sqlViews.json?fields=[id,name]&paging=false').then(function (response) {
-		
-                    return response.data ;
+
+                var def = $.Deferred();
+                $.ajax({
+                    type: "GET",
+                    dataType: "json",
+                    async: false,
+                    contentType: "application/json",
+                    url: '../../sqlViews.json?fields=[id,name]&paging=false',
+                    success: function (data) {
+                        def.resolve(data);
+                    }
                 });
-                return promise;
+                return def;
             }
          
         }

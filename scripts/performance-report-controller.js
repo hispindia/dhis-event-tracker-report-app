@@ -62,84 +62,85 @@ msfReportsApp
                     $scope.selectedOrgUnit = orgUnit;
                 });
             });
+            $scope.basicUrl = "../api/sqlViews/";
+            sqlviewservice.getAll().then(function(data){
+                $scope.sqlViews = data.sqlViews;
+    
+                for(var i=0;i<$scope.sqlViews.length;i++)
+                {
+                    if($scope.sqlViews[i].name=="Org Unit Path")
+                    {
+                        $scope.Org_Unit_Path=$scope.sqlViews[i].id;
+            
+                    }
+                    if($scope.sqlViews[i].name=="FILTER_CMO")
+                    {
+                        $scope.FILTER_CMO_id=$scope.sqlViews[i].id;
+            
+                    }
+                    if($scope.sqlViews[i].name=="FILTER_CMS")
+                    {
+                        $scope.FILTER_CMS_id=$scope.sqlViews[i].id;
+            
+                    }
+                
+                }
+                
+            })
+    
+
+            $scope.orgunit_CMO=[],$scope.orgunit_CMS=[];
+            MetadataService.filterCMO_CMS($scope.FILTER_CMO_id,$scope.selectedOrgUnitUid[0]).then(function (org) {
+                for(var i=0;i<org.rows.length;i++)
+                {
+                    var mm=org.rows[i][0]
+                    $scope.orgunit_CMO.push(org.rows[i][0]);
+                }
+            })
+            MetadataService.filterCMO_CMS($scope.FILTER_CMS_id,$scope.selectedOrgUnitUid[0]).then(function (org) {
+                for(var i=0;i<org.rows.length;i++)
+                {
+                    $scope.orgunit_CMS.push(org.rows[i][0]);
+                }
+            })
+    
         }
         
         getAllPrograms = function () {
             var program=['HTCqTWEF1XS','K3XysZ53B4r','CsEmq8UNA6z'];
+            var postfix=["- PBR monitoring(Aggregated)","Remarks Report","- PBR monitoring(under CMO)","- PBR monitoring(under CMS)","- PBR monitoring(under CMO(Aggregated))","- PBR monitoring(under CMS(Aggregated))"]
             $scope.Allprograms=[];
-
-            for(var i=0;i<program.length;i++)
-            {
-                MetadataService.getAggregatedata(program[i]).then(function (progdata) {
-                
-                    if(progdata.id=='HTCqTWEF1XS')
-                    {
-                        progdata.name="Anaesthetist- PBR monitoring(Aggregated)";
-                        $scope.Allprograms.push(progdata);
-                    }
-                    if(progdata.id=='K3XysZ53B4r')
-                    {
-                        progdata.name="Gynaecologist- PBR monitoring(Aggregated)";
-                        $scope.Allprograms.push(progdata);
-                    }
-                    if(progdata.id=='CsEmq8UNA6z')
-                    {
-                        progdata.name="Paediatric- PBR monitoring(Aggregated)";
-                        $scope.Allprograms.push(progdata);
-                    }
-                   
-                           
-                });
-    
-            }
+            $scope.current_program=[];
            
-            for(var i=0;i<program.length;i++)
-            {
-            MetadataService.remakreport(program[i]).then(function (prog1) {
+          MetadataService.getAllPrograms().then(function (prog) {
                 
-                if(prog1.id=='HTCqTWEF1XS')
-                    {
-                        prog1.name="Anaesthetist Remarks Report";
-                        $scope.Allprograms.push(prog1);
-                    }
-                    if(prog1.id=='K3XysZ53B4r')
-                    {
-                        prog1.name="Gynaecologist Remarks Report";
-                        $scope.Allprograms.push(prog1);
-                    }
-                    if(prog1.id=='CsEmq8UNA6z')
-                    {
-                        prog1.name="Paediatric Remarks Report";
-                        $scope.Allprograms.push(prog1);
-                    }
-                
-                       
-            });
-        }
-            MetadataService.getAllPrograms().then(function (prog) {
                 for (var i = 0; i < prog.programs.length; i++) {
-                    if (prog.programs[i].withoutRegistration == false) {
-                        $scope.Allprograms.push(prog.programs[i]);
+                    for(var j=0;j<program.length;j++)
+                    {
+                        if (prog.programs[i].withoutRegistration == false) {
+                            if(program[j]==prog.programs[i].id)
+                                $scope.Allprograms.push(prog.programs[i])
+                           }
                     }
                    
-                }
-               // $scope.programs.push({name:"",id:""});
-            });
-
-           $scope.basicUrl = "../api/sqlViews/";
-        sqlviewservice.getAll().then(function(data){
-            $scope.sqlViews = data.sqlViews;
-
-            for(var i=0;i<$scope.sqlViews.length;i++)
-            {
-                if($scope.sqlViews[i].name=="Org Unit Path")
+                 }
+                });
+               
+               
+                for(var y=0;y<3;y++)
                 {
-                    $scope.Org_Unit_Path=$scope.sqlViews[i].id;
-        
+                        for(var x=0;x<postfix.length;x++)
+                    {
+                        var newObject = jQuery.extend(true, {}, $scope.Allprograms[y]);
+                        var str=newObject.name.split("-");
+                        newObject.name=str[0]+postfix[x];
+                        $scope.Allprograms[$scope.Allprograms.length]=newObject
+                        $scope.newObject=[]
+                    }
+                    
                 }
-            }
-            
-        })
+         
+        
             getAllProg($scope.Allprograms)
         }
 
@@ -170,7 +171,6 @@ msfReportsApp
             saveAs(blob, "Report.xls");
 
         };
-
         $scope.generateReport = function (program) {
             $scope.selectedOrgUnitName = $scope.selectedOrgUnit.name;
             $scope.selectedStartDate = $scope.startdateSelected;
@@ -205,7 +205,49 @@ msfReportsApp
                $scope.programname=$scope.program.name;
                
 
-               if($scope.programname=='Anaesthetist- PBR monitoring(Aggregated)' || $scope.programname=='Gynaecologist- PBR monitoring(Aggregated)')
+               if($scope.programname=='Anaesthetist - PBR monitoring(Aggregated)' ||$scope.programname=='Gynaecologist - PBR monitoring(Aggregated)')
+               {
+                $("#showdata").empty();
+                $scope.new_psuid = $scope.program.programStages[i].id;
+                $scope.psDEs1.push({dataElement: {id: "orgUnit", name: "orgUnit", ps: psuid}});
+                $scope.psDEs1.push({dataElement: {id: "Specialist-Name", name: "Specialist Name", ps: psuid}});
+                
+                $scope.header=['',''];
+               
+                for (var j = 0; j < $scope.program.programStages[i].programStageDataElements.length; j++) {
+
+                    $scope.program.programStages[i].programStageDataElements[j].dataElement.ps = psuid;
+                    var de = $scope.program.programStages[i].programStageDataElements[j];
+                    
+                    
+                    for(var xx=0;xx<de_array.length;xx++)
+                    {
+                        if(de.dataElement.id==de_array[xx])
+                        $scope.psDEs.push(de);
+                    }
+                    program["newlength"] = $scope.psDEs1.length;
+
+                    if ($scope.program.programStages[i].programStageDataElements[j].dataElement.optionSet != undefined) {
+                        if ($scope.program.programStages[i].programStageDataElements[j].dataElement.optionSet.options != undefined) {
+
+                            for (var k = 0; k < $scope.program.programStages[i].programStageDataElements[j].dataElement.optionSet.options.length; k++) {
+                                index = index + 1; // $scope.Options.push($scope.program.programStages[i].programStageDataElements[j]);
+                                var code = $scope.program.programStages[i].programStageDataElements[j].dataElement.optionSet.options[k].code;
+                                var name = $scope.program.programStages[i].programStageDataElements[j].dataElement.optionSet.options[k].displayName;
+
+                                options.push({code: code, name: name});
+                                $scope.Options[$scope.program.programStages[i].programStageDataElements[j].dataElement.optionSet.options[k].code + "_index"] = $scope.program.programStages[i].programStageDataElements[j].dataElement.optionSet.options[k].displayName;
+                            }
+                        }
+                    }
+                }
+                for(var pe=0;pe<$scope.psDEs.length;pe++ )
+                {
+                    $scope.header.push('Value') ;
+                }
+                $scope.colspanval=0;
+               }
+               if($scope.programname=='Anaesthetist - PBR monitoring(under CMO(Aggregated))'||$scope.programname=='Anaesthetist - PBR monitoring(under CMS(Aggregated))' ||  $scope.programname=='Gynaecologist - PBR monitoring(under CMO(Aggregated))'||$scope.programname=='Gynaecologist - PBR monitoring(under CMS(Aggregated))')
                {
                 $("#showdata").empty();
                 $scope.new_psuid = $scope.program.programStages[i].id;
@@ -246,7 +288,7 @@ msfReportsApp
                     $scope.header.push('Case Load','Value','Points') ;
                 }
                 $scope.header.push("Total Points");
-                
+                $scope.colspanval=3;
                }
 
                if($scope.programname=="Paediatric- PBR monitoring(Aggregated)" && psuid=="PfRIIrvnjcU" )
@@ -295,6 +337,7 @@ msfReportsApp
                         $scope.header.push('Case Load','Value','Points') ;
                     }
                     $scope.header.push("Total Points");
+                    $scope.colspanval=3;
 
             }
                if(($scope.programname=="Paediatric Remarks Report" && psuid=="PfRIIrvnjcU" )||$scope.programname=="Anaesthetist Remarks Report" ||$scope.programname=="Gynaecologist Remarks Report" )
@@ -389,7 +432,7 @@ msfReportsApp
                     $scope.header.push("Total Points");
 
             }
-                if(($scope.programname=='Anaesthetist - PBR monitoring' && $scope.programid=="HTCqTWEF1XS")  || ($scope.programname=='Gynaecologist - PBR monitoring' &&  $scope.programid=="K3XysZ53B4r" ))
+                if(($scope.programname=='Anaesthetist - PBR monitoring' && $scope.programid=="HTCqTWEF1XS") ||($scope.programname=='Anaesthetist - PBR monitoring(under CMO)' && $scope.programid=="HTCqTWEF1XS")  ||($scope.programname=='Anaesthetist - PBR monitoring(under CMS)' && $scope.programid=="HTCqTWEF1XS")  || ($scope.programname=='Gynaecologist - PBR monitoring' &&  $scope.programid=="K3XysZ53B4r" ) || ($scope.programname=='Gynaecologist - PBR monitoring(under CMS)' &&  $scope.programid=="K3XysZ53B4r" ) || ($scope.programname=='Gynaecologist - PBR monitoring(under CMO)' &&  $scope.programid=="K3XysZ53B4r" ))
                 {
                     $("#showdata").empty();
                 $scope.psDEs1.push({dataElement: {id: "eventDate", name: "eventDate", ps: psuid}});
@@ -431,11 +474,10 @@ msfReportsApp
                 
                 for(var pe=0;pe<$scope.psDEs.length;pe++ )
                     {
-                        $scope.header.push('Case Load','Value','Points') ;
+                        $scope.header.push('Value') ;
                     }
-                    $scope.header.push("Total Points");
-
-            }
+                    $scope.colspanval=0;
+             }
         }
 
             //  var param = "var=program:"+program.id + "&var=orgunit:"+$scope.selectedOrgUnit.id+"&var=startdate:"+moment($scope.date.startDate).format("YYYY-MM-DD")+"&var=enddate:"+moment($scope.date.endDate).format("YYYY-MM-DD");
@@ -446,6 +488,7 @@ msfReportsApp
                 arrangeDataX($scope.stageData, $scope.programid,psuid,$scope.programname,$scope.new_psuid);
             })
         };
+
 
         function showLoad() {
             // alert( "inside showload method 1" );
@@ -464,7 +507,7 @@ msfReportsApp
         }
 
         function arrangeDataX(stageData,program,psuid,programname,new_psuid) {
-            Loader.showLoader()
+   
             // For Data values
             const index_deuid = 4;
             const index_devalue = 6;
@@ -588,7 +631,7 @@ msfReportsApp
             })**/
 
 ////Anaesthetist- PBR monitoring(Aggregated)
-if(program=="HTCqTWEF1XS" &&programname=='Anaesthetist- PBR monitoring(Aggregated)')
+if(program=="HTCqTWEF1XS" &&programname=='Anaesthetist - PBR monitoring(Aggregated)')
 {
     
            for(var i=0;i<$scope.eventList.length;i++)
@@ -717,139 +760,44 @@ if(program=="HTCqTWEF1XS" &&programname=='Anaesthetist- PBR monitoring(Aggregate
                                     $scope.FinalEnteredVal=getFinalvalue($scope.eventDeWiseValueMap,$scope.neweventval,$scope.programname); 
 
                                             var org=getheirarchy($scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'orgunitid']);
-
-                                            //var org=$scope.FinalEnteredVal["orgunit"];
                                             var specialist_name=$scope.FinalEnteredVal["U0jQjrOkFjR"];
                                             var case1=$scope.FinalEnteredVal["vhG2gN7KaEK"];
                                             var case2=$scope.FinalEnteredVal["qbgFsR4VWxU"];
                                             var case3=$scope.FinalEnteredVal["zfMOVN2lc1S"];
                                             
-                                        var case1_load,case1_val,case1_point,
-                                                        case2_load,case2_val,case2_point,
-                                                            case3_Load,case3_val,case3_point;
+                                        var case1_val,case2_val,case3_val;
                     ///case 1
                                             if(case1==undefined)
                                             {
-                                                case1_load=0;
                                                 case1_val=0;
-                                                case1_point=0;
-                                                
+                                                 
                                             }
                                             else
                                             {
-                                                if(case1>=6 && case1<=8)
-                                                {
-                                                    case1_load="6 to 8";
                                                     case1_val=case1;
-                                                    case1_point="5";
-                                                }
-                                                else if(case1>=9 && case1<=11)
-                                                {
-                                                    case1_load="9 to 11";
-                                                    case1_val=case1;
-                                                    case1_point="7.5";
-                                                }
-                                                else if(case1>=12 && case1<=15)
-                                                {
-                                                    case1_load="12 to 15";
-                                                    case1_val=case1;
-                                                    case1_point="10";
-                                                }
-                                                else if( case1>=15)
-                                                {
-                                                    case1_load=">15";
-                                                    case1_val=case1;
-                                                    case1_point="15";
-                                                }
-                                                else{
-                                                    case1_load="0";
-                                                    case1_val=case1;
-                                                    case1_point="0";
-                                                }
-                                                
+                                               
                                             }
                                             
 
                     ///////////case 2
                                             if(case2==undefined)
                                             {
-                                                case2_load=0;
                                                 case2_val=0;
-                                                case2_point=0;
                                             }
                                             else
-                                            {
-                                            if(case2!=undefined)
-                                            {
-                                            if(case2>0 && case2<=2 )
-                                            {
-                                                case2_load="Up to 2";
-                                                case2_val=case2;
-                                                case2_point="5";
-                                            }
-                                            else if(case2>=3 && case2<=5)
-                                            {
-                                                case2_load="3 to 5";
-                                                case2_val=case2;
-                                                case2_point="7.5";
-                                            }
-                                            else if(case2>=6 && case2<=8)
-                                            {
-                                                case2_load="6 to 8";
-                                                case2_val=case2;
-                                                case2_point="10";
-                                            }
-                                            else
-                                            {
-                                                case2_load="0";
-                                                case2_val=case2;
-                                                case2_point="0";
-                                            }
-                                        }
-                                    }
+                                          {
+                                               case2_val=case2;
+                                          }
                                             /////case 3
                                             
                                             if(case3==undefined)
                                             {
-                                                case3_Load=0;
                                                 case3_val=0;
-                                                case3_point=0;
                                             }
                                             else
                                             {
-                                                if(case3!=undefined)
-                                            {
-                                            if(case3>0 && case3<=6 )
-                                            {
-                                                case3_Load="Upto 5";
-                                                case3_val=case3;
-                                                case3_point="2.5";
-                                            }
-                                            else if(case3>=6 && case3<=10)
-                                            {
-                                                case3_Load="6 to 10";
-                                                case3_val=case3;
-                                                case3_point="5";
-                                            }
-                                            else if(case3>=11 && case1<=15)
-                                            {
-                                                case3_Load="11 to 15";
-                                                case3_val=case3;
-                                                case3_point="7.5";
-                                            }
-                                            else if( case3>=15)
-                                            {
-                                                case3_Load=">15";
-                                                case3_val=case3;
-                                                case3_point="10";
-                                            }
-                                            else {
-                                                case3_Load="0";
-                                                case3_val=case3;
-                                                case3_point="0";
-                                            }
-                                        }
-                                    }
+                                               case3_val=case3;
+                                          }
                                         var tt=Number(case2_point),ttt=Number(case2_point),ttttt=tt+ttt;
                                         
                                     $scope.total=(Number(case1_point)+Number(case2_point)+Number(case3_point)).toFixed(2);
@@ -861,19 +809,10 @@ if(program=="HTCqTWEF1XS" &&programname=='Anaesthetist- PBR monitoring(Aggregate
                                                 "<th>"+org+"</th>"+
                                                 "<th>"+specialist_name+"</th>"+
                                                 
-                                                "<th>"+case1_load+"</th>"+
                                                 "<th>"+case1_val+"</th>"+
-                                                "<th>"+case1_point+"</th>"+
-
-                                                "<th>"+case2_load+"</th>"+
+                                               
                                                 "<th>"+case2_val+"</th>"+
-                                                "<th>"+case2_point+"</th>"+
-
-                                                "<th>"+case3_Load+"</th>"+
-                                                "<th>"+case3_val+"</th>"+
-                                                "<th>"+case3_point+"</th>"+
-                                                
-                                                "<th>"+$scope.total+"</th>"+
+                                               "<th>"+case3_val+"</th>"+
                                                 
                                                 
                                                 "</tr>"
@@ -973,10 +912,466 @@ if(program=="HTCqTWEF1XS" &&programname=='Anaesthetist- PBR monitoring(Aggregate
                                     var case2=$scope.eventDeWiseValueMap_final[$scope.final_singleval[i]+'-'+'qbgFsR4VWxU'];
                                     var case3=$scope.eventDeWiseValueMap_final[$scope.final_singleval[i]+'-'+'zfMOVN2lc1S'];
                                      
+                                var case1_val,case2_val,case3_val;
+            ///case 1
+                                    if(case1==undefined)
+                                    {
+                                        case1_val=0;
+                                      }
+                                    else
+                                    {
+                                            case1_val=case1;
+                                       }
+                                    
+
+            ///////////case 2
+                                    if(case2==undefined)
+                                    {
+                                        case2_val=0;
+                                       }
+                                    else
+                                    {
+                                        case2_val=case2;
+                                     }
+                                    /////case 3
+                                    
+                                    if(case3==undefined)
+                                    {
+                                        case3_val=0;
+                                    }
+                                    else
+                                    {
+                                     case3_val=case3;
+                                   }
+                                
+                            $scope.total=(Number(case1_point)+Number(case2_point)+Number(case3_point)).toFixed(2);
+                                    if($scope.total=="NaN")
+                                    $scope.total=0;
+                                    
+                                    $scope.dataimport=$(
+                                        "<tr>"+
+                                        "<th>"+org+"</th>"+
+                                        "<th>"+specialist_name+"</th>"+
+                                        
+                                        "<th>"+case1_val+"</th>"+
+                                        "<th>"+case2_val+"</th>"+
+                                        "<th>"+case3_val+"</th>"+
+                                         
+                                        "</tr>"
+                                        
+                                )
+                                }
+                               
+                                
+                            }
+                            $("#showdata").append($scope.dataimport);
+                        }
+                
+                    }
+                    ////Anaesthetist- PBR monitoring(under CMO(Aggregated))
+if(program=="HTCqTWEF1XS" &&programname=='Anaesthetist - PBR monitoring(under CMO(Aggregated))')
+{
+  
+           for(var i=0;i<$scope.eventList.length;i++)
+           {
+
+            var eveid=$scope.eventList[i];
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                contentType: "application/json",
+                async:false,
+                url: "../../events/"+eveid+".json",
+                 success: function (data) {
+                     var teiid=data.trackedEntityInstance;
+
+                     $.ajax({
+                        type: "GET",
+                        dataType: "json",
+                        contentType: "application/json",
+                        async:false,
+                        url: "../../trackedEntityInstances/"+teiid+".json",
+                         success: function (datanew) {
+                            
+                            for(var jj=0;jj<datanew.attributes.length;jj++)
+                            {
+
+                                var val=datanew.attributes[jj].attribute;
+                                if(datanew.attributes[jj].attribute=="U0jQjrOkFjR")
+                                {
+                                    $scope.eventDeWiseValueMap[eveid+"-"+datanew.attributes[jj].attribute]=datanew.attributes[jj].value;
+                                }
+                            }
+        
+        
+                             
+                        }
+                    });
+
+                }
+            });
+           }
+
+
+           $scope.neweventval=[];
+           var case1=0,case2=0,case3=0;
+          
+
+           $scope.keyspresent=[];$scope.keyspresent_val=[];
+            for(var j in $scope.eventDeWiseValueMap)
+                {
+                    
+                    if(j.includes('U0jQjrOkFjR'))
+                    {
+                        $scope.keyspresent[j]=$scope.eventDeWiseValueMap[j];
+                        
+                    }
+
+                }
+
+                
+               
+                $scope.duplicateval=[]
+                    
+                $scope.key=Object.keys($scope.keyspresent);
+
+                var sortable = [];
+                for (var d in $scope.keyspresent) {
+                    sortable.push([d, $scope.keyspresent[d]]);
+                }
+                
+                $scope.keyspresent=sortable.sort(function(a,b) {
+                    return (a[1] > b[1]) ? 1 : ((b[1] > a[1]) ? -1 : 0);
+                } );
+                            for(var x =0;x<$scope.keyspresent.length;x++)
+                            { 
+                               //var h=$scope.keyspresent[x+1][1];
+                            if( (x+1)<$scope.keyspresent.length-1)
+                            {
+                                if($scope.keyspresent[x][1]==$scope.keyspresent[x+1][1] )
+                                {
+                                     $scope.duplicateval.push($scope.keyspresent[x][1]);
+                                     //hh= $scope.keyspresent.splice($scope.key[i+1],1);
+                                }
+                            }
+                               
+                            }
+
+
+                            var new_sortable=[];
+                            for(var x=0;x<$scope.keyspresent.length;x++)
+                            { 
+                                new_sortable[$scope.keyspresent[x][0]]=$scope.keyspresent[x][1];
+
+
+                            }
+                         
+                            $scope.keyspresent=new_sortable;
+                        
+                        $scope.duplicateval = $scope.duplicateval.filter( function( item, index, inputArray ) {
+                            return inputArray.indexOf(item) == index;
+                            });
+
+                         for(var i=0;i<$scope.duplicateval.length;)
+                             {
+                            for(var x in $scope.keyspresent)
+                            { 
+                               
+                            
+                               if($scope.keyspresent[x]==$scope.duplicateval[i])
+                                {
+                                    var val1=x.split('-');
+                                    $scope.neweventval.push(val1[0]);
+                                    //$scope.duplicateval.push($scope.keyspresent[$scope.key[i]]);
+                                     //hh= $scope.keyspresent.splice($scope.key[i+1],1);
+                                }
+                                
+                                
+                            }
+                            i++;
+                            $scope.neweventval = $scope.neweventval.filter( function( item, index, inputArray ) {
+                                return inputArray.indexOf(item) == index;
+                                });
+
+                                if($scope.neweventval.length!=0)
+                                {
+                                    $scope.FinalEnteredVal=getFinalvalue($scope.eventDeWiseValueMap,$scope.neweventval,$scope.programname); 
+
+
+                                    var orgUnitid=$scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'orgunitid']
+                                    for(var k=0;k<$scope.orgunit_CMO.length;k++){
+                                        if(orgUnitid==$scope.orgunit_CMO[k])
+                                        { 
+                                            var org=getheirarchy($scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'orgunitid']);
+
+                                            //var org=$scope.FinalEnteredVal["orgunit"];
+                                            var specialist_name=$scope.FinalEnteredVal["U0jQjrOkFjR"];
+                                            var case1=$scope.FinalEnteredVal["vhG2gN7KaEK"];
+                                            var case2=$scope.FinalEnteredVal["qbgFsR4VWxU"];
+                                            var case3=$scope.FinalEnteredVal["zfMOVN2lc1S"];
+                                            
+                                        var case1_load,case1_val,case1_point,
+                                                        case2_load,case2_val,case2_point,
+                                                            case3_Load,case3_val,case3_point;
+                    ///case 1
+                                            if(case1==undefined)
+                                            {
+                                                case1_load=0;
+                                                case1_val=0;
+                                                case1_point=0;
+                                                
+                                            }
+                                            else
+                                            {
+                                                if(case1>=6 && case1<=8)
+                                                {
+                                                    case1_load="6 to 8";
+                                                    case1_val=case1;
+                                                    case1_point="5";
+                                                }
+                                                else if(case1>=9 && case1<=11)
+                                                {
+                                                    case1_load="9 to 11";
+                                                    case1_val=case1;
+                                                    case1_point="7.5";
+                                                }
+                                                else if(case1>=12 && case1<=15)
+                                                {
+                                                    case1_load="12 to 15";
+                                                    case1_val=case1;
+                                                    case1_point="10";
+                                                }
+                                                else if( case1>=15)
+                                                {
+                                                    case1_load=">15";
+                                                    case1_val=case1;
+                                                    case1_point="15";
+                                                }
+                                                else{
+                                                    case1_load="0";
+                                                    case1_val=case1;
+                                                    case1_point="0";
+                                                }
+                                                
+                                            }
+                                            
+
+                    ///////////case 2
+                                            if(case2==undefined)
+                                            {
+                                                case2_load=0;
+                                                case2_val=0;
+                                                case2_point=0;
+                                            }
+                                            else
+                                            {
+                                            if(case2!=undefined)
+                                            {
+                                            if(case2>0 && case2<=2 )
+                                            {
+                                                case2_load="Up to 2";
+                                                case2_val=case2;
+                                                case2_point="5";
+                                            }
+                                            else if(case2>=3 && case2<=5)
+                                            {
+                                                case2_load="3 to 5";
+                                                case2_val=case2;
+                                                case2_point="7.5";
+                                            }
+                                            else if(case2>=6 && case2<=8)
+                                            {
+                                                case2_load="6 to 8";
+                                                case2_val=case2;
+                                                case2_point="10";
+                                            }
+                                            else if(case2>=8)
+                                            {
+                                                case2_load=">8";
+                                                case2_val=case2;
+                                                case2_point="15";
+                                            }
+                                            else
+                                            {
+                                                case2_load="0";
+                                                case2_val=case2;
+                                                case2_point="0";
+                                            }
+                                        }
+                                    }
+                                            /////case 3
+                                            
+                                            if(case3==undefined)
+                                            {
+                                                case3_Load=0;
+                                                case3_val=0;
+                                                case3_point=0;
+                                            }
+                                            else
+                                            {
+                                                if(case3!=undefined)
+                                            {
+                                            if(case3>0 && case3<=6 )
+                                            {
+                                                case3_Load="Upto 5";
+                                                case3_val=case3;
+                                                case3_point="2.5";
+                                            }
+                                            else if(case3>=6 && case3<=10)
+                                            {
+                                                case3_Load="6 to 10";
+                                                case3_val=case3;
+                                                case3_point="5";
+                                            }
+                                            else if(case3>=11 && case3<=15)
+                                            {
+                                                case3_Load="11 to 15";
+                                                case3_val=case3;
+                                                case3_point="7.5";
+                                            }
+                                            else if( case3>=15)
+                                            {
+                                                case3_Load=">15";
+                                                case3_val=case3;
+                                                case3_point="10";
+                                            }
+                                            else {
+                                                case3_Load="0";
+                                                case3_val=case3;
+                                                case3_point="0";
+                                            }
+                                        }
+                                    }
+                                        
+                                    $scope.total=(Number(case1_val)+Number(case2_val)+Number(case3_val)).toFixed(2);
+                                            if($scope.total=="NaN")
+                                            $scope.total=0;
+                                            
+                                            $scope.dataimport=$(
+                                                "<tr>"+
+                                                "<th>"+org+"</th>"+
+                                                "<th>"+specialist_name+"</th>"+
+                                                
+                                                "<th>"+case1_load+"</th>"+
+                                                "<th>"+case1_val+"</th>"+
+                                                "<th>"+case1_point+"</th>"+
+
+                                                "<th>"+case2_load+"</th>"+
+                                                "<th>"+case2_val+"</th>"+
+                                                "<th>"+case2_point+"</th>"+
+
+                                                "<th>"+case3_Load+"</th>"+
+                                                "<th>"+case3_val+"</th>"+
+                                                "<th>"+case3_point+"</th>"+
+                                                
+                                                "<th>"+$scope.total+"</th>"+
+                                                
+                                                
+                                                "</tr>"
+                                                
+                                        )
+                                    
+                                   
+                                $("#showdata").append($scope.dataimport);
+                                } }}
+                               
+                                $scope.neweventval=[];
+                }
+
+                      
+                $scope.duplicateval = $scope.duplicateval.filter( function( item, index, inputArray ) {
+                    return inputArray.indexOf(item) == index;
+                    });
+
+
+                $scope.final_keyspresent=[]
+                        for(var k in $scope.keyspresent)
+                        {
+                            $scope.keyspresent_val.push($scope.keyspresent[k]);
+                        }
+                        $scope.keyspresent_val = $scope.keyspresent_val.sort();
+                
+                        var hhhh=[];
+                        
+                            for(var k=0;k<$scope.duplicateval.length;k++)
+                            {
+                                for(var jj=$scope.keyspresent_val.length-1;jj>=0;jj--)
+                                {
+                                    if($scope.duplicateval[k]==$scope.keyspresent_val[jj])
+                                    {
+                                        $scope.keyspresent_val.splice(jj,1);
+                                    
+                                    }
+                                    
+                            }
+                            
+                        }
+
+
+                        $scope.final_singleval=[]
+                        for(var x in $scope.keyspresent)
+                                { 
+                                    for(var y=0;y<$scope.keyspresent_val.length;y++)
+                                    {
+                                        if($scope.keyspresent_val[y]==$scope.keyspresent[x])
+                                        {
+                                            var val=x.split('-');
+                                            $scope.final_singleval.push(val[0]);
+                                        }
+                                    }
+
+                                }
+
+
+
+
+
+                                $scope.eventDeWiseValueMap_final=[]
+                                 
+                                    for(var y=0;y<$scope.final_singleval.length;y++)
+                                    {
+                                        for(var x in $scope.eventDeWiseValueMap)
+                                    {
+                                        
+                                        var v=x.includes($scope.final_singleval[y]);
+                                        if(v)
+                                        {
+                                            $scope.eventDeWiseValueMap_final[x]=$scope.eventDeWiseValueMap[x];
+                                        }
+
+                                }
+                            }
+                                    
+
+
+
+                            for(var i=0;i<$scope.final_singleval.length;i++)
+                            {
+
+                            
+                            for(var j in $scope.eventDeWiseValueMap_final)
+                            {
+                               
+                                var new_uid=j.split('-');
+                                
+                                if($scope.final_singleval[i]==new_uid[0])
+                                {
+                                    var orgUnitid=$scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'orgunitid']
+                                    for(var k=0;k<$scope.orgunit_CMO.length;k++){
+                                        if(orgUnitid==$scope.orgunit_CMO[k])
+                                        {
+                                    var org=getheirarchy($scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'orgunitid']);
+                                    //var org=$scope.eventDeWiseValueMap_final[$scope.final_singleval[i]+'-'+'orgUnit'];
+                                    var specialist_name=$scope.eventDeWiseValueMap_final[$scope.final_singleval[i]+'-'+'U0jQjrOkFjR'];
+                                    
+                                    var case1=$scope.eventDeWiseValueMap_final[$scope.final_singleval[i]+'-'+'vhG2gN7KaEK'];
+                                    var case2=$scope.eventDeWiseValueMap_final[$scope.final_singleval[i]+'-'+'qbgFsR4VWxU'];
+                                    var case3=$scope.eventDeWiseValueMap_final[$scope.final_singleval[i]+'-'+'zfMOVN2lc1S'];
+                                     
                                 var case1_load,case1_val,case1_point,
                                                 case2_load,case2_val,case2_point,
                                                     case3_Load,case3_val,case3_point;
-            ///case 1
+                                    ///case 1
                                     if(case1==undefined)
                                     {
                                         case1_load=0;
@@ -1010,7 +1405,7 @@ if(program=="HTCqTWEF1XS" &&programname=='Anaesthetist- PBR monitoring(Aggregate
                                             case1_val=case1;
                                             case1_point="15";
                                         }
-                                        else {
+                                        else{
                                             case1_load="0";
                                             case1_val=case1;
                                             case1_point="0";
@@ -1019,7 +1414,7 @@ if(program=="HTCqTWEF1XS" &&programname=='Anaesthetist- PBR monitoring(Aggregate
                                     }
                                     
 
-            ///////////case 2
+                            ///////////case 2
                                     if(case2==undefined)
                                     {
                                         case2_load=0;
@@ -1048,7 +1443,581 @@ if(program=="HTCqTWEF1XS" &&programname=='Anaesthetist- PBR monitoring(Aggregate
                                         case2_val=case2;
                                         case2_point="10";
                                     }
+                                    else if(case2>=8)
+                                    {
+                                        case2_load=">8";
+                                        case2_val=case2;
+                                        case2_point="15";
+                                    }
+                                    else
+                                    {
+                                        case2_load="0";
+                                        case2_val=case2;
+                                        case2_point="0";
+                                    }
+                                }
+                            }
+                                    /////case 3
+                                    
+                                    if(case3==undefined)
+                                    {
+                                        case3_Load=0;
+                                        case3_val=0;
+                                        case3_point=0;
+                                    }
+                                    else
+                                    {
+                                        if(case3!=undefined)
+                                    {
+                                    if(case3>0 && case3<=6 )
+                                    {
+                                        case3_Load="Upto 5";
+                                        case3_val=case3;
+                                        case3_point="2.5";
+                                    }
+                                    else if(case3>=6 && case3<=10)
+                                    {
+                                        case3_Load="6 to 10";
+                                        case3_val=case3;
+                                        case3_point="5";
+                                    }
+                                    else if(case3>=11 && case3<=15)
+                                    {
+                                        case3_Load="11 to 15";
+                                        case3_val=case3;
+                                        case3_point="7.5";
+                                    }
+                                    else if( case3>=15)
+                                    {
+                                        case3_Load=">15";
+                                        case3_val=case3;
+                                        case3_point="10";
+                                    }
                                     else {
+                                        case3_Load="0";
+                                        case3_val=case3;
+                                        case3_point="0";
+                                    }
+                                }
+                            }
+                                
+                            $scope.total=(Number(case1_val)+Number(case2_val)+Number(case3_val)).toFixed(2);
+                                    if($scope.total=="NaN")
+                                    $scope.total=0;
+                                    
+                                    $scope.dataimport=$(
+                                        "<tr>"+
+                                        "<th>"+org+"</th>"+
+                                        "<th>"+specialist_name+"</th>"+
+                                        
+                                        "<th>"+case1_load+"</th>"+
+                                        "<th>"+case1_val+"</th>"+
+                                        "<th>"+case1_point+"</th>"+
+
+                                        "<th>"+case2_load+"</th>"+
+                                        "<th>"+case2_val+"</th>"+
+                                        "<th>"+case2_point+"</th>"+
+
+                                        "<th>"+case3_Load+"</th>"+
+                                        "<th>"+case3_val+"</th>"+
+                                        "<th>"+case3_point+"</th>"+
+                                        
+                                        "<th>"+$scope.total+"</th>"+
+                                        
+                                        
+                                        "</tr>"
+                                        
+                                )
+                               
+                            $("#showdata").append($scope.dataimport);
+                        } }
+                               
+                    }}
+                    }
+                
+                    }
+                    ////Anaesthetist- PBR monitoring(under CMS(Aggregated))
+if(program=="HTCqTWEF1XS" &&programname=='Anaesthetist - PBR monitoring(under CMS(Aggregated))')
+{
+    
+           for(var i=0;i<$scope.eventList.length;i++)
+           {
+
+            var eveid=$scope.eventList[i];
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                contentType: "application/json",
+                async:false,
+                url: "../../events/"+eveid+".json",
+                 success: function (data) {
+                     var teiid=data.trackedEntityInstance;
+
+                     $.ajax({
+                        type: "GET",
+                        dataType: "json",
+                        contentType: "application/json",
+                        async:false,
+                        url: "../../trackedEntityInstances/"+teiid+".json",
+                         success: function (datanew) {
+                            
+                            for(var jj=0;jj<datanew.attributes.length;jj++)
+                            {
+
+                                var val=datanew.attributes[jj].attribute;
+                                if(datanew.attributes[jj].attribute=="U0jQjrOkFjR")
+                                {
+                                    $scope.eventDeWiseValueMap[eveid+"-"+datanew.attributes[jj].attribute]=datanew.attributes[jj].value;
+                                }
+                            }
+        
+        
+                             
+                        }
+                    });
+
+                }
+            });
+           }
+
+
+           $scope.neweventval=[];
+           var case1=0,case2=0,case3=0;
+          
+
+           $scope.keyspresent=[];$scope.keyspresent_val=[];
+            for(var j in $scope.eventDeWiseValueMap)
+                {
+                    
+                    if(j.includes('U0jQjrOkFjR'))
+                    {
+                        $scope.keyspresent[j]=$scope.eventDeWiseValueMap[j];
+                        
+                    }
+
+                }
+
+                
+               
+                $scope.duplicateval=[]
+                    
+                $scope.key=Object.keys($scope.keyspresent);
+
+                var sortable = [];
+                for (var d in $scope.keyspresent) {
+                    sortable.push([d, $scope.keyspresent[d]]);
+                }
+                
+                $scope.keyspresent=sortable.sort(function(a,b) {
+                    return (a[1] > b[1]) ? 1 : ((b[1] > a[1]) ? -1 : 0);
+                } );
+                            for(var x =0;x<$scope.keyspresent.length;x++)
+                            { 
+                               //var h=$scope.keyspresent[x+1][1];
+                            if( (x+1)<$scope.keyspresent.length-1)
+                            {
+                                if($scope.keyspresent[x][1]==$scope.keyspresent[x+1][1] )
+                                {
+                                     $scope.duplicateval.push($scope.keyspresent[x][1]);
+                                     //hh= $scope.keyspresent.splice($scope.key[i+1],1);
+                                }
+                            }
+                               
+                            }
+
+
+                            var new_sortable=[];
+                            for(var x=0;x<$scope.keyspresent.length;x++)
+                            { 
+                                new_sortable[$scope.keyspresent[x][0]]=$scope.keyspresent[x][1];
+
+
+                            }
+                         
+                            $scope.keyspresent=new_sortable;
+                        
+                        $scope.duplicateval = $scope.duplicateval.filter( function( item, index, inputArray ) {
+                            return inputArray.indexOf(item) == index;
+                            });
+
+                         for(var i=0;i<$scope.duplicateval.length;)
+                             {
+                            for(var x in $scope.keyspresent)
+                            { 
+                               
+                            
+                               if($scope.keyspresent[x]==$scope.duplicateval[i])
+                                {
+                                    var val1=x.split('-');
+                                    $scope.neweventval.push(val1[0]);
+                                    //$scope.duplicateval.push($scope.keyspresent[$scope.key[i]]);
+                                     //hh= $scope.keyspresent.splice($scope.key[i+1],1);
+                                }
+                                
+                                
+                            }
+                            i++;
+                            $scope.neweventval = $scope.neweventval.filter( function( item, index, inputArray ) {
+                                return inputArray.indexOf(item) == index;
+                                });
+
+                                if($scope.neweventval.length!=0)
+                                {
+                                    $scope.FinalEnteredVal=getFinalvalue($scope.eventDeWiseValueMap,$scope.neweventval,$scope.programname); 
+
+                                    var orgUnitid=$scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'orgunitid']
+                                    for(var k=0;k<$scope.orgunit_CMS.length;k++){
+                                        if(orgUnitid==$scope.orgunit_CMS[k])
+                                        {
+                                            var org=getheirarchy($scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'orgunitid']);
+
+                                            //var org=$scope.FinalEnteredVal["orgunit"];
+                                            var specialist_name=$scope.FinalEnteredVal["U0jQjrOkFjR"];
+                                            var case1=Number($scope.FinalEnteredVal["vhG2gN7KaEK"]);
+                                            var case2=Number($scope.FinalEnteredVal["qbgFsR4VWxU"]);
+                                            var case3=Number($scope.FinalEnteredVal["zfMOVN2lc1S"]);
+                                            
+                                        var case1_load,case1_val,case1_point,
+                                                        case2_load,case2_val,case2_point,
+                                                            case3_Load,case3_val,case3_point;
+                    ///case 1
+                                            if(case1==undefined)
+                                            {
+                                                case1_load=0;
+                                                case1_val=0;
+                                                case1_point=0;
+                                                
+                                            }
+                                            else
+                                            {
+                                                if(case1>=6 && case1<=10)
+                                                {
+                                                    case1_load="6 to 10";
+                                                    case1_val=case1;
+                                                    case1_point="5";
+                                                }
+                                                else if(case1>=11 && case1<=15)
+                                                {
+                                                    case1_load="11 to 15";
+                                                    case1_val=case1;
+                                                    case1_point="7.5";
+                                                }
+                                                else if(case1>=16 && case1<=20)
+                                                {
+                                                    case1_load="16 to 20";
+                                                    case1_val=case1;
+                                                    case1_point="10";
+                                                }
+                                                else if( case1>20)
+                                                {
+                                                    case1_load=">20";
+                                                    case1_val=case1;
+                                                    case1_point="15";
+                                                }
+                                                else{
+                                                    case1_load="0";
+                                                    case1_val=case1;
+                                                    case1_point="0";
+                                                }
+                                                
+                                            }
+                                            
+
+                    ///////////case 2
+                                            if(case2==undefined)
+                                            {
+                                                case2_load=0;
+                                                case2_val=0;
+                                                case2_point=0;
+                                            }
+                                            else
+                                            {
+                                            if(case2!=undefined)
+                                            {
+                                            if(case2>=3 && case2<=6 )
+                                            {
+                                                case2_load="3 to 6";
+                                                case2_val=case2;
+                                                case2_point="5";
+                                            }
+                                            else if(case2>=7 && case2<=10)
+                                            {
+                                                case2_load="7 to 10";
+                                                case2_val=case2;
+                                                case2_point="7.5";
+                                            }
+                                            else if(case2>=11 && case2<=15)
+                                            {
+                                                case2_load="11 to 15";
+                                                case2_val=case2;
+                                                case2_point="10";
+                                            }
+                                            else if(case2>15)
+                                            {
+                                                case2_load=">15";
+                                                case2_val=case2;
+                                                case2_point="15";
+                                            }
+                                            else
+                                            {
+                                                case2_load="0";
+                                                case2_val=case2;
+                                                case2_point="0";
+                                            }
+                                        }
+                                    }
+                                            /////case 3
+                                            
+                                            if(case3==undefined)
+                                            {
+                                                case3_Load=0;
+                                                case3_val=0;
+                                                case3_point=0;
+                                            }
+                                            else
+                                            {
+                                                if(case3!=undefined)
+                                            {
+                                            if( case3<=5 )
+                                            {
+                                                case3_Load="Upto 5";
+                                                case3_val=case3;
+                                                case3_point="2.5";
+                                            }
+                                            else if(case3>=6 && case3<=10)
+                                            {
+                                                case3_Load="6 to 10";
+                                                case3_val=case3;
+                                                case3_point="5";
+                                            }
+                                            else if(case3>=11 && case3<=15)
+                                            {
+                                                case3_Load="11 to 15";
+                                                case3_val=case3;
+                                                case3_point="7.5";
+                                            }
+                                            else if( case3>=15)
+                                            {
+                                                case3_Load=">15";
+                                                case3_val=case3;
+                                                case3_point="10";
+                                            }
+                                            else {
+                                                case3_Load="0";
+                                                case3_val=case3;
+                                                case3_point="0";
+                                            }
+                                        }
+                                    }
+                                        
+                                    $scope.total=(Number(case1_val)+Number(case2_val)+Number(case3_val)).toFixed(2);
+                                            if($scope.total=="NaN")
+                                            $scope.total=0;
+                                            
+                                            $scope.dataimport=$(
+                                                "<tr>"+
+                                                "<th>"+org+"</th>"+
+                                                "<th>"+specialist_name+"</th>"+
+                                                
+                                                "<th>"+case1_load+"</th>"+
+                                                "<th>"+case1_val+"</th>"+
+                                                "<th>"+case1_point+"</th>"+
+
+                                                "<th>"+case2_load+"</th>"+
+                                                "<th>"+case2_val+"</th>"+
+                                                "<th>"+case2_point+"</th>"+
+
+                                                "<th>"+case3_Load+"</th>"+
+                                                "<th>"+case3_val+"</th>"+
+                                                "<th>"+case3_point+"</th>"+
+                                                
+                                                "<th>"+$scope.total+"</th>"+
+                                                
+                                                
+                                                "</tr>"
+                                                
+                                        )
+                                    
+                                    }}
+                                $("#showdata").append($scope.dataimport);
+                                } 
+                               
+                                $scope.neweventval=[];
+                }
+
+                      
+                $scope.duplicateval = $scope.duplicateval.filter( function( item, index, inputArray ) {
+                    return inputArray.indexOf(item) == index;
+                    });
+
+
+                $scope.final_keyspresent=[]
+                        for(var k in $scope.keyspresent)
+                        {
+                            $scope.keyspresent_val.push($scope.keyspresent[k]);
+                        }
+                        $scope.keyspresent_val = $scope.keyspresent_val.sort();
+                
+                        var hhhh=[];
+                        
+                            for(var k=0;k<$scope.duplicateval.length;k++)
+                            {
+                                for(var jj=$scope.keyspresent_val.length-1;jj>=0;jj--)
+                                {
+                                    if($scope.duplicateval[k]==$scope.keyspresent_val[jj])
+                                    {
+                                        $scope.keyspresent_val.splice(jj,1);
+                                    
+                                    }
+                                    
+                            }
+                            
+                        }
+
+
+                        $scope.final_singleval=[]
+                        for(var x in $scope.keyspresent)
+                                { 
+                                    for(var y=0;y<$scope.keyspresent_val.length;y++)
+                                    {
+                                        if($scope.keyspresent_val[y]==$scope.keyspresent[x])
+                                        {
+                                            var val=x.split('-');
+                                            $scope.final_singleval.push(val[0]);
+                                        }
+                                    }
+
+                                }
+
+
+
+
+
+                                $scope.eventDeWiseValueMap_final=[]
+                                 
+                                    for(var y=0;y<$scope.final_singleval.length;y++)
+                                    {
+                                        for(var x in $scope.eventDeWiseValueMap)
+                                    {
+                                        
+                                        var v=x.includes($scope.final_singleval[y]);
+                                        if(v)
+                                        {
+                                            $scope.eventDeWiseValueMap_final[x]=$scope.eventDeWiseValueMap[x];
+                                        }
+
+                                }
+                            }
+                                    
+
+
+
+                            for(var i=0;i<$scope.final_singleval.length;i++)
+                            {
+
+                            
+                            for(var j in $scope.eventDeWiseValueMap_final)
+                            {
+                               
+                                var new_uid=j.split('-');
+                                
+                                if($scope.final_singleval[i]==new_uid[0])
+                                {
+                                    var orgUnitid=$scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'orgunitid']
+                                    for(var k=0;k<$scope.orgunit_CMS.length;k++){
+                                        if(orgUnitid==$scope.orgunit_CMS[k])
+                                        {
+                                    var org=getheirarchy($scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'orgunitid']);
+                                    //var org=$scope.eventDeWiseValueMap_final[$scope.final_singleval[i]+'-'+'orgUnit'];
+                                    var specialist_name=$scope.eventDeWiseValueMap_final[$scope.final_singleval[i]+'-'+'U0jQjrOkFjR'];
+                                    
+                                    var case1=Number($scope.eventDeWiseValueMap_final[$scope.final_singleval[i]+'-'+'vhG2gN7KaEK']);
+                                    var case2=Number($scope.eventDeWiseValueMap_final[$scope.final_singleval[i]+'-'+'qbgFsR4VWxU']);
+                                    var case3=Number($scope.eventDeWiseValueMap_final[$scope.final_singleval[i]+'-'+'zfMOVN2lc1S']);
+                                     
+                                var case1_load,case1_val,case1_point,
+                                                case2_load,case2_val,case2_point,
+                                                    case3_Load,case3_val,case3_point;
+                                   
+                                   if(case1==undefined)
+                                    {
+                                        case1_load=0;
+                                        case1_val=0;
+                                        case1_point=0;
+                                        
+                                    }
+                                    else
+                                    {
+                                        if(case1>=6 && case1<=10)
+                                        {
+                                            case1_load="6 to 10";
+                                            case1_val=case1;
+                                            case1_point="5";
+                                        }
+                                        else if(case1>=11 && case1<=15)
+                                        {
+                                            case1_load="11 to 15";
+                                            case1_val=case1;
+                                            case1_point="7.5";
+                                        }
+                                        else if(case1>=16 && case1<=20)
+                                        {
+                                            case1_load="16 to 20";
+                                            case1_val=case1;
+                                            case1_point="10";
+                                        }
+                                        else if( case1>20)
+                                        {
+                                            case1_load=">20";
+                                            case1_val=case1;
+                                            case1_point="15";
+                                        }
+                                        else{
+                                            case1_load="0";
+                                            case1_val=case1;
+                                            case1_point="0";
+                                        }
+                                        
+                                    }
+                                    
+
+            ///////////case 2
+                                    if(case2==undefined)
+                                    {
+                                        case2_load=0;
+                                        case2_val=0;
+                                        case2_point=0;
+                                    }
+                                    else
+                                    {
+                                    if(case2!=undefined)
+                                    {
+                                    if(case2>=3 && case2<=6 )
+                                    {
+                                        case2_load="3 to 6";
+                                        case2_val=case2;
+                                        case2_point="5";
+                                    }
+                                    else if(case2>=7 && case2<=10)
+                                    {
+                                        case2_load="7 to 10";
+                                        case2_val=case2;
+                                        case2_point="7.5";
+                                    }
+                                    else if(case2>=11 && case2<=15)
+                                    {
+                                        case2_load="11 to 15";
+                                        case2_val=case2;
+                                        case2_point="10";
+                                    }
+                                    else if(case2>15)
+                                    {
+                                        case2_load=">15";
+                                        case2_val=case2;
+                                        case2_point="15";
+                                    }
+                                    else
+                                    {
                                         case2_load="0";
                                         case2_val=case2;
                                         case2_point="0";
@@ -1091,7 +2060,6 @@ if(program=="HTCqTWEF1XS" &&programname=='Anaesthetist- PBR monitoring(Aggregate
                                         case3_val=case3;
                                         case3_point="10";
                                     }
-                                    
                                     else {
                                         case3_Load="0";
                                         case3_val=case3;
@@ -1100,7 +2068,7 @@ if(program=="HTCqTWEF1XS" &&programname=='Anaesthetist- PBR monitoring(Aggregate
                                 }
                             }
                                 
-                            $scope.total=(Number(case1_point)+Number(case2_point)+Number(case3_point)).toFixed(2);
+                            $scope.total=(Number(case1_val)+Number(case2_val)+Number(case3_val)).toFixed(2);
                                     if($scope.total=="NaN")
                                     $scope.total=0;
                                     
@@ -1127,13 +2095,13 @@ if(program=="HTCqTWEF1XS" &&programname=='Anaesthetist- PBR monitoring(Aggregate
                                         "</tr>"
                                         
                                 )
-                                }
-                               
-                                
-                            }
+                            }}
                             $("#showdata").append($scope.dataimport);
                         }
-                
+                    }
+                               
+              
+                }
                     }
 ////Anaesthetist - PBR monitoring
 if(program=="HTCqTWEF1XS" && programname=='Anaesthetist - PBR monitoring')
@@ -1196,135 +2164,31 @@ if(program=="HTCqTWEF1XS" && programname=='Anaesthetist - PBR monitoring')
                         var case2=$scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'qbgFsR4VWxU'];
                         var case3=$scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'zfMOVN2lc1S'];
                         
-                       var case1_load,case1_val,case1_point,
-                                    case2_load,case2_val,case2_point,
-                                         case3_Load,case3_val,case3_point;
+                       var case1_val,case2_val,case3_val;
 ///case 1
                          if(case1==undefined)
-                         {
-                            case1_load=0;
-                            case1_val=0;
-                            case1_point=0;
-                            
-                         }
-                         else
-                         {
-                            if(case1>=6 && case1<=8)
-                            {
-                                case1_load="6 to 8";
+                         case1_val=0;
+                             else
                                 case1_val=case1;
-                                case1_point="5";
-                            }
-                             else if(case1>=9 && case1<=11)
-                            {
-                                case1_load="9 to 11";
-                                case1_val=case1;
-                                case1_point="7.5";
-                            }
-                            else if(case1>=12 && case1<=15)
-                            {
-                                case1_load="12 to 15";
-                                case1_val=case1;
-                                case1_point="10";
-                            }
-                            else if( case1>=15)
-                            {
-                                case1_load=">15";
-                                case1_val=case1;
-                                case1_point="15";
-                            }
-                            else 
-                            {
-                                case1_load="0";
-                                case1_val=case1;
-                                case1_point="0";
-                            }
-                            
-                         }
+                          
                         
 
 ///////////case 2
                         if(case2==undefined)
-                        {
-                            case2_load=0;
-                            case2_val=0;
-                            case2_point=0;
-                        }
+                         case2_val=0;
                         else
-                        {
-                        if(case2!=undefined)
-                        {
-                        if(case2>0 && case2<=2 )
-                        {
-                            case2_load="Up to 2";
-                            case2_val=case2;
-                            case2_point="5";
-                        }
-                        else if(case2>=3 && case2<=5)
-                        {
-                            case2_load="3 to 5";
-                            case2_val=case2;
-                            case2_point="7.5";
-                        }
-                        else if(case2>=6 && case2<=8)
-                        {
-                            case2_load="6 to 8";
-                            case2_val=case2;
-                            case2_point="10";
-                        }
-                        else
-                        {
-                            case2_load="0";
-                            case2_val=case2;
-                            case2_point="0";
-                        }
-                    }
-                }
+                        case2_val=case2;
+                        
                         /////case 3
                         
                         if(case3==undefined)
-                        {
-                            case3_Load=0;
-                            case3_val=0;
-                            case3_point=0;
-                        }
-                        else
-                        {
-                            if(case3!=undefined)
-                         {
-                        if(case3>0 && case3<=6 )
-                        {
-                            case3_Load="Upto 5";
-                            case3_val=case3;
-                            case3_point="2.5";
-                        }
-                        else if(case3>=6 && case3<=10)
-                        {
-                            case3_Load="6 to 10";
-                            case3_val=case3;
-                            case3_point="5";
-                        }
-                        else if(case3>=11 && case1<=15)
-                        {
-                            case3_Load="11 to 15";
-                            case3_val=case3;
-                            case3_point="7.5";
-                        }
-                        else if( case3>=15)
-                        {
-                            case3_Load=">15";
-                            case3_val=case3;
-                            case3_point="10";
-                        }
-                       else 
-                        {
-                            case3_Load="0";
-                            case3_val=case3;
-                            case3_point="0";
-                        }
-                    }
-                }
-                       var tt=Number(case2_point),ttt=Number(case2_point),ttttt=tt+ttt;
+                          case3_val=0;
+                         else
+                         case3_val=case3;
+
+
+
+                   var tt=Number(case2_point),ttt=Number(case2_point),ttttt=tt+ttt;
                        
                 $scope.total=(Number(case1_point)+Number(case2_point)+Number(case3_point)).toFixed(2);
                         if($scope.total=="NaN")
@@ -1336,21 +2200,12 @@ if(program=="HTCqTWEF1XS" && programname=='Anaesthetist - PBR monitoring')
                                "<th>"+org+"</th>"+
                                "<th>"+$scope.specialist_name+"</th>"+
                                
-                               "<th>"+case1_load+"</th>"+
-                               "<th>"+case1_val+"</th>"+
-                               "<th>"+case1_point+"</th>"+
-
-                               "<th>"+case2_load+"</th>"+
+                              "<th>"+case1_val+"</th>"+
+                               
                                "<th>"+case2_val+"</th>"+
-                               "<th>"+case2_point+"</th>"+
-
-                               "<th>"+case3_Load+"</th>"+
+                               
                                "<th>"+case3_val+"</th>"+
-                               "<th>"+case3_point+"</th>"+
-                               
-                               "<th>"+$scope.total+"</th>"+
-                               
-                               
+                                  
                             "</tr>"
                             
                        )
@@ -1365,9 +2220,270 @@ if(program=="HTCqTWEF1XS" && programname=='Anaesthetist - PBR monitoring')
            }
         }
         
+////Anaesthetist - PBR monitoring(under CMO)
+if(program=="HTCqTWEF1XS" &&programname=='Anaesthetist - PBR monitoring(under CMO)')
+{
+    
+           for(var i=0;i<$scope.eventList.length;i++)
+           {
 
+            var eveid=$scope.eventList[i];
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                contentType: "application/json",
+                async:false,
+                url: "../../events/"+eveid+".json",
+                 success: function (data) {
+                     var teiid=data.trackedEntityInstance;
+
+                     $.ajax({
+                        type: "GET",
+                        dataType: "json",
+                        contentType: "application/json",
+                        async:false,
+                        url: "../../trackedEntityInstances/"+teiid+".json",
+                         success: function (datanew) {
+                            
+                            for(var jj=0;jj<datanew.attributes.length;jj++)
+                            {
+
+                                var val=datanew.attributes[jj].attribute;
+                                if(datanew.attributes[jj].attribute=="U0jQjrOkFjR")
+                                {
+                                    $scope.specialist_name=datanew.attributes[jj].value;
+                                }
+                            }
+        
+        
+                             
+                        }
+                    });
+
+                }
+            });
+            
+            if($scope.specialist_name==undefined)
+            {
+                $scope.specialist_name="";
+
+            }
+                for(var j in $scope.eventDeWiseValueMap)
+                {
+                   
+                    var new_uid=j.split('-');
+                    
+                    if($scope.eventList[i]==new_uid[0])
+                    {
+                        var orgUnitid=$scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'orgunitid']
+                        for(var k=0;k<$scope.orgunit_CMO.length;k++){
+                            if(orgUnitid==$scope.orgunit_CMO[k])
+                            {
+                                
+                        var org=getheirarchy($scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'orgunitid']);
+                        var event_date=$scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'eventDate'];
+                        var case1=$scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'vhG2gN7KaEK'];
+                        var case2=$scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'qbgFsR4VWxU'];
+                        var case3=$scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'zfMOVN2lc1S'];
+                        
+                       var case1_val,case2_val,case3_val;
+///case 1
+                         if(case1==undefined)
+                         {
+                            case1_val=0;
+                           }
+                         else
+                         {
+                               case1_val=case1;
+                            }
+                        
+
+///////////case 2
+                        if(case2==undefined)
+                        {
+                            case2_val=0;
+                        }
+                        else{
+                             case2_val=case2;
+                        }
+                        /////case 3
+                        
+                        if(case3==undefined)
+                        {
+                             case3_val=0;
+                        }
+                        else
+                        {
+                          case3_val=case3;
+                       
+                }
+                       var tt=Number(case2_point),ttt=Number(case2_point),ttttt=tt+ttt;
+                       
+                $scope.total=(Number(case1_point)+Number(case2_point)+Number(case3_point)).toFixed(2);
+                        if($scope.total=="NaN")
+                        $scope.total=0;
+                        
+                        $scope.dataimport=$(
+                            "<tr>"+
+                               "<th>"+event_date+"</th>"+
+                               "<th>"+org+"</th>"+
+                               "<th>"+$scope.specialist_name+"</th>"+
+                               
+                                "<th>"+case1_val+"</th>"+
+                             
+                               "<th>"+case2_val+"</th>"+
+                             
+                               "<th>"+case3_val+"</th>"+
+                               
+                               
+                            "</tr>"
+                            
+                       )
+                    }
+                }
+            }
+                    
+                }
+                       $("#showdata").append($scope.dataimport);
+                
+                   
+               }
+
+        }
+        ////Anaesthetist - PBR monitoring(under CMS)
+if(program=="HTCqTWEF1XS" && programname=='Anaesthetist - PBR monitoring(under CMS)')
+{
+    $("#showdata").empty();
+           for(var i=0;i<$scope.eventList.length;i++)
+           {
+
+            var eveid=$scope.eventList[i];
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                contentType: "application/json",
+                async:false,
+                url: "../../events/"+eveid+".json",
+                 success: function (data) {
+                     var teiid=data.trackedEntityInstance;
+
+                     $.ajax({
+                        type: "GET",
+                        dataType: "json",
+                        contentType: "application/json",
+                        async:false,
+                        url: "../../trackedEntityInstances/"+teiid+".json",
+                         success: function (datanew) {
+                            
+                            for(var jj=0;jj<datanew.attributes.length;jj++)
+                            {
+
+                                var val=datanew.attributes[jj].attribute;
+                                if(datanew.attributes[jj].attribute=="U0jQjrOkFjR")
+                                {
+                                    $scope.specialist_name=datanew.attributes[jj].value;
+                                }
+                            }
+        
+        
+                             
+                        }
+                    });
+
+                }
+            });
+
+            if($scope.specialist_name==undefined)
+            {
+                $scope.specialist_name="";
+
+            }
+                for(var j in $scope.eventDeWiseValueMap)
+                {
+                   
+                    var new_uid=j.split('-');
+                    
+                    if($scope.eventList[i]==new_uid[0])
+                    {
+                        var orgUnitid=$scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'orgunitid']
+                        for(var k=0;k<$scope.orgunit_CMS.length;k++){
+                            if(orgUnitid==$scope.orgunit_CMS[k])
+                            {
+                        var org=getheirarchy($scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'orgunitid']);
+                        var event_date=$scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'eventDate'];
+                        var case1=$scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'vhG2gN7KaEK'];
+                        var case2=$scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'qbgFsR4VWxU'];
+                        var case3=$scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'zfMOVN2lc1S'];
+                        
+                       var case1_load,case1_val,case1_point,
+                                    case2_load,case2_val,case2_point,
+                                         case3_Load,case3_val,case3_point;
+///case 1
+                         if(case1==undefined)
+                         {
+                           case1_val=0;
+                           }
+                         else
+                         {
+                               case1_val=case1;
+                            }
+                        
+
+///////////case 2
+                        if(case2==undefined)
+                        {
+                             case2_val=0;
+                        }
+                        else
+                        {
+                         case2_val=case2;
+                       }
+                        /////case 3
+                        
+                        if(case3==undefined)
+                        {
+                            case3_val=0;
+                        }
+                        else
+                        {
+                           case3_val=case3;
+                      }
+                       var tt=Number(case2_point),ttt=Number(case2_point),ttttt=tt+ttt;
+                       
+                $scope.total=(Number(case1_point)+Number(case2_point)+Number(case3_point)).toFixed(2);
+                        if($scope.total=="NaN")
+                        $scope.total=0;
+                        
+                        $scope.dataimport=$(
+                            "<tr>"+
+                               "<th>"+event_date+"</th>"+
+                               "<th>"+org+"</th>"+
+                               "<th>"+$scope.specialist_name+"</th>"+
+                               "<th>"+case1_val+"</th>"+
+                             
+                                "<th>"+case2_val+"</th>"+
+                             
+                               "<th>"+case3_val+"</th>"+
+                              
+                               
+                            "</tr>"
+                            
+                       )
+
+                    }}
+                      
+               
+                    }
+                   
+            
+                }
+                $("#showdata").append($scope.dataimport);
+                
+            
+           }
+        }
 //////Gynaecologist - PBR monitoring(Aggregated)
-if(program=="K3XysZ53B4r"    && programname=="Gynaecologist- PBR monitoring(Aggregated)")
+if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Aggregated)")
 {
     
            for(var i=0;i<$scope.eventList.length;i++)
@@ -1504,219 +2620,60 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist- PBR monitoring(Aggr
                                    var case3=$scope.FinalEnteredVal["eryy31EUorR"];
                                    var case4=$scope.FinalEnteredVal["cqw0HGZQzhD"];
                                    
-                                  var case1_load,case1_val,case1_point,
-                                               case2_load,case2_val,case2_point,
-                                                    case3_Load,case3_val,case3_point
-                                                           case4_Load,case4_val,case4_point;
+                                  var case1_val,case2_val,case3_val,case4_val;
            ///case 1
                                     if(case1==undefined)
                                     {
-                                       case1_load=0;
                                        case1_val=0;
-                                       case1_point=0;
-                                       
-                                    }
+                                     }
                                     else
                                     {
-                                        
-                                       if(case1>=4 && case1<=6)
-                                       {
-                                           case1_load="4 to 6";
-                                           case1_val=case1;
-                                           case1_point="2.5";
-                                       }
-                                       else if(case1>=7 && case1<=9)
-                                       {
-                                           case1_load="7 to 9";
-                                           case1_val=case1;
-                                           case1_point="5";
-                                       }
-                                       else if(case1>=10 && case1<=12)
-                                       {
-                                           case1_load="10 to 12";
-                                           case1_val=case1;
-                                           case1_point="7.5";
-                                       }
-                                       else if( case1>=12)
-                                       {
-                                           case1_load=">12";
-                                           case1_val=case1;
-                                           case1_point="15";
-                                       }
-                                       else
-                                       {
-                                           case1_load="0";
-                                           case1_val=case1;
-                                           case1_point="0";
-                                       }
-                                       
-                                    }
+                                         case1_val=case1;
+                                      }
                                    
            
            ///////////case 2
                                    if(case2==undefined)
                                    {
-                                       case2_load=0;
                                        case2_val=0;
-                                       case2_point=0;
-                                   }
+                                     }
                                    else
                                    {
-                                   if(case2!=undefined)
-                                   {
-                                    
-                                   if(case2>=6 && case2<=8 )
-                                   {
-                                       case2_load="6 to 8";
-                                       case2_val=case2;
-                                       case2_point="2.5";
-                                   }
-                                    else if(case2>=9 && case2<=11)
-                                   {
-                                       case2_load="9 to 11";
-                                       case2_val=case2;
-                                       case2_point="5";
-                                   }
-                                   else if(case2>=12 && case2<=15)
-                                   {
-                                       case2_load="12 to 15";
-                                       case2_val=case2;
-                                       case2_point="7.5";
-                                   }
-                                   else if( case2>=8)
-                                   {
-                                       case2_load=">15";
-                                       case2_val=case2;
-                                       case2_point="10";
-                                   }
-                                   else{
-                                    
-                                        case2_load="0";
-                                        case2_val=case2;
-                                        case2_point="0";
-                                    
-                                   }
-                               }
-                           }
+                                  case2_val=case2;
+                                    }
                                    /////case 3
                                    
                                    if(case3==undefined)
                                    {
-                                       case3_Load=0;
                                        case3_val=0;
-                                       case3_point=0;
                                    }
                                    else
                                    {
-                                       if(case3!=undefined)
-                                    {
-                                   if(case3<=2 )
-                                   {
-                                       case3_Load="Upto 2";
-                                       case3_val=case3;
-                                       case3_point="2.5";
-                                   }
-                                    else if(case3>=3 && case3<=5)
-                                   {
-                                       case3_Load="3 to 5";
-                                       case3_val=case3;
-                                       case3_point="5";
-                                   }
-                                   else if(case3>=11 && case3<=15)
-                                   {
-                                       case3_Load="11 to 15";
-                                       case3_val=case3;
-                                       case3_point="7.5";
-                                   }
-                                   else if( case3>=8)
-                                   {
-                                       case3_Load=">8";
-                                       case3_val=case3;
-                                       case3_point="10";
-                                   }
-                                   else {
-                                    case3_Load="0";
                                     case3_val=case3;
-                                    case3_point="0";
-                                   }
-
-
-                               }
-                           }
+                                    }
            
            
            
                            //case 4
                            if(case4==undefined)
                                    {
-                                       case4_Load=0;
                                        case4_val=0;
-                                       case4_point=0;
                                    }
                                    else
                                    {
-                                       if(case4!=undefined)
-                                    {
-                                        
-                                   if(case4>=10 && case4<=15)
-                                   {
-                                       case4_Load="10 to 15 ";
                                        case4_val=case4;
-                                       case4_point="2.5";
                                    }
-                                   else  if(case4>=3 && case4<=5)
-                                   {
-                                       case4_Load="16 to 30";
-                                       case4_val=case4;
-                                       case4_point="5";
-                                   }
-                                   else if(case4>=11 && case4<=15)
-                                   {
-                                       case4_Load="31 to 50";
-                                       case4_val=case4;
-                                       case4_point="7.5";
-                                   }
-                                   else if( case4>=8)
-                                   {
-                                       case4_Load=">50";
-                                       case4_val=case4;
-                                       case4_point="10";
-                                   }
-                                   else {
-                                    case4_Load="0";
-                                    case4_val=case4;
-                                    case4_point="0";
-                                   }
-                               }
-                           }
                                   
-                           $scope.total=(Number(case1_point)+Number(case2_point)+Number(case3_point)+Number(case4_point)).toFixed(2);
-                                   if($scope.total=="NaN")
-                                   $scope.total=0;
-           
+                          
                                    $scope.dataimport=$(
                                        "<tr>"+
                                           "<th>"+org+"</th>"+
                                           "<th>"+specialist_name+"</th>"+
                                           
-                                          "<th>"+case1_load+"</th>"+
                                           "<th>"+case1_val+"</th>"+
-                                          "<th>"+case1_point+"</th>"+
-           
-                                          "<th>"+case2_load+"</th>"+
                                           "<th>"+case2_val+"</th>"+
-                                          "<th>"+case2_point+"</th>"+
-           
-                                          "<th>"+case3_Load+"</th>"+
                                           "<th>"+case3_val+"</th>"+
-                                          "<th>"+case3_point+"</th>"+
-           
-                                          "<th>"+case4_Load+"</th>"+
                                           "<th>"+case4_val+"</th>"+
-                                          "<th>"+case4_point+"</th>"+
-                                          
-                                          "<th>"+$scope.total+"</th>"+
-                                          
                                           
                                        "</tr>"
                                        
@@ -1816,193 +2773,718 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist- PBR monitoring(Aggr
                                     
                                    
                                      
-                                   var case1_load,case1_val,case1_point,
-                                                case2_load,case2_val,case2_point,
-                                                     case3_Load,case3_val,case3_point
-                                                            case4_Load,case4_val,case4_point;
+                                   var case1_val,case2_val,case3_val,case4_val;
                                             ///case 1
                                             if(case1==undefined)
                                             {
-                                                case1_load=0;
-                                                case1_val=0;
-                                                case1_point=0;
-                                                
-                                            }
+                                                 case1_val=0;
+                                              }
                                             else
-                                            {
-                                                
-                                                if(case1>=4 && case1<=6)
-                                                {
-                                                    case1_load="4 to 6";
-                                                    case1_val=case1;
-                                                    case1_point="2.5";
-                                                }
-                                                else if(case1>=7 && case1<=9)
-                                                {
-                                                    case1_load="7 to 9";
-                                                    case1_val=case1;
-                                                    case1_point="5";
-                                                }
-                                                else if(case1>=10 && case1<=12)
-                                                {
-                                                    case1_load="10 to 12";
-                                                    case1_val=case1;
-                                                    case1_point="7.5";
-                                                }
-                                                else if( case1>=12)
-                                                {
-                                                    case1_load=">12";
-                                                    case1_val=case1;
-                                                    case1_point="15";
-                                                }
-                                                else
-                                                {
-                                                    case1_load="0";
-                                                    case1_val=case1;
-                                                    case1_point="0";
-                                                }
-                                                
+                                            {     case1_val=case1;
+                                               
                                             }
                                             
 
                                     ///////////case 2
                                             if(case2==undefined)
                                             {
-                                                case2_load=0;
                                                 case2_val=0;
-                                                case2_point=0;
                                             }
                                             else
                                             {
-                                            if(case2!=undefined)
-                                            {
+                                            case2_val=case2;
                                             
-                                            if(case2>=6 && case2<=8 )
-                                            {
-                                                case2_load="6 to 8";
-                                                case2_val=case2;
-                                                case2_point="2.5";
-                                            }
-                                            else if(case2>=9 && case2<=11)
-                                            {
-                                                case2_load="9 to 11";
-                                                case2_val=case2;
-                                                case2_point="5";
-                                            }
-                                            else if(case2>=12 && case2<=15)
-                                            {
-                                                case2_load="12 to 15";
-                                                case2_val=case2;
-                                                case2_point="7.5";
-                                            }
-                                            else if( case2>=8)
-                                            {
-                                                case2_load=">15";
-                                                case2_val=case2;
-                                                case2_point="10";
-                                            }
-                                            else{
-                                            
-                                                case2_load="0";
-                                                case2_val=case2;
-                                                case2_point="0";
-                                            
-                                            }
-                                        }
                                     }
                                             /////case 3
                                             
                                             if(case3==undefined)
                                             {
-                                                case3_Load=0;
                                                 case3_val=0;
-                                                case3_point=0;
                                             }
-                                            else
-                                            {
-                                                if(case3!=undefined)
-                                            {
-                                            if(case3<=2 )
-                                            {
-                                                case3_Load="Upto 2";
-                                                case3_val=case3;
-                                                case3_point="2.5";
-                                            }
-                                            else if(case3>=3 && case3<=5)
-                                            {
-                                                case3_Load="3 to 5";
-                                                case3_val=case3;
-                                                case3_point="5";
-                                            }
-                                            else if(case3>=11 && case3<=15)
-                                            {
-                                                case3_Load="11 to 15";
-                                                case3_val=case3;
-                                                case3_point="7.5";
-                                            }
-                                            else if( case3>=8)
-                                            {
-                                                case3_Load=">8";
-                                                case3_val=case3;
-                                                case3_point="10";
-                                            }
-                                            else {
-                                            case3_Load="0";
-                                            case3_val=case3;
-                                            case3_point="0";
-                                            }
-
-
-                                        }
-                                    }
+                                            else{
+                                               case3_val=case3;
+                                             }
 
 
 
                                     //case 4
                                     if(case4==undefined)
                                             {
-                                                case4_Load=0;
                                                 case4_val=0;
-                                                case4_point=0;
                                             }
                                             else
                                             {
-                                                if(case4!=undefined)
-                                            {
-                                                
-                                            if(case4>=10 && case4<=15)
-                                            {
-                                                case4_Load="10 to 15 ";
-                                                case4_val=case4;
-                                                case4_point="2.5";
-                                            }
-                                            else  if(case4>=3 && case4<=5)
-                                            {
-                                                case4_Load="16 to 30";
-                                                case4_val=case4;
-                                                case4_point="5";
-                                            }
-                                            else if(case4>=11 && case4<=15)
-                                            {
-                                                case4_Load="31 to 50";
-                                                case4_val=case4;
-                                                case4_point="7.5";
-                                            }
-                                            else if( case4>=8)
-                                            {
-                                                case4_Load=">50";
-                                                case4_val=case4;
-                                                case4_point="10";
-                                            }
-                                            else {
-                                            case4_Load="0";
-                                            case4_val=case4;
-                                            case4_point="0";
-                                            }
+                                               case4_val=case4;
+                                           
+                                    }
+                                   
+                               $scope.dataimport=$(
+                                        "<tr>"+
+                                           "<th>"+org+"</th>"+
+                                           "<th>"+specialist_name+"</th>"+
+                                          
+                                           "<th>"+case1_val+"</th>"+
+                                           "<th>"+case2_val+"</th>"+
+                                           "<th>"+case3_val+"</th>"+
+                                            "<th>"+case4_val+"</th>"+
+                                           
+                                        "</tr>"
+                                        
+                                   )
+                                }
+                               
+                                
+                            }
+                            $("#showdata").append($scope.dataimport);
+                        }
+                
+                    }
+
+                    //Gynaecologist - PBR monitoring(under CMO(Aggregated))
+      if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(under CMO(Aggregated))")
+                {
+    $("#showdata").empty();
+           for(var i=0;i<$scope.eventList.length;i++)
+           {
+
+            var eveid=$scope.eventList[i];
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                contentType: "application/json",
+                async:false,
+                url: "../../events/"+eveid+".json",
+                 success: function (data) {
+                     var teiid=data.trackedEntityInstance;
+
+                     $.ajax({
+                        type: "GET",
+                        dataType: "json",
+                        contentType: "application/json",
+                        async:false,
+                        url: "../../trackedEntityInstances/"+teiid+".json",
+                         success: function (datanew) {
+                            
+                            for(var jj=0;jj<datanew.attributes.length;jj++)
+                            {
+
+                                var val=datanew.attributes[jj].attribute;
+                                if(datanew.attributes[jj].attribute=="U0jQjrOkFjR")
+                                {
+                                    $scope.eventDeWiseValueMap[eveid+"-"+datanew.attributes[jj].attribute]=datanew.attributes[jj].value;
+                                }
+                            }
+        
+        
+                             
+                        }
+                    });
+
+                }
+            });
+           }
+
+
+           
+           $scope.neweventval=[];
+           var case1=0,case2=0,case3=0;
+          
+
+           $scope.keyspresent=[];$scope.keyspresent_val=[];
+            for(var j in $scope.eventDeWiseValueMap)
+                {
+                    
+                    if(j.includes('U0jQjrOkFjR'))
+                    {
+                        $scope.keyspresent[j]=$scope.eventDeWiseValueMap[j];
+                        
+                    }
+
+                }
+
+                
+               
+                $scope.duplicateval=[]
+                    
+                $scope.key=Object.keys($scope.keyspresent);
+
+                var sortable = [];
+                for (var d in $scope.keyspresent) {
+                    sortable.push([d, $scope.keyspresent[d]]);
+                }
+                
+                $scope.keyspresent=sortable.sort(function(a,b) {return (a[1] > b[1]) ? 1 : ((b[1] > a[1]) ? -1 : 0);} );
+                            for(var x =0;x<$scope.keyspresent.length;x++)
+                            { 
+                               //var h=$scope.keyspresent[x+1][1];
+                            if( (x+1)<$scope.keyspresent.length-1)
+                            {
+                                if($scope.keyspresent[x][1]==$scope.keyspresent[x+1][1] )
+                                {
+                                     $scope.duplicateval.push($scope.keyspresent[x][1]);
+                                     //hh= $scope.keyspresent.splice($scope.key[i+1],1);
+                                }
+                            }
+                               
+                            }
+
+
+                            var new_sortable=[];
+                            for(var x=0;x<$scope.keyspresent.length;x++)
+                            { 
+                                new_sortable[$scope.keyspresent[x][0]]=$scope.keyspresent[x][1];
+
+
+                            }
+                         
+                            $scope.keyspresent=new_sortable;
+                        
+                        $scope.duplicateval = $scope.duplicateval.filter( function( item, index, inputArray ) {
+                            return inputArray.indexOf(item) == index;
+                            });
+
+                         for(var i=0;i<$scope.duplicateval.length;)
+                             {
+                            for(var x in $scope.keyspresent)
+                            { 
+                               
+                            
+                               if($scope.keyspresent[x]==$scope.duplicateval[i])
+                                {
+                                    var val1=x.split('-');
+                                    $scope.neweventval.push(val1[0]);
+                                    //$scope.duplicateval.push($scope.keyspresent[$scope.key[i]]);
+                                     //hh= $scope.keyspresent.splice($scope.key[i+1],1);
+                                }
+                                
+                                
+                            }
+                            i++;
+                            $scope.neweventval = $scope.neweventval.filter( function( item, index, inputArray ) {
+                                return inputArray.indexOf(item) == index;
+                                });
+
+                       
+                                if($scope.neweventval.length!=0)
+                                {
+                                    $scope.FinalEnteredVal=getFinalvalue($scope.eventDeWiseValueMap,$scope.neweventval,$scope.programname); 
+                                    
+                                    var orgUnitid=$scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'orgunitid']
+                                    for(var k=0;k<$scope.orgunit_CMO.length;k++){
+                                        if(orgUnitid==$scope.orgunit_CMO[k])
+                                        {
+                                   var specialist_name=$scope.FinalEnteredVal["U0jQjrOkFjR"];
+                                   var org=getheirarchy($scope.FinalEnteredVal['orgunitid']);
+                                   
+                                   var case1=$scope.FinalEnteredVal["kChiZJPd5je"];
+                                   var case2=$scope.FinalEnteredVal["wTdcUXWeqhN"];
+                                   var case3=$scope.FinalEnteredVal["eryy31EUorR"];
+                                   var case4=$scope.FinalEnteredVal["cqw0HGZQzhD"];
+                                   
+                                  var case1_load,case1_val,case1_point,
+                                               case2_load,case2_val,case2_point,
+                                                    case3_Load,case3_val,case3_point
+                                                           case4_Load,case4_val,case4_point;
+           ///case 1
+                                    if(case1==undefined)
+                                    {
+                                       case1_load=0;
+                                       case1_val=0;
+                                       case1_point=0;
+                                       
+                                    }
+                                    else
+                                    {
+                                        
+                                       if(case1>=4 && case1<=6)
+                                       {
+                                           case1_load="4 to 6";
+                                           case1_val=case1;
+                                           case1_point="2.5";
+                                       }
+                                       else if(case1>=7 && case1<=9)
+                                       {
+                                           case1_load="7 to 9";
+                                           case1_val=case1;
+                                           case1_point="5";
+                                       }
+                                       else if(case1>=10 && case1<=12)
+                                       {
+                                           case1_load="10 to 12";
+                                           case1_val=case1;
+                                           case1_point="7.5";
+                                       }
+                                       else if( case1>=12)
+                                       {
+                                           case1_load=">12";
+                                           case1_val=case1;
+                                           case1_point="10";
+                                       }
+                                       else
+                                       {
+                                           case1_load="0";
+                                           case1_val=case1;
+                                           case1_point="0";
+                                       }
+                                       
+                                    }
+                                   
+           
+           ///////////case 2
+                                   if(case2==undefined)
+                                   {
+                                       case2_load=0;
+                                       case2_val=0;
+                                       case2_point=0;
+                                   }
+                                   else
+                                   {
+                                   if(case2!=undefined)
+                                   {
+                                    
+                                   if(case2>=6 && case2<=8 )
+                                   {
+                                       case2_load="6 to 8";
+                                       case2_val=case2;
+                                       case2_point="2.5";
+                                   }
+                                    else if(case2>=9 && case2<=11)
+                                   {
+                                       case2_load="9 to 11";
+                                       case2_val=case2;
+                                       case2_point="5";
+                                   }
+                                   else if(case2>=12 && case2<=15)
+                                   {
+                                       case2_load="12 to 15";
+                                       case2_val=case2;
+                                       case2_point="7.5";
+                                   }
+                                   else if( case2>=8)
+                                   {
+                                       case2_load=">15";
+                                       case2_val=case2;
+                                       case2_point="10";
+                                   }
+                                   else{
+                                    
+                                        case2_load="0";
+                                        case2_val=case2;
+                                        case2_point="0";
+                                    
+                                   }
+                               }
+                           }
+                                   /////case 3
+                                   
+                                   if(case3==undefined)
+                                   {
+                                       case3_Load=0;
+                                       case3_val=0;
+                                       case3_point=0;
+                                   }
+                                   else
+                                   {
+                                       if(case3!=undefined)
+                                    {
+                                   if(case3<=2 )
+                                   {
+                                       case3_Load="Upto 2";
+                                       case3_val=case3;
+                                       case3_point="2.5";
+                                   }
+                                    else if(case3>=3 && case3<=5)
+                                   {
+                                       case3_Load="3 to 5";
+                                       case3_val=case3;
+                                       case3_point="5";
+                                   }
+                                   else if(case3>=6 && case3<=8)
+                                   {
+                                       case3_Load="6 to 8";
+                                       case3_val=case3;
+                                       case3_point="7.5";
+                                   }
+                                   else if( case3>=8)
+                                   {
+                                       case3_Load=">8";
+                                       case3_val=case3;
+                                       case3_point="10";
+                                   }
+                                   else {
+                                    case3_Load="0";
+                                    case3_val=case3;
+                                    case3_point="0";
+                                   }
+
+
+                               }
+                           }
+           
+           
+           
+                           //case 4
+                           if(case4==undefined)
+                                   {
+                                       case4_Load=0;
+                                       case4_val=0;
+                                       case4_point=0;
+                                   }
+                                   else
+                                   {
+                                       if(case4!=undefined)
+                                    {
+                                        
+                                   if(case4>=10 && case4<=15)
+                                   {
+                                       case4_Load="10 to 15 ";
+                                       case4_val=case4;
+                                       case4_point="2.5";
+                                   }
+                                   else  if(case4>=16 && case4<=30)
+                                   {
+                                       case4_Load="16 to 30";
+                                       case4_val=case4;
+                                       case4_point="5";
+                                   }
+                                   else if(case4>=31 && case4<=50)
+                                   {
+                                       case4_Load="31 to 50";
+                                       case4_val=case4;
+                                       case4_point="7.5";
+                                   }
+                                   else if( case4>=50)
+                                   {
+                                       case4_Load=">50";
+                                       case4_val=case4;
+                                       case4_point="10";
+                                   }
+                                   else {
+                                    case4_Load="0";
+                                    case4_val=case4;
+                                    case4_point="0";
+                                   }
+                               }
+                           }
+                                  
+                           $scope.total=(Number(case1_val)+Number(case2_val)+Number(case3_val)+Number(case4_val)).toFixed(2);
+                                    if($scope.total=="NaN")
+                                   $scope.total=0;
+           
+                                   $scope.dataimport=$(
+                                       "<tr>"+
+                                          "<th>"+org+"</th>"+
+                                          "<th>"+specialist_name+"</th>"+
+                                          
+                                          "<th>"+case1_load+"</th>"+
+                                          "<th>"+case1_val+"</th>"+
+                                          "<th>"+case1_point+"</th>"+
+           
+                                          "<th>"+case2_load+"</th>"+
+                                          "<th>"+case2_val+"</th>"+
+                                          "<th>"+case2_point+"</th>"+
+           
+                                          "<th>"+case3_Load+"</th>"+
+                                          "<th>"+case3_val+"</th>"+
+                                          "<th>"+case3_point+"</th>"+
+           
+                                          "<th>"+case4_Load+"</th>"+
+                                          "<th>"+case4_val+"</th>"+
+                                          "<th>"+case4_point+"</th>"+
+                                          
+                                          "<th>"+$scope.total+"</th>"+
+                                          
+                                          
+                                       "</tr>"
+                                       
+                                  )
+                                
+                                $("#showdata").append($scope.dataimport);
+                                }
+                            }}
+                                $scope.neweventval=[];
+                }
+
+                      
+                $scope.duplicateval = $scope.duplicateval.filter( function( item, index, inputArray ) {
+                    return inputArray.indexOf(item) == index;
+                    });
+
+
+                $scope.final_keyspresent=[]
+                        for(var k in $scope.keyspresent)
+                        {
+                            $scope.keyspresent_val.push($scope.keyspresent[k]);
+                        }
+                        $scope.keyspresent_val = $scope.keyspresent_val.sort();
+                
+                        
+                        
+                            for(var k=0;k<$scope.duplicateval.length;k++)
+                            {
+                                for(var jj=$scope.keyspresent_val.length-1;jj>=0;jj--)
+                                {
+                                    if($scope.duplicateval[k]==$scope.keyspresent_val[jj])
+                                    {
+                                        $scope.keyspresent_val.splice(jj,1);
+                                    
+                                    }
+                                    
+                            }
+                            
+                        }
+
+
+                        $scope.final_singleval=[]
+                        for(var x in $scope.keyspresent)
+                                { 
+                                    for(var y=0;y<$scope.keyspresent_val.length;y++)
+                                    {
+                                        if($scope.keyspresent_val[y]==$scope.keyspresent[x])
+                                        {
+                                            var val=x.split('-');
+                                            $scope.final_singleval.push(val[0]);
+                                        }
+                                    }
+
+                                }
+
+
+
+
+
+                                $scope.eventDeWiseValueMap_final=[]
+                                 
+                                    for(var y=0;y<$scope.final_singleval.length;y++)
+                                    {
+                                        for(var x in $scope.eventDeWiseValueMap)
+                                    {
+                                        
+                                        var v=x.includes($scope.final_singleval[y]);
+                                        if(v)
+                                        {
+                                            $scope.eventDeWiseValueMap_final[x]=$scope.eventDeWiseValueMap[x];
+                                        }
+
+                                }
+                            }
+                                    
+
+                            
+
+                            for(var i=0;i<$scope.final_singleval.length;i++)
+                            {
+
+                            
+                            for(var j in $scope.eventDeWiseValueMap_final)
+                            {
+                               
+                                var new_uid=j.split('-');
+                                
+                                if($scope.final_singleval[i]==new_uid[0])
+                                {
+                                    var orgUnitid=$scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'orgunitid']
+                                    for(var k=0;k<$scope.orgunit_CMO.length;k++){
+                                        if(orgUnitid==$scope.orgunit_CMO[k])
+                                        {
+                                    var org=getheirarchy($scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'orgunitid']);
+                                    var specialist_name=$scope.eventDeWiseValueMap_final[$scope.final_singleval[i]+'-'+'U0jQjrOkFjR'];
+                                    
+                                    var case1=$scope.eventDeWiseValueMap_final[$scope.final_singleval[i]+'-'+'kChiZJPd5je'];
+                                    var case2=$scope.eventDeWiseValueMap_final[$scope.final_singleval[i]+'-'+'wTdcUXWeqhN'];
+                                    var case3=$scope.eventDeWiseValueMap_final[$scope.final_singleval[i]+'-'+'eryy31EUorR'];
+                                    var case4=$scope.eventDeWiseValueMap_final[$scope.final_singleval[i]+'-'+'cqw0HGZQzhD'];
+                                    
+                                   
+                                     
+                                   var case1_load,case1_val,case1_point,
+                                                case2_load,case2_val,case2_point,
+                                                     case3_Load,case3_val,case3_point
+                                                            case4_Load,case4_val,case4_point;
+                                        
+                                   ///case 1
+                                   if(case1==undefined)
+                                   {
+                                      case1_load=0;
+                                      case1_val=0;
+                                      case1_point=0;
+                                      
+                                   }
+                                   else
+                                   {
+                                       
+                                      if(case1>=4 && case1<=6)
+                                      {
+                                          case1_load="4 to 6";
+                                          case1_val=case1;
+                                          case1_point="2.5";
+                                      }
+                                      else if(case1>=7 && case1<=9)
+                                      {
+                                          case1_load="7 to 9";
+                                          case1_val=case1;
+                                          case1_point="5";
+                                      }
+                                      else if(case1>=10 && case1<=12)
+                                      {
+                                          case1_load="10 to 12";
+                                          case1_val=case1;
+                                          case1_point="7.5";
+                                      }
+                                      else if( case1>=12)
+                                      {
+                                          case1_load=">12";
+                                          case1_val=case1;
+                                          case1_point="10";
+                                      }
+                                      else
+                                      {
+                                          case1_load="0";
+                                          case1_val=case1;
+                                          case1_point="0";
+                                      }
+                                      
+                                   }
+                                  
+          
+          ///////////case 2
+                                  if(case2==undefined)
+                                  {
+                                      case2_load=0;
+                                      case2_val=0;
+                                      case2_point=0;
+                                  }
+                                  else
+                                  {
+                                  if(case2!=undefined)
+                                  {
+                                   
+                                  if(case2>=6 && case2<=8 )
+                                  {
+                                      case2_load="6 to 8";
+                                      case2_val=case2;
+                                      case2_point="2.5";
+                                  }
+                                   else if(case2>=9 && case2<=11)
+                                  {
+                                      case2_load="9 to 11";
+                                      case2_val=case2;
+                                      case2_point="5";
+                                  }
+                                  else if(case2>=12 && case2<=15)
+                                  {
+                                      case2_load="12 to 15";
+                                      case2_val=case2;
+                                      case2_point="7.5";
+                                  }
+                                  else if( case2>=8)
+                                  {
+                                      case2_load=">15";
+                                      case2_val=case2;
+                                      case2_point="10";
+                                  }
+                                  else{
+                                   
+                                       case2_load="0";
+                                       case2_val=case2;
+                                       case2_point="0";
+                                   
+                                  }
+                              }
+                          }
+                                  /////case 3
+                                  
+                                  if(case3==undefined)
+                                  {
+                                      case3_Load=0;
+                                      case3_val=0;
+                                      case3_point=0;
+                                  }
+                                  else
+                                  {
+                                      if(case3!=undefined)
+                                   {
+                                  if(case3<=2 )
+                                  {
+                                      case3_Load="Upto 2";
+                                      case3_val=case3;
+                                      case3_point="2.5";
+                                  }
+                                   else if(case3>=3 && case3<=5)
+                                  {
+                                      case3_Load="3 to 5";
+                                      case3_val=case3;
+                                      case3_point="5";
+                                  }
+                                  else if(case3>=6 && case3<=8)
+                                  {
+                                      case3_Load="6 to 8";
+                                      case3_val=case3;
+                                      case3_point="7.5";
+                                  }
+                                  else if( case3>=8)
+                                  {
+                                      case3_Load=">8";
+                                      case3_val=case3;
+                                      case3_point="10";
+                                  }
+                                  else {
+                                   case3_Load="0";
+                                   case3_val=case3;
+                                   case3_point="0";
+                                  }
+
+
+                              }
+                          }
+          
+          
+          
+                          //case 4
+                          if(case4==undefined)
+                                  {
+                                      case4_Load=0;
+                                      case4_val=0;
+                                      case4_point=0;
+                                  }
+                                  else
+                                  {
+                                      if(case4!=undefined)
+                                   {
+                                       
+                                  if(case4>=10 && case4<=15)
+                                  {
+                                      case4_Load="10 to 15 ";
+                                      case4_val=case4;
+                                      case4_point="2.5";
+                                  }
+                                  else  if(case4>=16 && case4<=30)
+                                  {
+                                      case4_Load="16 to 30";
+                                      case4_val=case4;
+                                      case4_point="5";
+                                  }
+                                  else if(case4>=31 && case4<=50)
+                                  {
+                                      case4_Load="31 to 50";
+                                      case4_val=case4;
+                                      case4_point="7.5";
+                                  }
+                                  else if( case4>=50)
+                                  {
+                                      case4_Load=">50";
+                                      case4_val=case4;
+                                      case4_point="10";
+                                  }
+                                  else {
+                                   case4_Load="0";
+                                   case4_val=case4;
+                                   case4_point="0";
+                                  }
                                         }
                                     }
                                    
-                            $scope.total=(Number(case1_point)+Number(case2_point)+Number(case3_point)+Number(case4_point)).toFixed(2);
+                            $scope.total=(Number(case1_val)+Number(case2_val)+Number(case3_val)+Number(case4_val)).toFixed(2);
                                     if($scope.total=="NaN")
                                     $scope.total=0;
             
@@ -2036,10 +3518,693 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist- PBR monitoring(Aggr
                                 }
                                
                                 
+                         
+                            $("#showdata").append($scope.dataimport);
+                        }   }}}
+                
+                    }
+
+                   // Gynaecologist - PBR monitoring(under CMS(Aggregated))
+        if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(under CMS(Aggregated))")
+            {
+    
+           for(var i=0;i<$scope.eventList.length;i++)
+           {
+
+            var eveid=$scope.eventList[i];
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                contentType: "application/json",
+                async:false,
+                url: "../../events/"+eveid+".json",
+                 success: function (data) {
+                     var teiid=data.trackedEntityInstance;
+
+                     $.ajax({
+                        type: "GET",
+                        dataType: "json",
+                        contentType: "application/json",
+                        async:false,
+                        url: "../../trackedEntityInstances/"+teiid+".json",
+                         success: function (datanew) {
+                            
+                            for(var jj=0;jj<datanew.attributes.length;jj++)
+                            {
+
+                                var val=datanew.attributes[jj].attribute;
+                                if(datanew.attributes[jj].attribute=="U0jQjrOkFjR")
+                                {
+                                    $scope.eventDeWiseValueMap[eveid+"-"+datanew.attributes[jj].attribute]=datanew.attributes[jj].value;
+                                }
                             }
+        
+        
+                             
+                        }
+                    });
+
+                }
+            });
+           }
+
+
+           
+           $scope.neweventval=[];
+           var case1=0,case2=0,case3=0;
+          
+
+           $scope.keyspresent=[];$scope.keyspresent_val=[];
+            for(var j in $scope.eventDeWiseValueMap)
+                {
+                    
+                    if(j.includes('U0jQjrOkFjR'))
+                    {
+                        $scope.keyspresent[j]=$scope.eventDeWiseValueMap[j];
+                        
+                    }
+
+                }
+
+                
+               
+                $scope.duplicateval=[]
+                    
+                $scope.key=Object.keys($scope.keyspresent);
+
+                var sortable = [];
+                for (var d in $scope.keyspresent) {
+                    sortable.push([d, $scope.keyspresent[d]]);
+                }
+                
+                $scope.keyspresent=sortable.sort(function(a,b) {return (a[1] > b[1]) ? 1 : ((b[1] > a[1]) ? -1 : 0);} );
+                            for(var x =0;x<$scope.keyspresent.length;x++)
+                            { 
+                               //var h=$scope.keyspresent[x+1][1];
+                            if( (x+1)<$scope.keyspresent.length-1)
+                            {
+                                if($scope.keyspresent[x][1]==$scope.keyspresent[x+1][1] )
+                                {
+                                     $scope.duplicateval.push($scope.keyspresent[x][1]);
+                                     //hh= $scope.keyspresent.splice($scope.key[i+1],1);
+                                }
+                            }
+                               
+                            }
+
+
+                            var new_sortable=[];
+                            for(var x=0;x<$scope.keyspresent.length;x++)
+                            { 
+                                new_sortable[$scope.keyspresent[x][0]]=$scope.keyspresent[x][1];
+
+
+                            }
+                         
+                            $scope.keyspresent=new_sortable;
+                        
+                        $scope.duplicateval = $scope.duplicateval.filter( function( item, index, inputArray ) {
+                            return inputArray.indexOf(item) == index;
+                            });
+
+                         for(var i=0;i<$scope.duplicateval.length;)
+                             {
+                            for(var x in $scope.keyspresent)
+                            { 
+                               
+                            
+                               if($scope.keyspresent[x]==$scope.duplicateval[i])
+                                {
+                                    var val1=x.split('-');
+                                    $scope.neweventval.push(val1[0]);
+                                    //$scope.duplicateval.push($scope.keyspresent[$scope.key[i]]);
+                                     //hh= $scope.keyspresent.splice($scope.key[i+1],1);
+                                }
+                                
+                                
+                            }
+                            i++;
+                            $scope.neweventval = $scope.neweventval.filter( function( item, index, inputArray ) {
+                                return inputArray.indexOf(item) == index;
+                                });
+
+                       
+                                if($scope.neweventval.length!=0)
+                                {
+                                    $scope.FinalEnteredVal=getFinalvalue($scope.eventDeWiseValueMap,$scope.neweventval,$scope.programname); 
+                                    
+                                    var orgUnitid=$scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'orgunitid']
+                                    for(var k=0;k<$scope.orgunit_CMS.length;k++){
+                                        if(orgUnitid==$scope.orgunit_CMS[k])
+                                        {
+                                   var specialist_name=$scope.FinalEnteredVal["U0jQjrOkFjR"];
+                                   var org=getheirarchy($scope.FinalEnteredVal['orgunitid']);
+                                   
+                                   var case1=$scope.FinalEnteredVal["kChiZJPd5je"];
+                                   var case2=$scope.FinalEnteredVal["wTdcUXWeqhN"];
+                                   var case3=$scope.FinalEnteredVal["eryy31EUorR"];
+                                   var case4=$scope.FinalEnteredVal["cqw0HGZQzhD"];
+                                   
+                                  var case1_load,case1_val,case1_point,
+                                               case2_load,case2_val,case2_point,
+                                                    case3_Load,case3_val,case3_point
+                                                           case4_Load,case4_val,case4_point;
+           ///case 1
+                                    if(case1==undefined)
+                                    {
+                                       case1_load=0;
+                                       case1_val=0;
+                                       case1_point=0;
+                                       
+                                    }
+                                    else
+                                    {
+                                        
+                                       if(case1>=6 && case1<=10)
+                                       {
+                                           case1_load="6 to 10";
+                                           case1_val=case1;
+                                           case1_point="2.5";
+                                       }
+                                       else if(case1>=11 && case1<=15)
+                                       {
+                                           case1_load="11 to 15";
+                                           case1_val=case1;
+                                           case1_point="5";
+                                       }
+                                       else if(case1>=16 && case1<=20)
+                                       {
+                                           case1_load="16 to 20";
+                                           case1_val=case1;
+                                           case1_point="7.5";
+                                       }
+                                       else if( case1>=20)
+                                       {
+                                           case1_load=">20";
+                                           case1_val=case1;
+                                           case1_point="10";
+                                       }
+                                       else
+                                       {
+                                           case1_load="0";
+                                           case1_val=case1;
+                                           case1_point="0";
+                                       }
+                                       
+                                    }
+                                   
+           
+           ///////////case 2
+                                   if(case2==undefined)
+                                   {
+                                       case2_load=0;
+                                       case2_val=0;
+                                       case2_point=0;
+                                   }
+                                   else
+                                   {
+                                   if(case2!=undefined)
+                                   {
+                                    
+                                   if(case2>=6 && case2<=10 )
+                                   {
+                                       case2_load="6 to 10";
+                                       case2_val=case2;
+                                       case2_point="2.5";
+                                   }
+                                    else if(case2>=11 && case2<=15)
+                                   {
+                                       case2_load="11 to 15";
+                                       case2_val=case2;
+                                       case2_point="5";
+                                   }
+                                   else if(case2>=16 && case2<=20)
+                                   {
+                                       case2_load="16 to 20";
+                                       case2_val=case2;
+                                       case2_point="7.5";
+                                   }
+                                   else if( case2>=20)
+                                   {
+                                       case2_load=">20";
+                                       case2_val=case2;
+                                       case2_point="10";
+                                   }
+                                   else{
+                                    
+                                        case2_load="0";
+                                        case2_val=case2;
+                                        case2_point="0";
+                                    
+                                   }
+                               }
+                           }
+                                   /////case 3
+                                   
+                                   if(case3==undefined)
+                                   {
+                                       case3_Load=0;
+                                       case3_val=0;
+                                       case3_point=0;
+                                   }
+                                   else
+                                   {
+                                       if(case3!=undefined)
+                                    {
+                                   if(case3>=3 && case3<=6)
+                                   {
+                                       case3_Load="3 to 6";
+                                       case3_val=case3;
+                                       case3_point="2.5";
+                                   }
+                                    else if(case3>=7 && case3<=10)
+                                   {
+                                       case3_Load="7 to 10";
+                                       case3_val=case3;
+                                       case3_point="5";
+                                   }
+                                   else if(case3>=11 && case3<=15)
+                                   {
+                                       case3_Load="11 to 15";
+                                       case3_val=case3;
+                                       case3_point="7.5";
+                                   }
+                                   else if( case3>=15)
+                                   {
+                                       case3_Load=">15";
+                                       case3_val=case3;
+                                       case3_point="10";
+                                   }
+                                   else {
+                                    case3_Load="0";
+                                    case3_val=case3;
+                                    case3_point="0";
+                                   }
+
+
+                               }
+                           }
+           
+           
+           
+                           //case 4
+                           if(case4==undefined)
+                                   {
+                                       case4_Load=0;
+                                       case4_val=0;
+                                       case4_point=0;
+                                   }
+                                   else
+                                   {
+                                       if(case4!=undefined)
+                                    {
+                                        
+                                   if(case4>=10 && case4<=15)
+                                   {
+                                       case4_Load="10 to 15 ";
+                                       case4_val=case4;
+                                       case4_point="2.5";
+                                   }
+                                   else  if(case4>=3 && case4<=5)
+                                   {
+                                       case4_Load="16 to 30";
+                                       case4_val=case4;
+                                       case4_point="5";
+                                   }
+                                   else if(case4>=11 && case4<=15)
+                                   {
+                                       case4_Load="31 to 50";
+                                       case4_val=case4;
+                                       case4_point="7.5";
+                                   }
+                                   else if( case4>=8)
+                                   {
+                                       case4_Load=">50";
+                                       case4_val=case4;
+                                       case4_point="10";
+                                   }
+                                   else {
+                                    case4_Load="0";
+                                    case4_val=case4;
+                                    case4_point="0";
+                                   }
+                               }
+                           }
+                                  
+                           $scope.total=(Number(case1_val)+Number(case2_val)+Number(case3_val)+Number(case4_val)).toFixed(2);
+                                   if($scope.total=="NaN")
+                                   $scope.total=0;
+           
+                                   $scope.dataimport=$(
+                                       "<tr>"+
+                                          "<th>"+org+"</th>"+
+                                          "<th>"+specialist_name+"</th>"+
+                                          
+                                          "<th>"+case1_load+"</th>"+
+                                          "<th>"+case1_val+"</th>"+
+                                          "<th>"+case1_point+"</th>"+
+           
+                                          "<th>"+case2_load+"</th>"+
+                                          "<th>"+case2_val+"</th>"+
+                                          "<th>"+case2_point+"</th>"+
+           
+                                          "<th>"+case3_Load+"</th>"+
+                                          "<th>"+case3_val+"</th>"+
+                                          "<th>"+case3_point+"</th>"+
+           
+                                          "<th>"+case4_Load+"</th>"+
+                                          "<th>"+case4_val+"</th>"+
+                                          "<th>"+case4_point+"</th>"+
+                                          
+                                          "<th>"+$scope.total+"</th>"+
+                                          
+                                          
+                                       "</tr>"
+                                       
+                                  )
+                                
+                                $("#showdata").append($scope.dataimport);
+                                }
+                            }}
+                                $scope.neweventval=[];
+                }
+
+                      
+                $scope.duplicateval = $scope.duplicateval.filter( function( item, index, inputArray ) {
+                    return inputArray.indexOf(item) == index;
+                    });
+
+
+                $scope.final_keyspresent=[]
+                        for(var k in $scope.keyspresent)
+                        {
+                            $scope.keyspresent_val.push($scope.keyspresent[k]);
+                        }
+                        $scope.keyspresent_val = $scope.keyspresent_val.sort();
+                
+                        
+                        
+                            for(var k=0;k<$scope.duplicateval.length;k++)
+                            {
+                                for(var jj=$scope.keyspresent_val.length-1;jj>=0;jj--)
+                                {
+                                    if($scope.duplicateval[k]==$scope.keyspresent_val[jj])
+                                    {
+                                        $scope.keyspresent_val.splice(jj,1);
+                                    
+                                    }
+                                    
+                            }
+                            
+                        }
+
+
+                        $scope.final_singleval=[]
+                        for(var x in $scope.keyspresent)
+                                { 
+                                    for(var y=0;y<$scope.keyspresent_val.length;y++)
+                                    {
+                                        if($scope.keyspresent_val[y]==$scope.keyspresent[x])
+                                        {
+                                            var val=x.split('-');
+                                            $scope.final_singleval.push(val[0]);
+                                        }
+                                    }
+
+                                }
+
+
+
+
+
+                                $scope.eventDeWiseValueMap_final=[]
+                                 
+                                    for(var y=0;y<$scope.final_singleval.length;y++)
+                                    {
+                                        for(var x in $scope.eventDeWiseValueMap)
+                                    {
+                                        
+                                        var v=x.includes($scope.final_singleval[y]);
+                                        if(v)
+                                        {
+                                            $scope.eventDeWiseValueMap_final[x]=$scope.eventDeWiseValueMap[x];
+                                        }
+
+                                }
+                            }
+                                    
+
+                            
+
+                            for(var i=0;i<$scope.final_singleval.length;i++)
+                            {
+
+                            
+                            for(var j in $scope.eventDeWiseValueMap_final)
+                            {
+                               
+                                var new_uid=j.split('-');
+                                
+                                if($scope.final_singleval[i]==new_uid[0])
+                                {
+                                    var orgUnitid=$scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'orgunitid']
+                                    for(var k=0;k<$scope.orgunit_CMS.length;k++){
+                                        if(orgUnitid==$scope.orgunit_CMS[k])
+                                        {
+                                    var org=getheirarchy($scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'orgunitid']);
+                                    var specialist_name=$scope.eventDeWiseValueMap_final[$scope.final_singleval[i]+'-'+'U0jQjrOkFjR'];
+                                    
+                                    var case1=$scope.eventDeWiseValueMap_final[$scope.final_singleval[i]+'-'+'kChiZJPd5je'];
+                                    var case2=$scope.eventDeWiseValueMap_final[$scope.final_singleval[i]+'-'+'wTdcUXWeqhN'];
+                                    var case3=$scope.eventDeWiseValueMap_final[$scope.final_singleval[i]+'-'+'eryy31EUorR'];
+                                    var case4=$scope.eventDeWiseValueMap_final[$scope.final_singleval[i]+'-'+'cqw0HGZQzhD'];
+                                    
+                                   
+                                     
+                                   var case1_load,case1_val,case1_point,
+                                                case2_load,case2_val,case2_point,
+                                                     case3_Load,case3_val,case3_point
+                                                            case4_Load,case4_val,case4_point;
+                                            ///case 1
+                                    if(case1==undefined)
+                                    {
+                                       case1_load=0;
+                                       case1_val=0;
+                                       case1_point=0;
+                                       
+                                    }
+                                    else
+                                    {
+                                        
+                                       if(case1>=6 && case1<=10)
+                                       {
+                                           case1_load="6 to 10";
+                                           case1_val=case1;
+                                           case1_point="2.5";
+                                       }
+                                       else if(case1>=11 && case1<=15)
+                                       {
+                                           case1_load="11 to 15";
+                                           case1_val=case1;
+                                           case1_point="5";
+                                       }
+                                       else if(case1>=16 && case1<=20)
+                                       {
+                                           case1_load="16 to 20";
+                                           case1_val=case1;
+                                           case1_point="7.5";
+                                       }
+                                       else if( case1>=20)
+                                       {
+                                           case1_load=">20";
+                                           case1_val=case1;
+                                           case1_point="10";
+                                       }
+                                       else
+                                       {
+                                           case1_load="0";
+                                           case1_val=case1;
+                                           case1_point="0";
+                                       }
+                                       
+                                    }
+                                   
+           
+           ///////////case 2
+                                   if(case2==undefined)
+                                   {
+                                       case2_load=0;
+                                       case2_val=0;
+                                       case2_point=0;
+                                   }
+                                   else
+                                   {
+                                   if(case2!=undefined)
+                                   {
+                                    
+                                   if(case2>=6 && case2<=10 )
+                                   {
+                                       case2_load="6 to 10";
+                                       case2_val=case2;
+                                       case2_point="2.5";
+                                   }
+                                    else if(case2>=11 && case2<=15)
+                                   {
+                                       case2_load="11 to 15";
+                                       case2_val=case2;
+                                       case2_point="5";
+                                   }
+                                   else if(case2>=16 && case2<=20)
+                                   {
+                                       case2_load="16 to 20";
+                                       case2_val=case2;
+                                       case2_point="7.5";
+                                   }
+                                   else if( case2>=20)
+                                   {
+                                       case2_load=">20";
+                                       case2_val=case2;
+                                       case2_point="10";
+                                   }
+                                   else{
+                                    
+                                        case2_load="0";
+                                        case2_val=case2;
+                                        case2_point="0";
+                                    
+                                   }
+                               }
+                           }
+                                   /////case 3
+                                   
+                                   if(case3==undefined)
+                                   {
+                                       case3_Load=0;
+                                       case3_val=0;
+                                       case3_point=0;
+                                   }
+                                   else
+                                   {
+                                       if(case3!=undefined)
+                                    {
+                                   if(case3>=3 && case3<=6)
+                                   {
+                                       case3_Load="3 to 6";
+                                       case3_val=case3;
+                                       case3_point="2.5";
+                                   }
+                                    else if(case3>=7 && case3<=10)
+                                   {
+                                       case3_Load="7 to 10";
+                                       case3_val=case3;
+                                       case3_point="5";
+                                   }
+                                   else if(case3>=11 && case3<=15)
+                                   {
+                                       case3_Load="11 to 15";
+                                       case3_val=case3;
+                                       case3_point="7.5";
+                                   }
+                                   else if( case3>=15)
+                                   {
+                                       case3_Load=">15";
+                                       case3_val=case3;
+                                       case3_point="10";
+                                   }
+                                   else {
+                                    case3_Load="0";
+                                    case3_val=case3;
+                                    case3_point="0";
+                                   }
+
+
+                               }
+                           }
+           
+           
+           
+                           //case 4
+                           if(case4==undefined)
+                                   {
+                                       case4_Load=0;
+                                       case4_val=0;
+                                       case4_point=0;
+                                   }
+                                   else
+                                   {
+                                       if(case4!=undefined)
+                                    {
+                                        
+                                   if(case4>=10 && case4<=15)
+                                   {
+                                       case4_Load="10 to 15 ";
+                                       case4_val=case4;
+                                       case4_point="2.5";
+                                   }
+                                   else  if(case4>=3 && case4<=5)
+                                   {
+                                       case4_Load="16 to 30";
+                                       case4_val=case4;
+                                       case4_point="5";
+                                   }
+                                   else if(case4>=11 && case4<=15)
+                                   {
+                                       case4_Load="31 to 50";
+                                       case4_val=case4;
+                                       case4_point="7.5";
+                                   }
+                                   else if( case4>=8)
+                                   {
+                                       case4_Load=">50";
+                                       case4_val=case4;
+                                       case4_point="10";
+                                   }
+                                   else {
+                                    case4_Load="0";
+                                    case4_val=case4;
+                                    case4_point="0";
+                                   }
+                                        }
+                                    }
+                                   
+                            $scope.total=(Number(case1_val)+Number(case2_val)+Number(case3_val)+Number(case4_val)).toFixed(2);
+                                    if($scope.total=="NaN")
+                                    $scope.total=0;
+            
+                                    $scope.dataimport=$(
+                                        "<tr>"+
+                                           "<th>"+org+"</th>"+
+                                           "<th>"+specialist_name+"</th>"+
+                                          
+                                           "<th>"+case1_load+"</th>"+
+                                           "<th>"+case1_val+"</th>"+
+                                           "<th>"+case1_point+"</th>"+
+            
+                                           "<th>"+case2_load+"</th>"+
+                                           "<th>"+case2_val+"</th>"+
+                                           "<th>"+case2_point+"</th>"+
+            
+                                           "<th>"+case3_Load+"</th>"+
+                                           "<th>"+case3_val+"</th>"+
+                                           "<th>"+case3_point+"</th>"+
+            
+                                           "<th>"+case4_Load+"</th>"+
+                                           "<th>"+case4_val+"</th>"+
+                                           "<th>"+case4_point+"</th>"+
+                                           
+                                           "<th>"+$scope.total+"</th>"+
+                                           
+                                           
+                                        "</tr>"
+                                        
+                                   )
+                                
                             $("#showdata").append($scope.dataimport);
                         }
-                
+                    }
+                               
+                                
+                }}}
                     }
         
 //Gynaecologist - PBR monitoring
@@ -2321,6 +4486,293 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist- PBR monitoring(Aggr
                 
             
            }
+        }
+
+        //Gynaecologist - PBR monitoring(CMO)
+        if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(under CMO)")
+        {
+            for(var i=0;i<$scope.eventList.length;i++)
+           {
+            var eveid=$scope.eventList[i];
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                contentType: "application/json",
+                async:false,
+                url: "../../events/"+eveid+".json",
+                 success: function (data) {
+                     var teiid=data.trackedEntityInstance;
+
+                     $.ajax({
+                        type: "GET",
+                        dataType: "json",
+                        contentType: "application/json",
+                        async:false,
+                        url: "../../trackedEntityInstances/"+teiid+".json",
+                         success: function (datanew) {
+                            
+                            for(var jj=0;jj<datanew.attributes.length;jj++)
+                            {
+
+                                var val=datanew.attributes[jj].attribute;
+                                if(datanew.attributes[jj].attribute=="U0jQjrOkFjR")
+                                {
+                                    $scope.specialist_name=datanew.attributes[jj].value;
+                                }
+                            }
+        
+        
+                             
+                        }
+                    });
+
+                }
+            });
+
+            if($scope.specialist_name==undefined)
+            {
+                $scope.specialist_name="";
+
+            }
+               var count=0;
+                for(var j in $scope.eventDeWiseValueMap)
+                {
+                   
+                    var new_uid=j.split('-');
+                    
+                    if($scope.eventList[i]==new_uid[0])
+                    {
+
+                        var orgUnitid=$scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'orgunitid']
+                        for(var k=0;k<$scope.orgunit_CMO.length;k++){
+                            if(orgUnitid==$scope.orgunit_CMO[k])
+                            {
+                                
+                        var org=getheirarchy($scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'orgunitid']);
+                        var event_date=$scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'eventDate'];
+                        var case1=$scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'kChiZJPd5je'];
+                        var case2=$scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'wTdcUXWeqhN'];
+                        var case3=$scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'eryy31EUorR'];
+                        var case4=$scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'cqw0HGZQzhD'];
+                        
+                       var case1_load,case1_val,case1_point,
+                                    case2_load,case2_val,case2_point,
+                                         case3_Load,case3_val,case3_point
+                                                case4_Load,case4_val,case4_point;
+///case 1
+                         if(case1==undefined)
+                         {
+                            case1_val=0;
+                            }
+                         else
+                         {
+                             case1_val=case1;
+                            }
+                        
+
+///////////case 2
+                        if(case2==undefined)
+                        {
+                           
+                            case2_val=0;
+                           }
+                        else
+                        {
+                        
+                            case2_val=case2;
+                        }
+                        /////case 3
+                        
+                        if(case3==undefined)
+                        {
+                            case3_val=0;
+                        }
+                        else
+                        {
+                         case3_val=case3;
+                          }
+
+
+
+                //case 4
+                if(case4==undefined)
+                        {
+                            case4_val=0;
+                            
+                        }
+                        else
+                        {
+                          case4_val=case4;
+                         }
+                       
+                $scope.total=(Number(case1_point)+Number(case2_point)+Number(case3_point)+Number(case4_point)).toFixed(2);
+                        if($scope.total=="NaN")
+                        $scope.total=0;
+
+                        $scope.dataimport=$(
+                            "<tr>"+
+                               "<th>"+event_date+"</th>"+
+                               "<th>"+org+"</th>"+
+                               "<th>"+$scope.specialist_name+"</th>"+
+                               "<th>"+case1_val+"</th>"+
+                               "<th>"+case2_val+"</th>"+
+                               "<th>"+case3_val+"</th>"+
+                               "<th>"+case4_val+"</th>"+
+                               "</tr>"
+                            
+                       )
+                    
+                $("#showdata").append($scope.dataimport);
+                
+            }
+                   
+        }}
+        }
+            
+           }
+
+          
+        }
+
+        //Gynaecologist - PBR monitoring(CMS)
+        if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(under CMS)")
+        {
+            for(var i=0;i<$scope.eventList.length;i++)
+           {
+            var eveid=$scope.eventList[i];
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                contentType: "application/json",
+                async:false,
+                url: "../../events/"+eveid+".json",
+                 success: function (data) {
+                     var teiid=data.trackedEntityInstance;
+
+                     $.ajax({
+                        type: "GET",
+                        dataType: "json",
+                        contentType: "application/json",
+                        async:false,
+                        url: "../../trackedEntityInstances/"+teiid+".json",
+                         success: function (datanew) {
+                            
+                            for(var jj=0;jj<datanew.attributes.length;jj++)
+                            {
+
+                                var val=datanew.attributes[jj].attribute;
+                                if(datanew.attributes[jj].attribute=="U0jQjrOkFjR")
+                                {
+                                    $scope.specialist_name=datanew.attributes[jj].value;
+                                }
+                            }
+        
+        
+                             
+                        }
+                    });
+
+                }
+            });
+
+            if($scope.specialist_name==undefined)
+            {
+                $scope.specialist_name="";
+
+            }
+               var count=0;
+                for(var j in $scope.eventDeWiseValueMap)
+                {
+                   
+                    var new_uid=j.split('-');
+                    
+                    if($scope.eventList[i]==new_uid[0])
+                    {
+                        var orgUnitid=$scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'orgunitid']
+                        for(var k=0;k<$scope.orgunit_CMS.length;k++){
+                            if(orgUnitid==$scope.orgunit_CMS[k])
+                            {
+                                count++;
+                        var org=getheirarchy($scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'orgunitid']);
+                        var event_date=$scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'eventDate'];
+                        var case1=$scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'kChiZJPd5je'];
+                        var case2=$scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'wTdcUXWeqhN'];
+                        var case3=$scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'eryy31EUorR'];
+                        var case4=$scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'cqw0HGZQzhD'];
+                        
+                       var case1_val,case2_val,case3_val,case4_val;
+///case 1
+                         if(case1==undefined)
+                         {
+                            case1_val=0;
+                            
+                         }
+                         else
+                         {
+                                case1_val=case1;
+                         
+                         }
+                        
+
+///////////case 2
+                        if(case2==undefined)
+                        {
+                             case2_val=0;
+                           }
+                        else
+                        {
+                           case2_val=case2;
+                         }
+                        /////case 3
+                        
+                        if(case3==undefined)
+                        {
+                             case3_val=0;
+                        }
+                        else
+                        {
+                       
+                            case3_val=case3;
+                        }
+
+
+
+                //case 4
+                if(case4==undefined)
+                        {
+                            case4_val=0;
+                        }
+                        else
+                        {
+                           case4_val=case4;
+                        }
+                       
+                $scope.total=(Number(case1_point)+Number(case2_point)+Number(case3_point)+Number(case4_point)).toFixed(2);
+                        if($scope.total=="NaN")
+                        $scope.total=0;
+
+                        $scope.dataimport=$(
+                            "<tr>"+
+                               "<th>"+event_date+"</th>"+
+                               "<th>"+org+"</th>"+
+                               "<th>"+$scope.specialist_name+"</th>"+
+                               "<th>"+case1_val+"</th>"+
+                              "<th>"+case2_val+"</th>"+
+                                "<th>"+case3_val+"</th>"+
+                              "<th>"+case4_val+"</th>"+
+                             "</tr>"
+                            
+                       )
+                  
+                $("#showdata").append($scope.dataimport);
+                
+            }
+                   
+        }}
+        }
+            
+           }
+          
         }
 
 
@@ -3538,7 +5990,7 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist- PBR monitoring(Aggr
                             });
 
                     }}$("#showdata").append($scope.dataimport);} }
-                    Loader.hideLoader()
+                  
                 }
                     
                     
@@ -3638,8 +6090,8 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist- PBR monitoring(Aggr
                 }
             }
         }
-       
-        if(programname=="Anaesthetist- PBR monitoring(Aggregated)")
+        
+        if(programname=="Anaesthetist - PBR monitoring(Aggregated)" ||programname=="Anaesthetist - PBR monitoring(under CMO(Aggregated))" ||programname=="Anaesthetist - PBR monitoring(under CMS(Aggregated))")
         {
 
         
@@ -3687,7 +6139,7 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist- PBR monitoring(Aggr
 
 
    
-    if(programname=="Gynaecologist- PBR monitoring(Aggregated)")
+    if(programname=="Gynaecologist - PBR monitoring(Aggregated)" ||programname=="Gynaecologist - PBR monitoring(under CMO(Aggregated))" ||programname=="Gynaecologist - PBR monitoring(under CMS(Aggregated))")
         {
 
         
@@ -3743,8 +6195,8 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist- PBR monitoring(Aggr
     }
 
 
-   
-        if(programname=="Paediatric- PBR monitoring(Aggregated)")
+
+        if(programname=="Paediatric - PBR monitoring(Aggregated)")
         {
             for(var i in $scope.value_entered)
             {

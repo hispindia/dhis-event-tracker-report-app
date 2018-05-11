@@ -30,8 +30,6 @@ var msfReportsApp = angular.module('msfReportsApp',['ui.bootstrap',
         }).when('/performance-report', {
             templateUrl:'views/performance-report.html',
             controller: 'performanceReportController'
-
-        
         }).otherwise({
             redirectTo : '/'
         });

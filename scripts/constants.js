@@ -64,6 +64,8 @@ const SQLQUERY_EVENT= "select ps.uid psuid,min(ps.name) psname,psi.uid ev ,psi.e
 
 const SQLQUERY_EVENT_NAME = "TRACKER_REPORTS_EVENT_V1";
 
+
+
 const SQLView_Init = [
     {
         name : SQLQUERY_TEI_ATTR_NAME,
@@ -82,7 +84,8 @@ const SQLView_Init = [
         query :SQLQUERY_EVENT,
         desc : "",
         type : "QUERY"
-    }
+    },
+  
 ];
 
 const SQLView_Init_Map = prepareIdToObjectMap(SQLView_Init,"name");
