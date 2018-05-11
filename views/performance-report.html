@@ -48,7 +48,33 @@
 
     </div>
 
-
+    <div id="Scoringtable" style="display:none">
+        <table class="table-bordered" border="1" style="float:left; ">
+            <tr>
+              <th colspan="2" style="background-color: #2980B9;">*Scoring Parameter</th>
+            </tr>
+            <tr>
+              <th style="background-color: #2980B9;">Points</th>
+              <th style="background-color: #2980B9;">Performance Based Incentives<br></th>
+            </tr>
+            <tr>
+              <td>31 – 40<br></td>
+              <td>100% Incentive<br></td>
+            </tr>
+            <tr>
+              <td>21 – 30<br></td>
+              <td>75% Incentive<br></td>
+            </tr>
+            <tr>
+              <td>11 - 20<br></td>
+              <td>50% Incentive<br></td>
+            </tr>
+            <tr>
+              <td>0 – 10<br></td>
+              <td>Penalty of 20% PBI amount to be deducted from the payment of Specialist<br></td>
+            </tr>
+          </table>
+        </div>
     <div id ="divId">
         
         <table id="tableid" class="table-bordered" border="1" style="float:left; " >
@@ -90,6 +116,7 @@
         <div class="alert alert-warning">{{'please_select_program_report'| translate}}</div>
     </div>
 </div>
+
 
  <!--<div ng-switch="selectedProgram.id" >
         <div ng-switch-when="HTCqTWEF1XS">
