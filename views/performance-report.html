@@ -43,7 +43,11 @@
         <div class="col-md-6 trim">
             <button id="btnExport" class="btn btn-primary" ng-click="fnExcelReport();" ng-disabled="!selectedProgram"> Export To Excel </button>
         </div>
-       
+        <div id="showdiv"class="row" style="display: none;">
+            <div class="col-sm-8 col-md-6 vertical-spacing">
+                <div class="alert alert-warning">Program_not_assigned</div>
+            </div>
+        </div>
        
 
     </div>
@@ -89,8 +93,8 @@
 
             </tr>
             <tr>
-                <th ng-repeat="de in psDEs1" style="background-color: #2980B9    ;">{{de.dataElement.name}}</th>
-                <th ng-repeat="de in psDEs" colspan="{{colspanval}}" style="background-color: #2980B9    ;">{{de.dataElement.name}}</th>
+                <th ng-repeat="de in psDEs1" style="background-color: #2980B9;color:white">{{de.dataElement.name}}</th>
+                <th ng-repeat="de in psDEs" colspan="{{colspanval}}" style="background-color: #2980B9;color:white">{{de.dataElement.name}}</th>
                 </tr>
             <tr>
                 <th ng-repeat="he in header track by $index " style="background-color: #85C1E9  ;">{{he}}</th>
@@ -109,13 +113,10 @@
 
         </table>
     </div>
+    
 </div>
 
-<div class="row" ng-if="selectedOrgUnit.programs.length > 0 && !selectedProgram">
-    <div class="col-sm-8 col-md-6 vertical-spacing">
-        <div class="alert alert-warning">{{'please_select_program_report'| translate}}</div>
-    </div>
-</div>
+
 
 
  <!--<div ng-switch="selectedProgram.id" >
