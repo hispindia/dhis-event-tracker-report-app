@@ -4618,7 +4618,7 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
                                                            case4_Load,case4_val,case4_point,
                                                               case5_Load,case5_val,case5_point;
            ///case 1
-                                    if(case1==undefined || case1=="NAN" ||case1=="NaN")
+                                    if(case1==undefined || case1=="NAN" ||case1=="NaN"||case1=="Infinity")
                                     {
                                        case1_load=0;
                                        case1_val=0;
@@ -4662,7 +4662,7 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
                                    
            
            ///////////case 2
-                                   if(case2==undefined || case2=="NAN" ||case2=="NaN")
+                                   if(case2==undefined || case2=="NAN" ||case2=="NaN" ||case2=="Infinity")
                                    {
                                        case2_load=0;
                                        case2_val=0;
@@ -4706,7 +4706,7 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
                            }
                                    /////case 3
                                    
-                                   if(case3==undefined || case3=="NAN" ||case3=="NaN")
+                                   if(case3==undefined || case3=="NAN" ||case3=="NaN" ||case3=="Infinity")
                                    {
                                        case3_Load=0;
                                        case3_val=0;
@@ -4758,7 +4758,7 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
            
            
                            //case 4
-                           if(case4==undefined || case4=="NAN" ||case4=="NaN")
+                           if(case4==undefined || case4=="NAN" ||case4=="NaN"||case4=="Infinity")
                                    {
                                        case4_Load=0;
                                        case4_val=0;
@@ -4809,7 +4809,7 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
            
            
                            //case 5
-                           if(case5==undefined || case5==0 || case5=="NAN" ||case5=="NaN")
+                           if(case5==undefined || case5==0 || case5=="NAN" ||case5=="NaN"||case5=="Infinity")
                                    {
                                        case5_Load="no",case5_val=0,case5_point=0;
                                    }
@@ -4991,7 +4991,7 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
                                                             case4_Load,case4_val,case4_point,
                                                                case5_Load,case5_val,case5_point;
             ///case 1
-                                     if(case1==undefined || case1=="NAN" ||case1=="NaN")
+                                     if(case1==undefined || case1=="NAN" ||case1=="NaN"||case1=="Infinity")
                                      {
                                         case1_load=0;
                                         case1_val=0;
@@ -5033,7 +5033,7 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
                                     
             
             ///////////case 2
-                                    if(case2==undefined || case2=="NAN" ||case2=="NaN")
+                                    if(case2==undefined || case2=="NAN" ||case2=="NaN"||case2=="Infinity")
                                     {
                                         case2_load=0;
                                         case2_val=0;
@@ -5076,7 +5076,7 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
                             }
                                     /////case 3
                                     
-                                    if(case3==undefined || case3=="NAN" ||case3=="NaN")
+                                    if(case3==undefined || case3=="NAN" ||case3=="NaN" ||case3=="Infinity")
                                     {
                                         case3_Load=0;
                                         case3_val=0;
@@ -5121,7 +5121,7 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
             
             
                             //case 4
-                            if(case4==undefined || case4=="NAN" ||case4=="NaN")
+                            if(case4==undefined || case4=="NAN" ||case4=="NaN"||case4=="Infinity")
                                     {
                                         case4_Load=0;
                                         case4_val=0;
@@ -5165,7 +5165,7 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
             
             
                             //case 5
-                            if(case5==undefined || case5==0 || case5=="NAN" ||case5=="NaN")
+                            if(case5==undefined || case5==0 || case5=="NAN" ||case5=="NaN"||case5=="Infinity")
                                    {
                                        case5_Load="no",case5_val=0,case5_point=0;
                                    }
