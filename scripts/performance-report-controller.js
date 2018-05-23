@@ -1631,9 +1631,9 @@ if(program=="HTCqTWEF1XS" &&programname=='Anaesthetist - PBR monitoring(under CM
 
                                             //var org=$scope.FinalEnteredVal["orgunit"];
                                             var specialist_name=$scope.FinalEnteredVal["docname"];
-                                            var case1=Number($scope.FinalEnteredVal["vhG2gN7KaEK"]);
-                                            var case2=Number($scope.FinalEnteredVal["qbgFsR4VWxU"]);
-                                            var case3=Number($scope.FinalEnteredVal["zfMOVN2lc1S"]);
+                                            var case1=$scope.FinalEnteredVal["vhG2gN7KaEK"];
+                                            var case2=$scope.FinalEnteredVal["qbgFsR4VWxU"];
+                                            var case3=$scope.FinalEnteredVal["zfMOVN2lc1S"];
                                             
                                         var case1_load,case1_val,case1_point,
                                                         case2_load,case2_val,case2_point,
@@ -1890,9 +1890,9 @@ if(program=="HTCqTWEF1XS" &&programname=='Anaesthetist - PBR monitoring(under CM
                                     //var org=$scope.eventDeWiseValueMap_final[$scope.final_singleval[i]+'-'+'orgUnit'];
                                     var specialist_name=$scope.eventDeWiseValueMap_final[$scope.final_singleval[i]+'-'+'docname'];
                                     
-                                    var case1=Number($scope.eventDeWiseValueMap_final[$scope.final_singleval[i]+'-'+'vhG2gN7KaEK']);
-                                    var case2=Number($scope.eventDeWiseValueMap_final[$scope.final_singleval[i]+'-'+'qbgFsR4VWxU']);
-                                    var case3=Number($scope.eventDeWiseValueMap_final[$scope.final_singleval[i]+'-'+'zfMOVN2lc1S']);
+                                    var case1=$scope.eventDeWiseValueMap_final[$scope.final_singleval[i]+'-'+'vhG2gN7KaEK'];
+                                    var case2=$scope.eventDeWiseValueMap_final[$scope.final_singleval[i]+'-'+'qbgFsR4VWxU'];
+                                    var case3=$scope.eventDeWiseValueMap_final[$scope.final_singleval[i]+'-'+'zfMOVN2lc1S'];
                                      
                                 var case1_load,case1_val,case1_point,
                                                 case2_load,case2_val,case2_point,
@@ -2055,10 +2055,10 @@ if(program=="HTCqTWEF1XS" &&programname=='Anaesthetist - PBR monitoring(under CM
                                         
                                 )
                             }
-                            $("#showdata").append($scope.dataimport);
+                           
                         }
                     }
-                               
+                    $("#showdata").append($scope.dataimport);         
               
                 }
 
@@ -2276,8 +2276,15 @@ if(program=="HTCqTWEF1XS" && programname=='Anaesthetist - PBR monitoring(under C
     var count=0;$scope.dataimport=$();
            for(var i=0;i<$scope.eventList.length;i++)
            {
+            $scope.eventDeWiseValueMap=$scope.eventDeWiseValueMap.sort(function(a, b){
+                if(a.firstname < b.firstname) return -1;
+                if(a.firstname > b.firstname) return 1;
+                return 0;
+            })
              for(var j in $scope.eventDeWiseValueMap)
                 {
+
+                    
                    
                     var new_uid=j.split('-');
                     
@@ -2294,7 +2301,9 @@ if(program=="HTCqTWEF1XS" && programname=='Anaesthetist - PBR monitoring(under C
                         var case2=$scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'qbgFsR4VWxU'];
                         var case3=$scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'zfMOVN2lc1S'];
                         $scope.specialist_name=$scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'docname'];
-                        
+                        console.log ($scope.specialist_name);
+
+
                        var case1_load,case1_val,case1_point,
                                     case2_load,case2_val,case2_point,
                                          case3_Load,case3_val,case3_point;
