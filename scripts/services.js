@@ -89,6 +89,20 @@ var trackerReportsAppServices = angular.module('trackerReportsAppServices', [])
                });
                return def;
            },
+           getSQLViewData : function(sqlViewUID){
+            var def = $.Deferred();
+            $.ajax({
+                type: "GET",
+                async: false,
+                dataType: "json",
+                contentType: "application/json",
+                url: '../../sqlViews/'+sqlViewUID+"/data?",
+                success: function (data) {
+                    def.resolve(data);
+                }
+            });
+            return def;
+        },
 
 
            getEnrollmentsBetweenDateProgramAndOu : function(ou,prog,start,end){
