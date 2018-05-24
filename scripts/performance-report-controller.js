@@ -4734,9 +4734,9 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
                                        case3_val=case3;
                                        case3_point="7.5";
                                    }
-                                   else if( case3>=100)
+                                   else if(case3>=75 && case3<=100)
                                    {
-                                       case3_Load=">100%";
+                                       case3_Load="75% to 100%";
                                        case3_val=case3;
                                        case3_point="10";
                                    }
@@ -5102,14 +5102,14 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
                                     {
                                         case3_Load="50% to 75%";
                                         case3_val=case3;
-                                        case3_point="3.75";
+                                        case3_point="7.5";
                                     }
-                                    else if( case3>=100)
-                                    {
-                                        case3_Load=">100%";
-                                        case3_val=case3;
-                                        case3_point="5";
-                                    }
+                                    else if(case3>=75 && case3<=100)
+                                   {
+                                       case3_Load="75% to 100%";
+                                       case3_val=case3;
+                                       case3_point="10";
+                                   }
                                     else {
                                         case3_Load="0";
                                         case3_val=case3;
