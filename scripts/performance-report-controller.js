@@ -4588,7 +4588,7 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
                                    if( case3_value2 == undefined)
                                    case3_value2=0;
 
-                                    var case3=(Math.round((case3_value1/case3_value2)*100)).toString();
+                                   var case3=(Math.round((case3_value1/case3_value2)*100)).toString();
                                     
                                                       
                                    var case4_value1_num=$scope.FinalEnteredVal['yQELYdrwRXg'];
@@ -4627,7 +4627,7 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
                                     }
                                     else
                                     {
-                                       if(case1<=300)
+                                       if(case1>=1&& case1<=300)
                                        {
                                            case1_load="<300";
                                            case1_val=case1;
@@ -5000,7 +5000,7 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
                                      }
                                      else
                                      {
-                                        if(case1<=300)
+                                        if(case1>=1 && case1<=300)
                                         {
                                             case1_load="<300";
                                             case1_val=case1;
