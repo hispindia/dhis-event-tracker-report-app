@@ -124,6 +124,13 @@ msfReportsApp
                     $scope.orgunitheirarchy[orguinit.rows[i][0]]=orguinit.rows[i][1]
                 }
             })
+            $scope.allContactNo=[]
+            MetadataService.getSQLViewData(SQLViewsName2IdMap["Get_contactno"]).then(function (contact) {
+               
+                for(var i=0;i<contact.rows.length;i++){
+                    $scope.allContactNo[contact.rows[i][0]]=contact.rows[i][1]
+                }
+            })
            
         }
         
@@ -133,6 +140,7 @@ msfReportsApp
             
             var program=['HTCqTWEF1XS','K3XysZ53B4r','CsEmq8UNA6z'];
             var postfix=["- PBR monitoring(Aggregated)","Remarks Report","- PBR monitoring(under CMO)","- PBR monitoring(under CMS)","- PBR monitoring(under CMO(Aggregated))","- PBR monitoring(under CMS(Aggregated))"]
+            var postfix2=["Remarks Report","- PBR monitoring(under CMO)","- PBR monitoring(under CMS)","- PBR monitoring(under CMO(Aggregated))","- PBR monitoring(under CMS(Aggregated))"]
             var postfix1=["- PBR monitoring(Aggregated)","Remarks Report"]
             
             $scope.Allprograms=[];
@@ -144,11 +152,12 @@ msfReportsApp
                     {
                         if (prog.programs[i].withoutRegistration == false) {
                             if(program[j]==prog.programs[i].id)
-                                $scope.selectedprograms.push(prog.programs[i])
-                           }
+                                $scope.Allprograms.push(prog.programs[i])
+                            }
                     }
                    
                  }
+                // $scope.Allprograms.push($scope.selectedprograms[2]);
                 });
                
                
@@ -157,11 +166,11 @@ msfReportsApp
                         
                         if(program[y]=="HTCqTWEF1XS" ||program[y]=="K3XysZ53B4r")
                         {
-                            for(var x=0;x<postfix.length;x++)
+                            for(var x=0;x<postfix2.length;x++)
                             {
-                            var newObject = jQuery.extend(true, {}, $scope.selectedprograms[y]);
+                            var newObject = jQuery.extend(true, {}, $scope.Allprograms[y]);
                             var str=newObject.name.split("-");
-                            newObject.name=str[0]+postfix[x];
+                            newObject.name=str[0]+postfix2[x];
                             $scope.Allprograms[$scope.Allprograms.length]=newObject
                             $scope.newObject=[];
                             }
@@ -170,7 +179,7 @@ msfReportsApp
                         {
                             for(var x=0;x<postfix1.length;x++)
                             {
-                            var newObject = jQuery.extend(true, {}, $scope.selectedprograms[y]);
+                            var newObject = jQuery.extend(true, {}, $scope.Allprograms[y]);
                             var str=newObject.name.split("-");
                             newObject.name=str[0]+postfix1[x];
                             $scope.Allprograms[$scope.Allprograms.length]=newObject
@@ -344,7 +353,7 @@ msfReportsApp
                     var div=document.getElementById("Scoringtable")
                     div.style.display="block";
                  
-                    $scope.psDEs1.push({dataElement: {id: "orgUnit", name: "orgUnit", ps: psuid}});
+                $scope.psDEs1.push({dataElement: {id: "orgUnit", name: "orgUnit", ps: psuid}});
                 $scope.psDEs1.push({dataElement: {id: "Specialist-Name", name: "Specialist Name", ps: psuid}});
                 $scope.psDEs.push({dataElement: {id: "DE1", name: "Attend pediatric OPD/ newborn babies  of the hospital (follow-up OPD post discharge from SNCU.) as per schedule.", ps: psuid}});
                 $scope.psDEs.push({dataElement: {id: "DE2", name: "Attend complicated deliveries/caesarean sections/if required. (No of Pediatric Emergency Cases attended in day time)", ps: psuid}});
@@ -626,7 +635,19 @@ msfReportsApp
                 var devalue = stageData.rows[i][index_devalue];
                 var ou =stageData.rows[i][index_ou];
                 var ou_id=stageData.rows[i][index_ouid];
-                var doc_name=stageData.rows[i][index_sname]
+
+                var num_doc=(stageData.rows[i][index_sname]).split(',');
+                if(num_doc.length==1)
+                {
+                    var doc_name=num_doc[0];
+                    var contact_no=""
+                }
+               else{
+                var doc_name=num_doc[1];
+                var contact_no=num_doc[0];
+               }
+                
+
                 /*var newkey=stageData.rows[i][9];
                 for(var key in org_val)
                 {
@@ -648,6 +669,7 @@ msfReportsApp
                     $scope.eventDeWiseValueMap[evuid + "-eventDate"] = evDate;
                     $scope.eventDeWiseValueMap[evuid + "-orgunitid"] = ou_id;
                     $scope.eventDeWiseValueMap[evuid + "-docname"] = doc_name;
+                    $scope.eventDeWiseValueMap[evuid + "-contactno"] = contact_no;
                     
                     $scope.eventDeWiseValueMap[evuid + "-activity"] = "";
 
@@ -924,7 +946,7 @@ if(program=="HTCqTWEF1XS" &&programname=='Anaesthetist - PBR monitoring(Aggregat
                                 if($scope.final_singleval[i]==new_uid[0])
                                 {
                                     count++
-                                    var org=getheirarchy($scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'orgunitid']);
+                                    var org=getheirarchy($scope.eventDeWiseValueMap_final[$scope.final_singleval[i]+'-'+'orgunitid']);
                                     //var org=$scope.eventDeWiseValueMap_final[$scope.final_singleval[i]+'-'+'orgUnit'];
                                     var specialist_name=$scope.eventDeWiseValueMap_final[$scope.final_singleval[i]+'-'+'docname'];
                                     
@@ -1083,8 +1105,8 @@ if(program=="HTCqTWEF1XS" &&programname=='Anaesthetist - PBR monitoring(under CM
                                 {
                                     $scope.FinalEnteredVal=getFinalvalue($scope.eventDeWiseValueMap,$scope.neweventval,$scope.programname); 
 
-
-                                    var orgUnitid=$scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'orgunitid']
+                                    var orgUnitid=$scope.FinalEnteredVal['orgunitid']
+                                    
                                     var returnvalue=checkorgunit(orgUnitid,programname);
                                     if(returnvalue=="true")
                                         {
@@ -1343,12 +1365,12 @@ if(program=="HTCqTWEF1XS" &&programname=='Anaesthetist - PBR monitoring(under CM
                                 
                                 if($scope.final_singleval[i]==new_uid[0])
                                 {
-                                    var orgUnitid=$scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'orgunitid']
+                                    var orgUnitid=$scope.eventDeWiseValueMap_final[$scope.final_singleval[i]+'-'+'orgunitid']
                                     var returnvalue=checkorgunit(orgUnitid,programname);
                                     if(returnvalue=="true")
                                         {
                                             count++
-                                    var org=getheirarchy($scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'orgunitid']);
+                                    var org=getheirarchy($scope.eventDeWiseValueMap_final[$scope.final_singleval[i]+'-'+'orgunitid']);
                                     //var org=$scope.eventDeWiseValueMap_final[$scope.final_singleval[i]+'-'+'orgUnit'];
                                     var specialist_name=$scope.eventDeWiseValueMap_final[$scope.final_singleval[i]+'-'+'docname'];
                                     
@@ -1622,7 +1644,7 @@ if(program=="HTCqTWEF1XS" &&programname=='Anaesthetist - PBR monitoring(under CM
                                 {
                                     $scope.FinalEnteredVal=getFinalvalue($scope.eventDeWiseValueMap,$scope.neweventval,$scope.programname); 
 
-                                    var orgUnitid=$scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'orgunitid']
+                                    var orgUnitid=$scope.FinalEnteredVal['orgunitid']
                                     var returnvalue=checkorgunit(orgUnitid,programname);
                                     if(returnvalue=="true")
                                         {
@@ -1736,7 +1758,7 @@ if(program=="HTCqTWEF1XS" &&programname=='Anaesthetist - PBR monitoring(under CM
                                             {
                                                 if(case3!=undefined)
                                             {
-                                            if( case3<=5 )
+                                            if(case3>=1 && case3<=5 )
                                             {
                                                 case3_Load="Upto 5";
                                                 case3_val=case3;
@@ -1881,12 +1903,12 @@ if(program=="HTCqTWEF1XS" &&programname=='Anaesthetist - PBR monitoring(under CM
                                 
                                 if($scope.final_singleval[i]==new_uid[0])
                                 {
-                                    var orgUnitid=$scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'orgunitid']
+                                    var orgUnitid=$scope.eventDeWiseValueMap_final[$scope.final_singleval[i]+'-'+'orgunitid']
                                     var returnvalue=checkorgunit(orgUnitid,programname);
                                     if(returnvalue=="true")
                                         {
                                             count++;
-                                    var org=getheirarchy($scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'orgunitid']);
+                                    var org=getheirarchy(orgUnitid);
                                     //var org=$scope.eventDeWiseValueMap_final[$scope.final_singleval[i]+'-'+'orgUnit'];
                                     var specialist_name=$scope.eventDeWiseValueMap_final[$scope.final_singleval[i]+'-'+'docname'];
                                     
@@ -1995,7 +2017,7 @@ if(program=="HTCqTWEF1XS" &&programname=='Anaesthetist - PBR monitoring(under CM
                                     {
                                         if(case3!=undefined)
                                     {
-                                    if(case3>0 && case3<=6 )
+                                    if(case3>=1 && case3<=5 )
                                     {
                                         case3_Load="Upto 5";
                                         case3_val=case3;
@@ -2276,12 +2298,7 @@ if(program=="HTCqTWEF1XS" && programname=='Anaesthetist - PBR monitoring(under C
     var count=0;$scope.dataimport=$();
            for(var i=0;i<$scope.eventList.length;i++)
            {
-            $scope.eventDeWiseValueMap=$scope.eventDeWiseValueMap.sort(function(a, b){
-                if(a.firstname < b.firstname) return -1;
-                if(a.firstname > b.firstname) return 1;
-                return 0;
-            })
-             for(var j in $scope.eventDeWiseValueMap)
+            for(var j in $scope.eventDeWiseValueMap)
                 {
 
                     
@@ -2619,7 +2636,7 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
                                 if($scope.final_singleval[i]==new_uid[0])
                                 {
                                     count++
-                                    var org=getheirarchy($scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'orgunitid']);
+                                    var org=getheirarchy($scope.eventDeWiseValueMap_final[$scope.final_singleval[i]+'-'+'orgunitid']);
                                     var specialist_name=$scope.eventDeWiseValueMap_final[$scope.final_singleval[i]+'-'+'docname'];
                                     
                                     var case1=$scope.eventDeWiseValueMap_final[$scope.final_singleval[i]+'-'+'kChiZJPd5je'];
@@ -2795,7 +2812,7 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
                                     count++
                                     $scope.FinalEnteredVal=getFinalvalue($scope.eventDeWiseValueMap,$scope.neweventval,$scope.programname); 
                                     
-                                    var orgUnitid=$scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'orgunitid']
+                                    var orgUnitid=$scope.FinalEnteredVal['orgunitid']
                                     var returnvalue=checkorgunit(orgUnitid,programname);
                                     if(returnvalue=="true")
                                     {
@@ -3109,12 +3126,12 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
                                 
                                 if($scope.final_singleval[i]==new_uid[0])
                                 {
-                                    var orgUnitid=$scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'orgunitid']
+                                    var orgUnitid=$scope.eventDeWiseValueMap_final[$scope.final_singleval[i]+'-'+'orgunitid']
                                     var returnvalue=checkorgunit(orgUnitid,programname);
                                     if(returnvalue=="true")
                                         {
                                             count++
-                                    var org=getheirarchy($scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'orgunitid']);
+                                    var org=getheirarchy($scope.eventDeWiseValueMap_final[$scope.final_singleval[i]+'-'+'orgunitid']);
                                     var specialist_name=$scope.eventDeWiseValueMap_final[$scope.final_singleval[i]+'-'+'docname'];
                                     
                                     var case1=$scope.eventDeWiseValueMap_final[$scope.final_singleval[i]+'-'+'kChiZJPd5je'];
@@ -3451,7 +3468,7 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
                                 {
                                     $scope.FinalEnteredVal=getFinalvalue($scope.eventDeWiseValueMap,$scope.neweventval,$scope.programname); 
                                     
-                                    var orgUnitid=$scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'orgunitid']
+                                    var orgUnitid=$scope.FinalEnteredVal['orgunitid']
                                     var returnvalue=checkorgunit(orgUnitid,programname);
                                     if(returnvalue=="true")
                                         {
@@ -3624,19 +3641,19 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
                                        case4_val=case4;
                                        case4_point="2.5";
                                    }
-                                   else  if(case4>=3 && case4<=5)
+                                   else  if(case4>=16 && case4<=30)
                                    {
                                        case4_Load="16 to 30";
                                        case4_val=case4;
                                        case4_point="5";
                                    }
-                                   else if(case4>=11 && case4<=15)
+                                   else if(case4>=31 && case4<=50)
                                    {
                                        case4_Load="31 to 50";
                                        case4_val=case4;
                                        case4_point="7.5";
                                    }
-                                   else if( case4>=8)
+                                   else if( case4>=51)
                                    {
                                        case4_Load=">50";
                                        case4_val=case4;
@@ -3765,12 +3782,12 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
                                 
                                 if($scope.final_singleval[i]==new_uid[0])
                                 {
-                                    var orgUnitid=$scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'orgunitid']
+                                    var orgUnitid=$scope.eventDeWiseValueMap_final[$scope.final_singleval[i]+'-'+'orgunitid']
                                     var returnvalue=checkorgunit(orgUnitid,programname);
                                     if(returnvalue=="true")
                                         {
                                             count++
-                                    var org=getheirarchy($scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'orgunitid']);
+                                    var org=getheirarchy($scope.eventDeWiseValueMap_final[$scope.final_singleval[i]+'-'+'orgunitid']);
                                     var specialist_name=$scope.eventDeWiseValueMap_final[$scope.final_singleval[i]+'-'+'docname'];
                                     
                                     var case1=$scope.eventDeWiseValueMap_final[$scope.final_singleval[i]+'-'+'kChiZJPd5je'];
@@ -4672,7 +4689,7 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
                                    {
                                    if(case2!=undefined)
                                    {
-                                   if(case2<=2 )
+                                    if(case2>=1 && case2<=2 )
                                    {
                                        case2_load="<2";
                                        case2_val=case2;
@@ -5043,7 +5060,7 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
                                     {
                                     if(case2!=undefined)
                                     {
-                                    if(case2<=2 )
+                                    if(case2>=1 && case2<=2 )
                                     {
                                         case2_load="<2";
                                         case2_val=case2;
@@ -5418,7 +5435,8 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
 
 
                                 $.when(orgheirarchy).then(function (res) {
-                                    
+
+                                $scope.contact_number=getcontactnumber($scope.eventList[i]);
                                 var event_date=$scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'eventDate'];
                                 var Remark=$scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'PTDWef0EKBH'];
                                 var Challenges_faced=$scope.eventDeWiseValueMap[$scope.eventList[i]+'-'+'C1Hr5tSOFhO'];
@@ -5450,6 +5468,13 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
                     
                     
 
+                getcontactnumber=function(uid)
+                {
+                    var contact=$scope.allContactNo[uid]
+                    if(contact==undefined)
+                    contact="";
+                    return contact
+                }
    
     finalvalue=function(event_date, orgheirarchy,specialist_name, Remark,Challenges_faced,contact_number)
     {
