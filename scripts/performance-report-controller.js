@@ -221,11 +221,30 @@ msfReportsApp
             saveAs(blob, "Report.xls");
 
         };
-        $scope.generateReport = function (program) {
+
+            
+           // setTimeout(function(){
+           
+          //  })
+          $scope.showloader=function(){
+           
+          }
+          $scope.generateReport=function(prog){
+            $('#loader').attr('style','display:block !important');
+            //document.getElementById("loader").style.display="block";
+           // document.getElementById("loader-wrapper").style.display="block";
+           $timeout(function(){$scope.createReport(prog)}, 5000);
+        }
+
+       // $scope.progval=[]
+        $scope.createReport = function (prog) {
+           // $scope.progval.push(prog)
+            
+            
             $scope.selectedOrgUnitName = $scope.selectedOrgUnit.name;
             $scope.selectedStartDate = $scope.startdateSelected;
             $scope.selectedEndDate = $scope.enddateSelected;
-            $scope.program = program;
+            $scope.program =  prog
 
             for (var i = 0; i < $scope.program.programTrackedEntityAttributes.length; i++) {
                 var str = $scope.program.programTrackedEntityAttributes[i].displayName;
@@ -278,7 +297,7 @@ msfReportsApp
                         if(de.dataElement.id==de_array[xx])
                         $scope.psDEs.push(de);
                     }
-                    program["newlength"] = $scope.psDEs1.length;
+                    $scope.program["newlength"] = $scope.psDEs1.length;
 
                     if ($scope.program.programStages[i].programStageDataElements[j].dataElement.optionSet != undefined) {
                         if ($scope.program.programStages[i].programStageDataElements[j].dataElement.optionSet.options != undefined) {
@@ -323,7 +342,7 @@ msfReportsApp
                         if(de.dataElement.id==de_array[xx])
                         $scope.psDEs.push(de);
                     }
-                    program["newlength"] = $scope.psDEs1.length;
+                    $scope.program["newlength"] = $scope.psDEs1.length;
 
                     if ($scope.program.programStages[i].programStageDataElements[j].dataElement.optionSet != undefined) {
                         if ($scope.program.programStages[i].programStageDataElements[j].dataElement.optionSet.options != undefined) {
@@ -370,7 +389,7 @@ msfReportsApp
                     var de = $scope.program.programStages[i].programStageDataElements[j];
                     
                     
-                    program["newlength"] = $scope.psDEs.length;
+                    $scope.program["newlength"] = $scope.psDEs.length;
 
                    
 
@@ -423,7 +442,7 @@ msfReportsApp
                         if(de.dataElement.id==$scope.newde_array[xx])
                         $scope.psDEs1.push(de);
                     }
-                    program["newlength"] = $scope.psDEs1.length;
+                    $scope.program["newlength"] = $scope.psDEs1.length;
 
                     if ($scope.program.programStages[i].programStageDataElements[j].dataElement.optionSet != undefined) {
                         if ($scope.program.programStages[i].programStageDataElements[j].dataElement.optionSet.options != undefined) {
@@ -468,7 +487,7 @@ msfReportsApp
                     var de = $scope.program.programStages[i].programStageDataElements[j];
                     
                     
-                    program["newlength"] = $scope.psDEs.length;
+                    $scope.program["newlength"] = $scope.psDEs.length;
 
                    
 
@@ -519,7 +538,7 @@ msfReportsApp
                     }
                     
 
-                    program["newlength"] = $scope.psDEs.length;
+                    $scope.program["newlength"] = $scope.psDEs.length;
 
 
                     if ($scope.program.programStages[i].programStageDataElements[j].dataElement.optionSet != undefined) {
@@ -547,12 +566,14 @@ msfReportsApp
         }
 
             //  var param = "var=program:"+program.id + "&var=orgunit:"+$scope.selectedOrgUnit.id+"&var=startdate:"+moment($scope.date.startDate).format("YYYY-MM-DD")+"&var=enddate:"+moment($scope.date.endDate).format("YYYY-MM-DD");
-            var param = "var=program:" + program.id + "&var=orgunit:" + $scope.selectedOrgUnit.id + "&var=startdate:" + $scope.startdateSelected + "&var=enddate:" + $scope.enddateSelected;
+            var param = "var=program:" + $scope.program.id + "&var=orgunit:" + $scope.selectedOrgUnit.id + "&var=startdate:" + $scope.startdateSelected + "&var=enddate:" + $scope.enddateSelected;
 
             MetadataService.getSQLView(SQLViewsName2IdMap[SQLQUERY_EVENT_NAME], param).then(function (stageData) {
                 $scope.stageData = stageData;
                 arrangeDataX($scope.stageData, $scope.programid,psuid,$scope.programname,$scope.new_psuid);
             })
+
+       // })
         };
 
 
@@ -573,7 +594,7 @@ msfReportsApp
         }
 
         function arrangeDataX(stageData,program,psuid,programname,new_psuid) {
-   
+            $scope.progval=[]
             // For Data values
             const index_deuid = 4;
             const index_devalue = 6;
@@ -1008,6 +1029,8 @@ if(program=="HTCqTWEF1XS" &&programname=='Anaesthetist - PBR monitoring(Aggregat
                             }
                             $("#showdata").append($scope.dataimport);
                         }
+                        document.getElementById("loader").style.display="none";
+           
                         if(count==0)
                         {
                          document.getElementById("divId").style.display="none";
@@ -1544,7 +1567,8 @@ if(program=="HTCqTWEF1XS" &&programname=='Anaesthetist - PBR monitoring(under CM
                         
                     } }
                     }$("#showdata").append($scope.dataimport);
-                    
+                    document.getElementById("loader").style.display="none";
+           
                     if(count==0)
                     {
                      document.getElementById("divId").style.display="none";
@@ -2084,7 +2108,8 @@ if(program=="HTCqTWEF1XS" &&programname=='Anaesthetist - PBR monitoring(under CM
               
                 }
 
-
+                document.getElementById("loader").style.display="none";
+           
                 if(count==0)
                {
                 document.getElementById("divId").style.display="none";
@@ -2168,12 +2193,15 @@ if(program=="HTCqTWEF1XS" && programname=='Anaesthetist - PBR monitoring')
                    
                     
                 }
+                //$('#loader').attr('style','display:none !important');
+                        
                 $("#showdata").append($scope.dataimport);
                 
                 
             
            }
-
+           document.getElementById("loader").style.display="none";
+                
            if(count==0)
                         {
                          document.getElementById("divId").style.display="none";
@@ -2184,6 +2212,7 @@ if(program=="HTCqTWEF1XS" && programname=='Anaesthetist - PBR monitoring')
                          document.getElementById("showdiv").style.display="none";
                          
                         }
+ 
         }
         
 ////Anaesthetist - PBR monitoring(under CMO)
@@ -2275,7 +2304,7 @@ if(program=="HTCqTWEF1XS" &&programname=='Anaesthetist - PBR monitoring(under CM
                 $("#showdata").append($scope.dataimport);   
                
                }
-
+               document.getElementById("loader").style.display="none";
                if(count==0)
                {
                 document.getElementById("divId").style.display="none";
@@ -2381,6 +2410,7 @@ if(program=="HTCqTWEF1XS" && programname=='Anaesthetist - PBR monitoring(under C
                 
             
            }
+           document.getElementById("loader").style.display="none";
 
            if(count==0)
                         {
@@ -2710,7 +2740,7 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
                             }
                             $("#showdata").append($scope.dataimport);
                         }
-                
+                        document.getElementById("loader").style.display="none";
                         if(count==0)
                         {
                          document.getElementById("divId").style.display="none";
@@ -3364,7 +3394,7 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
                                 
                             }}}
                             $("#showdata").append($scope.dataimport);
-                        
+                            document.getElementById("loader").style.display="none"; 
                     if(count==0)
                     {
                      document.getElementById("divId").style.display="none";
@@ -4022,7 +4052,7 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
                                 
                 }}}  $("#showdata").append($scope.dataimport);
 
-
+                document.getElementById("loader").style.display="none";
                 if(count==0)
                         {
                          document.getElementById("divId").style.display="none";
@@ -4261,7 +4291,7 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
                 
             
            }
-
+           document.getElementById("loader").style.display="none";
            if(count==0)
                         {
                          document.getElementById("divId").style.display="none";
@@ -4373,7 +4403,7 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
                     $("#showdata").append($scope.dataimport);
                      
            }
-
+           document.getElementById("loader").style.display="none";
            if(count==0)
            {
             document.getElementById("divId").style.display="none";
@@ -4487,7 +4517,7 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
         $("#showdata").append($scope.dataimport);
         
         }
-
+        document.getElementById("loader").style.display="none";
         if(count==0)
                         {
                          document.getElementById("divId").style.display="none";
@@ -5242,7 +5272,7 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
                         }
                         
                         
-
+                        document.getElementById("loader").style.display="none";
                         if(count==0)
                         {
                          document.getElementById("divId").style.display="none";
@@ -5402,7 +5432,7 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
                 
             
            }
-
+           document.getElementById("loader").style.display="none";
            if(count==0)
                         {
                          document.getElementById("divId").style.display="none";
@@ -5462,7 +5492,8 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
 
                             });
 
-                    }}$("#showdata").append($scope.dataimport);} }
+                    }}$("#showdata").append($scope.dataimport);
+                document.getElementById("loader").style.display="none";} }
                   
                 }
                     
