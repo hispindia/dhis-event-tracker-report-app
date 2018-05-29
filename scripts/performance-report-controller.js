@@ -233,7 +233,7 @@ msfReportsApp
             $('#loader').attr('style','display:block !important');
             //document.getElementById("loader").style.display="block";
            // document.getElementById("loader-wrapper").style.display="block";
-           $timeout(function(){$scope.createReport(prog)}, 5000);
+           $timeout(function(){$scope.createReport(prog)}, 2000);
         }
 
        // $scope.progval=[]
