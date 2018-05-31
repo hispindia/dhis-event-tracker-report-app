@@ -62,7 +62,7 @@ where path like '%${orgunit}%') and psi.executiondate between '${startdate}' and
 
 const SQLQUERY_EVENT_NAME = "TRACKER_REPORTS_EVENT_V1";
 
-
+const CMO_uid='zn7QglcpZdg',CMS_uid='NPSH96qOxoV'
 
 const SQLView_Init = [
     {

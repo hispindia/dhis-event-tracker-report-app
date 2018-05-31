@@ -19,14 +19,14 @@ var trackerReportsAppServices = angular.module('trackerReportsAppServices', [])
                });
                return def;
            },
-           filterCMO_CMS : function(sqlViewUID,orgUnitid){
+           filterCMO_CMS : function(uid){
             var def = $.Deferred();
             $.ajax({
                 type: "GET",
                 dataType: "json",
                 async: false,
                 contentType: "application/json",
-                url: '../../sqlViews/'+sqlViewUID+'/data?var=orgunitid:'+orgUnitid+'',
+                url: '../../organisationUnitGroups/'+uid+'.json?fields=organisationUnits[id]',
                 success: function (data) {
                     def.resolve(data);
                 }

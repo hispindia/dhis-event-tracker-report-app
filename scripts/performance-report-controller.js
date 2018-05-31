@@ -70,52 +70,21 @@ msfReportsApp
               setTimeout(function(){
                 $scope.orgunit_CMO=[],$scope.orgunit_CMS=[];
                 if($scope.selectedOrgUnitlevel==2){
-                    MetadataService.filterCMO_CMS(SQLViewsName2IdMap["FILTER_CMS_STATE"],$scope.selectedOrgUnitUid[0]).then(function (org) {
-                        for(var i=0;i<org.rows.length;i++)
+
+                    MetadataService.filterCMO_CMS(CMS_uid).then(function (org) {
+                        for(var i=0;i<org.organisationUnits.length;i++)
                         {
-                            $scope.orgunit_CMS[org.rows[i][0]]="true";
+                            $scope.orgunit_CMS[org.organisationUnits[i].id]="true";
                         }
                     })
-                    MetadataService.filterCMO_CMS(SQLViewsName2IdMap["FILTER_CMO_STATE"],$scope.selectedOrgUnitUid[0]).then(function (org) {
-                        for(var i=0;i<org.rows.length;i++)
+                    MetadataService.filterCMO_CMS(CMO_uid).then(function (org) {
+                        for(var i=0;i<org.organisationUnits.length;i++)
                         {
-                            $scope.orgunit_CMO[org.rows[i][0]]="true";
+                            $scope.orgunit_CMO[org.organisationUnits[i].id]="true";
                         }
                     })
                 }
-                if($scope.selectedOrgUnitlevel==3){
-                    MetadataService.filterCMO_CMS(SQLViewsName2IdMap["FILTER_CMO_DIVISION"],$scope.selectedOrgUnitUid[0]).then(function (org) {
-                    
-                        for(var i=0;i<org.rows.length;i++)
-                        {
-                            var mm=org.rows[i][0]
-                            $scope.orgunit_CMO[org.rows[i][0]]="true";
-                        }
-                    })
-                    MetadataService.filterCMO_CMS(SQLViewsName2IdMap["FILTER_CMS_DIVISION"],$scope.selectedOrgUnitUid[0]).then(function (org) {
-                        for(var i=0;i<org.rows.length;i++)
-                        {
-                            $scope.orgunit_CMS[org.rows[i][0]]="true";
-                        }
-                    })
-                   }
-                   if($scope.selectedOrgUnitlevel==4){
-                    MetadataService.filterCMO_CMS(SQLViewsName2IdMap["FILTER_CMO_DISTRICT"],$scope.selectedOrgUnitUid[0]).then(function (org) {
-                    
-                        for(var i=0;i<org.rows.length;i++)
-                        {
-                            var mm=org.rows[i][0]
-                            $scope.orgunit_CMO[org.rows[i][0]]="true";
-                        }
-                    })
-                    MetadataService.filterCMO_CMS(SQLViewsName2IdMap["FILTER_CMS_DISTRICT"],$scope.selectedOrgUnitUid[0]).then(function (org) {
-                        for(var i=0;i<org.rows.length;i++)
-                        {
-                            $scope.orgunit_CMS[org.rows[i][0]]="true";
-                        }
-                    })
-                   }
-                   
+                
                 
             }, 2000)
             MetadataService.getSQLViewData(SQLViewsName2IdMap["UPHMIS_Heirarchy"]).then(function (orguinit) {
