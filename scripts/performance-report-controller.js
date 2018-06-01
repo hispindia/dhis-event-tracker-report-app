@@ -2929,7 +2929,7 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
                                    {
                                        if(case3!=undefined)
                                     {
-                                   if(case3<=2 )
+                                   if(case3>=1 && case3<=2 )
                                    {
                                        case3_Load="Upto 2";
                                        case3_val=case3;
@@ -3247,7 +3247,7 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
                                   {
                                       if(case3!=undefined)
                                    {
-                                  if(case3<=2 )
+                                  if(case3>=1 && case3<=2 )
                                   {
                                       case3_Load="Upto 2";
                                       case3_val=case3;
