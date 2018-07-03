@@ -6101,33 +6101,33 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
                 }
                 if(case5 !=undefined)
                 {
-                    val5+=Number(case4);
+                    val5+=Number(case5);
                 }
                 if(case6 !=undefined)
                 {
-                    val6+=Number(case4);
+                    val6+=Number(case6);
                 }
                 if(case7 !=undefined)
                 {
-                    val7+=Number(case4);
+                    val7+=Number(case7);
                 }
                 if(case8 !=undefined)
                 {
-                    val8+=Number(case4);
+                    val8+=Number(case8);
                 }
                 if(case9 !=undefined)
                 {
-                    val9+=Number(case4);
+                    val9+=Number(case9);
                 }
                 if(case10 !=undefined)
                 {
-                    val10+=Number(case4);
+                    val10+=Number(case10);
                 }
                 if(case11 !=undefined)
                 {
-                    val11+=Number(case4);
+                    val11+=Number(case11);
                 }
-                if(case1 ==undefined && case2 ==undefined && case3 ==undefined && case4 ==undefined)
+                if(case1 ==undefined && case2 ==undefined && case3 ==undefined && case4 ==undefined&& case5 ==undefined&& case6 ==undefined&& case7 ==undefined&& case8 ==undefined&& case9 ==undefined&& case10 ==undefined&& case11 ==undefined)
                 {
                     count++;
                 }
