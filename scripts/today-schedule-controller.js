@@ -94,7 +94,19 @@ msfReportsApp
 
         }
 
-       $scope.generateReport = function(program){
+        $scope.showloader=function(){
+           
+        }
+        $scope.generateReport=function(prog){
+          $('#loader').attr('style','display:block !important');
+          //document.getElementById("loader").style.display="block";
+         // document.getElementById("loader-wrapper").style.display="block";
+         $timeout(function(){$scope.createReport(prog)}, 2000);
+      }
+
+     // $scope.progval=[]
+      $scope.createReport = function (program) {
+         // $scope.progval.push(prog)
 
                $scope.program = program;
 
@@ -153,10 +165,13 @@ msfReportsApp
 
                             MetadataService.getALLAttributes().then(function (allattr) {
                                 $scope.allattr = allattr;
+                                MetadataService.getSQLView(SQLViewsName2IdMap['TRACKER_REPORTS_ALL_TEI_ATTR'], param).then(function (AllstageData) {
+                    
+                                    $scope.AllstageData = AllstageData;
 
-
-                                arrangeDataX($scope.stageData, $scope.attrData, $scope.allattr);
+                                arrangeDataX($scope.stageData, $scope.attrData, $scope.allattr,$scope.AllstageData);
                             })
+                        })
                         })
                     })
 
@@ -182,7 +197,7 @@ msfReportsApp
 
         }
 
-        function arrangeDataX(stageData,attrData,allattr){
+        function arrangeDataX(stageData,attrData,allattr,AllstageData){
 
             var report = [{
                 teiuid : ""
@@ -219,7 +234,7 @@ msfReportsApp
             const index_evDate = 4;
             const index_ou = 8;
 
-
+            var allteiuid=[]
             for (var i=0;i<attrData.height;i++){
 
                 var teiuid = attrData.rows[i][index_tei];
@@ -244,42 +259,6 @@ msfReportsApp
                     }
                 }
 
-            /*    anonymous(0,attrData);
-
-                function completeAnonymous(index,data){
-                    anonymous(index+1,data);
-
-                }
-                function anonymous(index, attrData){
-
-                    if (index == attrData.rows.length) {
-                        def.resolve("");
-                        return
-                    }
-
-                //    var def = $.Deferred();
-                    $.ajax({
-                        async:false,
-                        type: "GET",
-                        dataType: "json",
-                        contentType: "application/json",
-                        url: '../../trackedEntityAttributes/'+attruid+'.json?fields=*,attributeValues[*,attribute[id,name,code]]&paging=false',
-                        success: function (data) {
-                            // def.resolve(data);
-                            if (data.attributeValues.length > 0) {
-                                for (var k = 0; k < data.attributeValues.length; k++) {
-                                    if (data.attributeValues[k].attribute.code == 'Anonymous?'&& data.attributeValues[k].value == 'true')
-                                    {
-                                        attrvalue = 'ANONYMOUS';
-                                    }
-                                }
-                            }
-                        }
-                    });
-                    completeAnonymous(index,attrData);
-                   // return def;
-                }
-*/
                     if (teiWiseAttrMap[teiuid] == undefined){
                     teiWiseAttrMap[teiuid] = [];
                 }
@@ -290,17 +269,24 @@ msfReportsApp
                 $scope.teiEnrollMap[teiuid+"-enrollDate"] = enrollDate;
                 $scope.teiEnrollOrgMap[teiuid+"-ouname"] = ouname;
 
+                
+                allteiuid.push(teiuid)
                 for(m in $scope.Options){
 
                     if(attrvalue+'_index' == m){
 
                         $scope.attrMap[teiuid+"-"+attruid] = $scope.Options[m];
+                        
                     }
 
                 }
 
             }
+           
 
+            $scope.allteiuid = allteiuid.filter(function(elem, index, self) {
+                return index === self.indexOf(elem);
+            })
             for (key in teiWiseAttrMap){
                 $scope.teiList.push({teiuid : key});
             //    $scope.attrMap =$scope.attrMap;
@@ -316,7 +302,10 @@ msfReportsApp
             var eventToMiscMap = [];
                 eventToMiscMap["dummy"] = {ou : "" , evDate : ""};
             var teiList = [];
-            for (var i=0;i<stageData.height;i++) {
+
+       
+
+            for (var i=0;i<stageData.rows.length;i++) {
                 var teiuid = stageData.rows[i][index_tei];
                 var psuid = stageData.rows[i][index_ps];
                 var evuid = stageData.rows[i][index_ev];
@@ -354,8 +343,22 @@ msfReportsApp
                 eventToMiscMap[evuid] = {ou : ou , evDate : evDate};
                 teiPsEventDeMap[teiuid + "-" + evuid + "-" + deuid] = devalue;
             }
-                var TheRows = [];
+                $scope.TheRows = [];
                 var psDes = $scope.psDEs;
+               
+               
+                
+
+                
+                 for(var i=0;i<$scope.allteiuid.length;i++)
+                {
+                    var returnval=checkteival(teiList,$scope.allteiuid[i])
+                    if(returnval==true)
+                    $scope.allteiuid.splice(i, 1); 
+    
+                }
+
+                $scope.emptyval=[];
 
                 for (key in teiList){
                     var teiuid = key;
@@ -366,7 +369,7 @@ msfReportsApp
                     if (maxEventCount == 0){debugger}
                     for (var y=0;y<maxEventCount;y++){
 
-                        TheRows = [];
+                        $scope.TheRows = [];
                         for (var x=0;x<psDes.length;x++){
                         var psuid = psDes[x].dataElement.ps;
                         var deuid = psDes[x].dataElement.id;
@@ -394,18 +397,28 @@ msfReportsApp
 
                                 }
                             }
-                            TheRows.push(val?val:"");
+                            $scope.TheRows.push(val?val:"");
                         }
-                        $scope.eventList[teiuid].push(TheRows);
+                        $scope.eventList[teiuid].push($scope.TheRows);
                     }
                 }
-
+                for(var i=0;i<$scope.TheRows.length;i++)
+               $scope.emptyval.push("");
+               $('#divIdmmm').attr('style','display:block !important');
+         
             $scope.teiPerPsEventListMap = teiPerPsEventListMap;
-            $scope.teiList = Object.keys(teiList);
-            hideLoad();
+            $scope.teiListnew =  Object.keys(teiList);
+            $scope.teiList = $scope.allteiuid;
+            document.getElementById("loader").style.display="none";
+           
         }
 
+            checkteival=function(teiList,allteiuid)
+            {
+                var value=teiList[allteiuid]
 
+                return value;
+            }
 
     });
 
