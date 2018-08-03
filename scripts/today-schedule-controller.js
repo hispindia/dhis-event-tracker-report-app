@@ -165,12 +165,12 @@ msfReportsApp
 
                             MetadataService.getALLAttributes().then(function (allattr) {
                                 $scope.allattr = allattr;
-                                MetadataService.getSQLView(SQLViewsName2IdMap['TRACKER_REPORTS_ALL_TEI_ATTR'], param).then(function (AllstageData) {
+                               // MetadataService.getSQLView(SQLViewsName2IdMap['TRACKER_REPORTS_ALL_TEI_ATTR'], param).then(function (AllstageData) {
                     
-                                    $scope.AllstageData = AllstageData;
+                                   // $scope.AllstageData = AllstageData;
 
-                                arrangeDataX($scope.stageData, $scope.attrData, $scope.allattr,$scope.AllstageData);
-                            })
+                                arrangeDataX($scope.stageData, $scope.attrData, $scope.allattr);
+                          //  })
                         })
                         })
                     })
@@ -197,7 +197,7 @@ msfReportsApp
 
         }
 
-        function arrangeDataX(stageData,attrData,allattr,AllstageData){
+        function arrangeDataX(stageData,attrData,allattr){
 
             var report = [{
                 teiuid : ""
