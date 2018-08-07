@@ -17,10 +17,11 @@ var msfReportsApp = angular.module('msfReportsApp',['ui.bootstrap',
 
 .config(function($routeProvider,$translateProvider){
         $routeProvider.when('/', {
-            templateUrl:'views/home.html',
-            controller: 'homeController'
+            templateUrl:'views/tracker-report.html',
+            controller: 'TodayScheduleController'
+       
         }).when('/schedule-today', {
-            templateUrl:'views/schedule-today.html',
+            templateUrl:'views/tracker-report.html',
             controller: 'TodayScheduleController'
 
         }).when('/event-report', {

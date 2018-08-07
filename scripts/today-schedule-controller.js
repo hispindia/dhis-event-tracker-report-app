@@ -47,7 +47,11 @@ msfReportsApp
         // Listen for OU changes
         selection.setListenerFunction(function(){
             $scope.selectedOrgUnitUid = selection.getSelected();
-            loadPrograms();
+
+            if($scope.selectedOrgUnitUid=="wnDm6jbp27v")
+              alert("Please select the Level below 1")
+               else
+              loadPrograms();
         },false);
 
         loadPrograms = function(){
