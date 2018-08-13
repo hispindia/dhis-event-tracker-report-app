@@ -66,14 +66,22 @@
 
 <div style="padding-bottom:2000px">
     <table id="tableid1" class="table-bordered custom" border="2">
-        <tbody  ng-repeat="tei in teiList">
+            <tbody  ng-repeat="tei in teiList">
+                    <tr  ng-repeat="event in eventList[tei] track by $index" >
+                        <td>{{teiEnrollMap[tei+"-enrollDate"]}}</td>
+                        <td>{{teiEnrollOrgMap[tei+"-ouname"]}}</td>
+                        <td  ng-repeat="attr in program.programTrackedEntityAttributes">{{attrMap[tei+"-"+attr.trackedEntityAttribute.id]}} </td>
+                        <td  ng-repeat="value in event track by $index">{{value}}</td>
+                    </tr>
+             </tbody>
+       <!-- <tbody  ng-repeat="tei in teiList">
             <tr  ng-repeat="event in eventList[tei] track by $index" >
                 <td>{{teiEnrollMap[tei+"-enrollDate"]}}</td>
                 <td>{{teiEnrollOrgMap[tei+"-ouname"]}}</td>
                 <td  ng-repeat="attr in program.programTrackedEntityAttributes">{{attrMap[tei+"-"+attr.trackedEntityAttribute.id]}} </td>
-                <td ng-repeat="value in event track by $index">{{value}}</td>
+                <td  ng-repeat="value in event track by $index">{{value}}</td>
             </tr>
-     </tbody>
+     </tbody>-->
     </table>
 </div>
    

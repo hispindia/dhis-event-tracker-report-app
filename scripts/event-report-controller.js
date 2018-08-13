@@ -79,25 +79,7 @@ msfReportsApp
 
         $scope.fnExcelReport = function(){
 
-           /* str="";
-
-            var myTableHead = document.getElementById('tbhead');
-            var rowCount = myTableHead.rows.length;
-            var colCount = myTableHead.getElementsByTagName("tr")[0].getElementsByTagName("th").length; 
-
-            var ExcelApp = new ActiveXObject("Excel.Application");
-            var ExcelSheet = new ActiveXObject("Excel.Sheet");
-            ExcelSheet.Application.Visible = true;
-
-            for(var i=0; i<rowCount; i++) 
-            {   
-                for(var j=0; j<colCount; j++) 
-                {           
-                    str= myTableHead.getElementsByTagName("tr")[i].getElementsByTagName("th")[j].innerHTML;
-                    ExcelSheet.ActiveSheet.Cells(i+1,j+1).Value = str;
-                }
-            }*/
-        
+          
             var blob = new Blob([document.getElementById('divId').innerHTML], {
                  type: 'text/plain;charset=utf-8',
                  endings: 'native' 
@@ -180,8 +162,7 @@ msfReportsApp
                 $scope.selectedOrgUnitName_level_id=$scope.selectedOrgUnit.id;
             }
 
-            //  var param = "var=program:"+program.id + "&var=orgunit:"+$scope.selectedOrgUnit.id+"&var=startdate:"+moment($scope.date.startDate).format("YYYY-MM-DD")+"&var=enddate:"+moment($scope.date.endDate).format("YYYY-MM-DD");
-            var param = "var=program:"+program.id + "&var=orgunit:"+$scope.selectedOrgUnitName_level_id+"&var=startdate:"+$scope.startdateSelected+"&var=enddate:"+$scope.enddateSelected;
+             var param = "var=program:"+program.id + "&var=orgunit:"+$scope.selectedOrgUnitName_level_id+"&var=startdate:"+$scope.startdateSelected+"&var=enddate:"+$scope.enddateSelected;
 
             MetadataService.getSQLView(SQLViewsName2IdMap[SQLQUERY_TEI_DATA_VALUE_NAME], param).then(function (stageData) {
                 $scope.stageData = stageData;
@@ -201,24 +182,15 @@ msfReportsApp
         }
 
         function showLoad()
-        {// alert( "inside showload method 1" );
+        {
             setTimeout(function(){
 
 
-                //  document.getElementById('load').style.visibility="visible";
-                //   document.getElementById('tableid').style.visibility="hidden";
-
             },1000);
 
-            //     alert( "inside showload method 2" );
-        }
+            }
         function hideLoad() {
-
-            //  document.getElementById('load').style.visibility="hidden";
-            //  document.getElementById('tableid').style.visibility="visible";
-
-
-        }
+}
         function arrangeDataX(stageData,attrData,allenrollments){
             
             var allteid=[]
@@ -255,7 +227,8 @@ msfReportsApp
 
             $scope.teiEnrollOrgMap = [];
             $scope.teiEnrollMap =[];
-
+            $scope.teiEnrollMaptest=[]
+            
             var teiPsMap = [];
             var teiPsEventMap = [];
             var teiPsEventDeMap = [];
@@ -277,7 +250,13 @@ msfReportsApp
             const index_ev = 3;
             const index_evDate = 4;
             const index_ou = 8;
+            for (var i=0;i<attrData.height;i++){
+                var teiuid = attrData.rows[i][index_tei];
+                var enrollDate = attrData.rows[i][index_enrollmentDate]; // enrollment date
+                enrollDate = enrollDate.substring(0, 10);
+                $scope.teiEnrollMaptest[teiuid]=enrollDate;
 
+            }
             for (var i=0;i<attrData.height;i++){
                 var teiuid = attrData.rows[i][index_tei];
                 var attruid = attrData.rows[i][index_attruid];
@@ -289,7 +268,6 @@ msfReportsApp
                     teiWiseAttrMap[teiuid] = [];
                 }
                 teiWiseAttrMap[teiuid].push(attrData.rows[i]);
-                // $scope.attrMap[teiuid+"-"+attruid] = ouname;
                 if(attrvalue=="true")
                 {
                     attrvalue="Yes";
@@ -298,21 +276,22 @@ msfReportsApp
                 {
                     attrvalue="No";
                 }
-                $scope.attrMap[teiuid+"-"+attruid] = attrvalue;
+                var datevalue=getval(teiuid)
+                
+                $scope.attrMap[datevalue+"-"+teiuid+"-"+attruid] = attrvalue;
 
-                $scope.teiEnrollMap[teiuid+"-enrollDate"] = enrollDate;
-
+                $scope.teiEnrollMap[datevalue+"-"+teiuid+"-enrollDate"] = enrollDate;
+                
                 for (var k=0; k< allenrollments.enrollments.length;k++) {
                     if (allenrollments.enrollments[k].trackedEntityInstance == attrData.rows[i][0]) {
-                        $scope.teiEnrollOrgMap[teiuid + "-ouname"] = allenrollments.enrollments[k].orgUnitName;
+                        $scope.teiEnrollOrgMap[datevalue+"-"+teiuid + "-ouname"] = allenrollments.enrollments[k].orgUnitName;
                     }
                 }
-                //    $scope.teiEnrollOrgMap[teiuid + "-ouname"] = ouname;
                 for(m in $scope.Options){
 
                     if(attrvalue+'_index' == m){
 
-                        $scope.attrMap[teiuid+"-"+attruid] = $scope.Options[m];
+                        $scope.attrMap[datevalue+"-"+teiuid+"-"+attruid] = $scope.Options[m];
                     }
 
                 }
@@ -320,9 +299,9 @@ msfReportsApp
             }
 
             for (key in teiWiseAttrMap){
+                var testval=getval(key)
                 $scope.teiList.push({teiuid : key});
-                //    $scope.attrMap =$scope.attrMap;
-            }
+                }
 
             $timeout(function(){
                 $scope.teiList = $scope.teiList;
@@ -378,7 +357,9 @@ msfReportsApp
           
             for (key in teiList){
                 var teiuid = key;
-                $scope.eventList[teiuid] = [];
+                var datevalue=getval(teiuid)
+                
+                $scope.eventList[datevalue+"-"+teiuid] = [];
                 
            
                 
@@ -438,16 +419,31 @@ msfReportsApp
 
                             
                         }
-                        
-                        $scope.eventList[teiuid].push($scope.TheRows);
+                        var datevalue=getval(teiuid)
+                
+                        $scope.eventList[datevalue+"-"+teiuid].push($scope.TheRows);
                 }
             }
 
             $scope.teiPerPsEventListMap = teiPerPsEventListMap;
-            $scope.teiList = Object.keys(teiList);
+            $scope.teiListvalue = Object.keys(teiList);
+            $scope.teiList=[]
+            for(var i=0;i<$scope.teiListvalue.length;i++)
+            {
+                var dateval=getval($scope.teiListvalue[i])
+                $scope.teiList.push(dateval+"-"+$scope.teiListvalue[i])
+            }
+            $scope.teiList=$scope.teiList.sort()
             hideLoad();
         }
 
+        getval=function(key){
+
+            date=$scope.teiEnrollMaptest[key]
+            
+                return date
+           
+        }
 
 
     });
