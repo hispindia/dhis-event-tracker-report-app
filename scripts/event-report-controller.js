@@ -87,8 +87,14 @@ msfReportsApp
                 saveAs(blob, "AES/AMES-Report.xls");
              
         };
-
-        $scope.generateReport = function(program){
+        $scope.generateReport=function(prog){
+            $('#loader').attr('style','display:block !important');
+            //document.getElementById("loader").style.display="block";
+           // document.getElementById("loader-wrapper").style.display="block";
+           $timeout(function(){$scope.createReport(prog)}, 2000);
+        }
+        $scope.createReport = function (program) {
+            
             $scope.selectedOrgUnitName_level=$scope.selectedOrgUnit.level;
             $scope.selectedOrgUnitName = $scope.selectedOrgUnit.name;
             $scope.selectedStartDate = $scope.startdateSelected;
@@ -435,6 +441,8 @@ msfReportsApp
             }
             $scope.teiList=$scope.teiList.sort()
             hideLoad();
+            document.getElementById("loader").style.display="none";
+           
         }
 
         getval=function(key){
