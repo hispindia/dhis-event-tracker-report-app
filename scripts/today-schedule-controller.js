@@ -168,17 +168,15 @@ msfReportsApp
                             $scope.attrData = attrData;
                            
                            
-                            MetadataService.getSQLView(SQLViewsName2IdMap["TRACKER_REPORTS_EVENT_OUNAME"], param).then(function (ouname) {
-                                $scope.ouname=ouname
                             MetadataService.getALLAttributes().then(function (allattr) {
                                 $scope.allattr = allattr;
                                // MetadataService.getSQLView(SQLViewsName2IdMap['TRACKER_REPORTS_ALL_TEI_ATTR'], param).then(function (AllstageData) {
                     
                                    // $scope.AllstageData = AllstageData;
 
-                                arrangeDataX($scope.stageData, $scope.attrData, $scope.allattr,$scope.ouname);
+                                arrangeDataX($scope.stageData, $scope.attrData, $scope.allattr);
                           //  })
-                        })
+                        
                         })
                     })
                     })
@@ -205,7 +203,7 @@ msfReportsApp
 
         }
 
-        function arrangeDataX(stageData,attrData,allattr,ouname){
+        function arrangeDataX(stageData,attrData,allattr){
 
             var report = [{
                 teiuid : ""
