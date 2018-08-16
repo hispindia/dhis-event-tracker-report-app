@@ -413,6 +413,8 @@ msfReportsApp
             $scope.teiPerPsEventListMap = teiPerPsEventListMap;
             $scope.teiListnew =  Object.keys(teiList);
             $scope.teiList = $scope.allteiuid;
+
+            $scope.teiList = $scope.teiList.filter(val => !$scope.teiListnew.includes(val));
             document.getElementById("loader").style.display="none";
            
         }
