@@ -157,7 +157,7 @@ msfReportsApp
 
                }
 
-
+               
          //  var param = "var=program:"+program.id + "&var=orgunit:"+$scope.selectedOrgUnit.id+"&var=startdate:"+moment($scope.date.startDate).format("YYYY-MM-DD")+"&var=enddate:"+moment($scope.date.endDate).format("YYYY-MM-DD");
            var param = "var=program:"+program.id + "&var=orgunit:"+$scope.selectedOrgUnit.id+"&var=startdate:"+$scope.startdateSelected+"&var=enddate:"+$scope.enddateSelected;
 
@@ -166,17 +166,21 @@ msfReportsApp
 
                         MetadataService.getSQLView(SQLViewsName2IdMap[SQLQUERY_TEI_ATTR_NAME], param).then(function (attrData) {
                             $scope.attrData = attrData;
-
+                           
+                           
+                            MetadataService.getSQLView(SQLViewsName2IdMap["TRACKER_REPORTS_EVENT_OUNAME"], param).then(function (ouname) {
+                                $scope.ouname=ouname
                             MetadataService.getALLAttributes().then(function (allattr) {
                                 $scope.allattr = allattr;
                                // MetadataService.getSQLView(SQLViewsName2IdMap['TRACKER_REPORTS_ALL_TEI_ATTR'], param).then(function (AllstageData) {
                     
                                    // $scope.AllstageData = AllstageData;
 
-                                arrangeDataX($scope.stageData, $scope.attrData, $scope.allattr);
+                                arrangeDataX($scope.stageData, $scope.attrData, $scope.allattr,$scope.ouname);
                           //  })
                         })
                         })
+                    })
                     })
 
        }
@@ -201,7 +205,7 @@ msfReportsApp
 
         }
 
-        function arrangeDataX(stageData,attrData,allattr){
+        function arrangeDataX(stageData,attrData,allattr,ouname){
 
             var report = [{
                 teiuid : ""
@@ -239,14 +243,18 @@ msfReportsApp
             const index_ou = 8;
 
             var allteiuid=[]
-            for (var i=0;i<attrData.height;i++){
 
+           
+            for (var i=0;i<attrData.height;i++){
+                
                 var teiuid = attrData.rows[i][index_tei];
+                
                 var attruid = attrData.rows[i][index_attruid];
                 var attrvalue = attrData.rows[i][index_attrvalue];
                 var ouname = attrData.rows[0][index_ouname];
                 var enrollDate = attrData.rows[i][index_enrollmentDate]; // enrollment date
                 enrollDate = enrollDate.substring(0, 10);
+                var ounamenew = attrData.rows[i][index_ouname];
 
                // if (allattr.length > 0) {
                 for(var m=0; m<allattr.trackedEntityAttributes.length; m++) {
@@ -269,10 +277,11 @@ msfReportsApp
                 teiWiseAttrMap[teiuid].push(attrData.rows[i]);
                 // $scope.attrMap[teiuid+"-"+attruid] = ouname;
                 $scope.attrMap[teiuid+"-"+attruid] = attrvalue;
+                
 
+                $scope.teiEnrollOrgMap[teiuid+"-ouname"] = ounamenew;
                 $scope.teiEnrollMap[teiuid+"-enrollDate"] = enrollDate;
-                $scope.teiEnrollOrgMap[teiuid+"-ouname"] = ouname;
-
+                
                 
                 allteiuid.push(teiuid)
                 for(m in $scope.Options){
