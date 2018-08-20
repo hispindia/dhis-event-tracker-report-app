@@ -94,8 +94,15 @@ msfReportsApp
 
         }
 
-       $scope.generateReport = function(program){
+        $scope.generateReport=function(prog){
+            $('#loader').attr('style','display:block !important');
+            //document.getElementById("loader").style.display="block";
+           // document.getElementById("loader-wrapper").style.display="block";
+           $timeout(function(){$scope.createReport(prog)}, 2000);
+        }
 
+       // $scope.progval=[]
+        $scope.createReport = function (program) {
                $scope.program = program;
 
            for(var i=0; i<$scope.program.programTrackedEntityAttributes.length;i++){
@@ -403,6 +410,8 @@ msfReportsApp
             $scope.teiPerPsEventListMap = teiPerPsEventListMap;
             $scope.teiList = Object.keys(teiList);
             hideLoad();
+            document.getElementById("loader").style.display="none";
+           
         }
 
 
