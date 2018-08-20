@@ -235,6 +235,7 @@ msfReportsApp
                 var ouname = attrData.rows[0][index_ouname];
                 var enrollDate = attrData.rows[i][index_enrollmentDate]; // enrollment date
                 enrollDate = enrollDate.substring(0, 10);
+                var ounamenew = attrData.rows[i][index_ouname];
 
                // if (allattr.length > 0) {
                 for(var m=0; m<allattr.trackedEntityAttributes.length; m++) {
@@ -295,8 +296,8 @@ msfReportsApp
                 $scope.attrMap[teiuid+"-"+attruid] = attrvalue;
 
                 $scope.teiEnrollMap[teiuid+"-enrollDate"] = enrollDate;
-                $scope.teiEnrollOrgMap[teiuid+"-ouname"] = ouname;
-
+                $scope.teiEnrollOrgMap[teiuid+"-ouname"] = ounamenew;
+                
                 for(m in $scope.Options){
 
                     if(attrvalue+'_index' == m){
