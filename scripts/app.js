@@ -16,29 +16,29 @@ var msfReportsApp = angular.module('msfReportsApp',['ui.bootstrap',
 ])
 
 .config(function($routeProvider,$translateProvider){
-        $routeProvider.when('/', {
-            templateUrl:'views/tracker-report.html',
-            controller: 'TodayScheduleController'
-       
-        }).when('/schedule-today', {
-            templateUrl:'views/tracker-report.html',
-            controller: 'TodayScheduleController'
+    $routeProvider.when('/', {
+        templateUrl:'views/home.html',
+        controller: 'homeController'
+    }).when('/schedule-today', {
+        templateUrl:'views/schedule-today.html',
+        controller: 'TodayScheduleController'
 
-        }).when('/event-report', {
-            templateUrl:'views/event-report.html',
-            controller: 'EventReportController'
+    }).when('/event-report', {
+        templateUrl:'views/event-report.html',
+        controller: 'EventReportController'
 
-        }).otherwise({
-            redirectTo : '/'
-        });
+    }).otherwise({
+        redirectTo : '/'
+    });
 
-        $translateProvider.preferredLanguage('en');
-        $translateProvider.useSanitizeValueStrategy('escaped');
-        $translateProvider.useLoader('i18nLoader');
+    $translateProvider.preferredLanguage('en');
+    $translateProvider.useSanitizeValueStrategy('escaped');
+    $translateProvider.useLoader('i18nLoader');
 
-        initSQLView();
+    initSQLView();
 
 });
+
 
 function initSQLView() {
 
