@@ -17,7 +17,7 @@ msfReportsApp.directive('calendar', function () {
     };
 });
 msfReportsApp
-    .controller('TodayScheduleController', function( $rootScope,
+    .controller('TrackerReportController', function( $rootScope,
                                             $scope,
                                             $timeout,
                                             MetadataService){
@@ -164,7 +164,7 @@ msfReportsApp
                     MetadataService.getSQLView(SQLViewsName2IdMap[SQLQUERY_TEI_DATA_VALUE_NAME], param).then(function (stageData) {
                         $scope.stageData = stageData;
 
-                        MetadataService.getSQLView(SQLViewsName2IdMap[SQLQUERY_TEI_ATTR_NAME], param).then(function (attrData) {
+                        MetadataService.getSQLView(SQLViewsName2IdMap["TRACKER_REPORTS_TEI_ATTR_ENROLLED"], param).then(function (attrData) {
                             $scope.attrData = attrData;
                            
                            
@@ -316,7 +316,7 @@ msfReportsApp
 
        
 
-            for (var i=0;i<stageData.rows.length;i++) {
+           /* for (var i=0;i<stageData.rows.length;i++) {
                 var teiuid = stageData.rows[i][index_tei];
                 var psuid = stageData.rows[i][index_ps];
                 var evuid = stageData.rows[i][index_ev];
@@ -353,7 +353,7 @@ msfReportsApp
 
                 eventToMiscMap[evuid] = {ou : ou , evDate : evDate};
                 teiPsEventDeMap[teiuid + "-" + evuid + "-" + deuid] = devalue;
-            }
+            }*/
                 $scope.TheRows = [];
                 var psDes = $scope.psDEs;
                
@@ -397,7 +397,7 @@ msfReportsApp
                             } else if (deuid == "eventDate") {
                                 val = eventToMiscMap[evuid].evDate;//debugger
                             }
-                            if($scope.psDEs[x].dataElement.optionSet != undefined){
+                           /* if($scope.psDEs[x].dataElement.optionSet != undefined){
 
                                 if($scope.psDEs[x].dataElement.optionSet.options != undefined){
 
@@ -407,7 +407,7 @@ msfReportsApp
                                     //  dataValues.push(value);
 
                                 }
-                            }
+                            }*/
                             $scope.TheRows.push(val?val:"");
                         }
                         $scope.eventList[teiuid].push($scope.TheRows);
