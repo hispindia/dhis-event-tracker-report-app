@@ -216,8 +216,7 @@ msfReportsApp
                 });
 
             }
-           // var org_val = getorghirarcy(org_path);
-
+          
 
             for (var i = 0; i < stageData.height; i++) {
 
@@ -229,17 +228,7 @@ msfReportsApp
                 var deuid = stageData.rows[i][index_deuid];
                 var devalue = stageData.rows[i][index_devalue];
                 var ou =stageData.rows[i][index_ou];
-                /*var newkey=stageData.rows[i][9];
-                for(var key in org_val)
-                {
-                    if(key==newkey)
-                    {
-                        var ou =org_val[key];
-                    }
-
-
-                }*/
-
+                
 
                 if (!$scope.eventMap[evuid]) {
                     $scope.eventMap[evuid] = {
