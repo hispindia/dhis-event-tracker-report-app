@@ -2291,11 +2291,11 @@ if(program=="HTCqTWEF1XS" &&programname=='Anaesthetist - PBR monitoring(under CM
                         if(returnteiuid[0].length!=0)
                     {
                         for(var x=0;x<returnteiuid[0].length;x++){
-                       
+                            var checkeddata=checkInactiveData(returnteiuid[0][x])
                             var returnorgunitid=checkorgunit($scope.ALLregisteredDoc_name_CMS[returnteiuid[0][x]].ouid,programname)
                             if(returnorgunitid=="true")
                             {
-                                var checkeddata=checkInactiveData(returnteiuid[0][x])
+                                
                                 
                             var org=getheirarchy($scope.ALLregisteredDoc_name_CMS[returnteiuid[0][x]].ouid)
                                 var specialist_name=$scope.ALLregisteredDoc_name_CMS[returnteiuid[0][x]].name
@@ -2324,7 +2324,7 @@ if(program=="HTCqTWEF1XS" &&programname=='Anaesthetist - PBR monitoring(under CM
                                 
                         )
                         $("#showdata").append($scope.dataimport);
-                        if(checkeddata==true)
+                        if(checkeddata=="true")
                         {
                             var tdd=$scope.dataimport[0].cells
                             for(i=0;i<tdd.length;i++)
@@ -3739,7 +3739,7 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
                                 
                            )
                         $("#showdata").append($scope.dataimport);
-                        if(checkeddata==true)
+                        if(checkeddata=="true")
                         {
                             var tdd=$scope.dataimport[0].cells
                             for(i=0;i<tdd.length;i++)
@@ -4504,7 +4504,7 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
                                 
                            )
                         $("#showdata").append($scope.dataimport);
-                        if(checkeddata==true)
+                        if(checkeddata=="true")
                         {
                             var tdd=$scope.dataimport[0].cells
                             for(i=0;i<tdd.length;i++)
