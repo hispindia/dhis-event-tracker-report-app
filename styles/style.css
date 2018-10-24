@@ -1190,3 +1190,7 @@ input, button, select, textarea {
     border-top: 1pt solid black;;
     border-bottom:1pt solid black;
 }
+
+.selcsection{
+    margin: 0px 10px 10px 280px;
+}
