@@ -244,42 +244,7 @@ msfReportsApp
                     }
                 }
 
-            /*    anonymous(0,attrData);
-
-                function completeAnonymous(index,data){
-                    anonymous(index+1,data);
-
-                }
-                function anonymous(index, attrData){
-
-                    if (index == attrData.rows.length) {
-                        def.resolve("");
-                        return
-                    }
-
-                //    var def = $.Deferred();
-                    $.ajax({
-                        async:false,
-                        type: "GET",
-                        dataType: "json",
-                        contentType: "application/json",
-                        url: '../../trackedEntityAttributes/'+attruid+'.json?fields=*,attributeValues[*,attribute[id,name,code]]&paging=false',
-                        success: function (data) {
-                            // def.resolve(data);
-                            if (data.attributeValues.length > 0) {
-                                for (var k = 0; k < data.attributeValues.length; k++) {
-                                    if (data.attributeValues[k].attribute.code == 'Anonymous?'&& data.attributeValues[k].value == 'true')
-                                    {
-                                        attrvalue = 'ANONYMOUS';
-                                    }
-                                }
-                            }
-                        }
-                    });
-                    completeAnonymous(index,attrData);
-                   // return def;
-                }
-*/
+          
                     if (teiWiseAttrMap[teiuid] == undefined){
                     teiWiseAttrMap[teiuid] = [];
                 }

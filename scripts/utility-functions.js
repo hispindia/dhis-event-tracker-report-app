@@ -157,12 +157,3 @@ function getAllSQLViews(){
     });
     return def;
 }
-function extractMetaAttributeValue(attributeValues,code){
-    var value = undefined;
-    for (var i=0;i<attributeValues.length;i++){
-        if (attributeValues[i].attribute.code == code){
-            value = attributeValues[i].value;
-        }
-    }
-    return value;
-}

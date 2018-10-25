@@ -1,5 +1,15 @@
-<div style="margin-left: -270px ">
-    <div class="row" id="mainPage">
+<div id="leftBar">
+    <d2-left-bar></d2-left-bar>
+
+    <div id="orgUnitTree">
+        <ul>
+        </ul>
+    </div>
+
+</div>
+
+
+<div class="row" id="mainPage">
 
     <div class="col-md-6">
         <div class="well well-lg">
@@ -21,7 +31,38 @@
             </table>
         </div>
     </div>
+    <div class="col-md-6">
+
+        <div id="Scoringtable" style="display:none">
+                <!-- Default panel contents -->
+                <div>*Scoring Parameter</div>
+                <!-- Table -->
+                <table class="table table-hover table-striped" style="float:left;font-size:11px; font-weight: bold;">
+                    <tr style="background-color: #2980B9;color: #F0F3F4">
+                        <th style="background-color: #2980B9;">Points</th>
+                        <th style="background-color: #2980B9;">Performance Based Incentives</th>
+                    </tr>
+                    <tr>
+                        <td>31 – 40</td>
+                        <td>100%  of PBF to be added in Fixed Component</td>
+                    </tr>
+                    <tr>
+                        <td>21 – 30</td>
+                        <td>75% of PBF to be added in Fixed Component</td>
+                    </tr>
+                    <tr>
+                        <td>11 - 20</td>
+                        <td>50% of PBF to be added in Fixed Component</td>
+                    </tr>
+                    <tr>
+                        <td>0 – 10</td>
+                        <td>Penalty of 20% PBF amount to be deducted from the fixed component of Specialist</td>
+                    </tr>
+                </table>
+        </div>
+    </div>
 </div>
+
 
 <!-- Selection Parameter -->
 <div class="well selcsection">
@@ -62,43 +103,32 @@
 </div>
 <!-- Selection Parameter -->
 
-
+<!-- Table Display -->
 
 <div id="divId" class="selcsection">
-    
-        <table id="tableid" class="table-bordered" border="1" style="float:left" >
-            
+    <div id="loader" style="display: none" class="lds-facebook">
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+    <table id="tableid" class="table table-hover table-striped text-center" style="float:left;font-size: 12px ">
         <tr>
-            <th colspan="{{program.programTrackedEntityAttributes.length+2}}">{{attribute}}</th>
-            <th ng-repeat="ps in program.programStages"
-                colspan="{{ps.programStageDataElements.length+2}}">{{ps.name}}</th>
-
+            <th colspan="2">{{org}}{{selectedOrgUnitName}}</th>
+            <th colspan="2">{{start}}{{selectedStartDate}}</th>
+            <th colspan="2">{{end}}{{selectedEndDate}}</th>
         </tr>
-        <tr style="background-color:antiquewhite">
-            <th ng-repeat="enrol in enrollment">{{enrol}}</th>
-            <th ng-repeat="attr in program.programTrackedEntityAttributes">{{attr.displayName}}</th>
-            <th ng-repeat="de in psDEs">{{de.dataElement.name}}</th>
+        <tr>
+            <th colspan="6" ng-repeat="ps in program.programStages" colspan="{{ps.newlength+3}}" style="background-color: #DCDCDC;text-align: center">{{program.name}}</th>
         </tr>
-
-      
-        <tbody ng-repeat="tei in teiList">
-        <tr  ng-repeat="event in eventList[tei] track by $index" >
-            <td  >{{teiEnrollMap[tei+"-enrollDate"]}}</td>
-            <td >{{teiEnrollOrgMap[tei+"-ouname"]}}</td>
-            <td  ng-repeat="attr in program.programTrackedEntityAttributes">{{attrMap[tei+"-"+attr.trackedEntityAttribute.id]}} </td>
-
-            <td ng-repeat="value in event track by $index">{{value}}</td>
+        <tr>
+            <th ng-repeat="de in psDEs1" style="background-color: #2980B9;color:white">{{de.dataElement.name}}</th>
+            <th ng-repeat="de in psDEs" colspan="{{colspanval}}" style="background-color: #2980B9;color:white">{{de.dataElement.name}}</th>
         </tr>
-
-        
+        <tr>
+            <th ng-repeat="he in header track by $index " style="background-color: #85C1E9;padding:0px">{{he}}</th>
+        </tr>
+        <tbody id="showdata">
         </tbody>
-
     </table>
-    </div>
 </div>
-
-<div class="row" ng-if="selectedOrgUnit.programs.length > 0 && !selectedProgram">
-    <div class="col-sm-8 col-md-6 vertical-spacing">
-        <div class="alert alert-warning">{{'please_select_program_report'| translate}}</div> 
-    </div>
-</div>
+<!-- Table Display -->
