@@ -81,7 +81,7 @@ var trackerReportsAppServices = angular.module('trackerReportsAppServices', [])
                 async: false,
                 dataType: "json",
                 contentType: "application/json",
-                url: "../../organisationUnits/"+param+".json?fields=path",
+                url: "../../organisationUnits/"+param+".json?fields=path&paging=False",
                 success: function (data) {
                     def.resolve(data);
                 }
@@ -95,7 +95,7 @@ var trackerReportsAppServices = angular.module('trackerReportsAppServices', [])
                    async: false,
                    dataType: "json",
                    contentType: "application/json",
-                   url: '../../sqlViews/'+sqlViewUID+"/data?"+param,
+                   url: '../../sqlViews/'+sqlViewUID+"/data?"+param+"&paging=False",
                    success: function (data) {
                        def.resolve(data);
                    }

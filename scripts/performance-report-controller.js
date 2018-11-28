@@ -139,10 +139,9 @@ msfReportsApp
                 });
                
                
-                for(var y=0;y<3;y++)
+                for(var y=0;y<$scope.Allprograms.length;y++)
                 {
-                        
-                        if(program[y]=="HTCqTWEF1XS" ||program[y]=="K3XysZ53B4r")
+                        	if((program[y]==$scope.Allprograms[y].id && program[y]=="HTCqTWEF1XS" )||(program[y]==$scope.Allprograms[y].id && program[y]=="K3XysZ53B4r"))
                         {
                             for(var x=0;x<postfix2.length;x++)
                             {
@@ -153,7 +152,7 @@ msfReportsApp
                             $scope.newObject=[];
                             }
                         }
-                        if(program[y]=="CsEmq8UNA6z")
+                        if(program[y]==$scope.Allprograms[y].id && program[y]=="CsEmq8UNA6z")
                         {
                             for(var x=0;x<postfix1.length;x++)
                             {
@@ -163,6 +162,8 @@ msfReportsApp
                             $scope.Allprograms[$scope.Allprograms.length]=newObject
                             $scope.newObject=[]
                         }
+						
+                        
                         
                     }
                     
@@ -575,6 +576,7 @@ msfReportsApp
 
         function arrangeDataX(stageData,program,psuid,programname,new_psuid) {
             $scope.progval=[]
+			 $scope.percen="";
             // For Data values
             const index_deuid = 4;
             const index_devalue = 6;
@@ -672,21 +674,14 @@ msfReportsApp
                         event: evuid,
                         data: []
                     };
-
-                    $scope.eventDeWiseValueMap[evuid + "-orgUnit"] = ou;
+					}
+					$scope.eventDeWiseValueMap[evuid + "-orgUnit"] = ou;
                     $scope.eventDeWiseValueMap[evuid + "-eventDate"] = evDate;
                     $scope.eventDeWiseValueMap[evuid + "-orgunitid"] = ou_id;
                     $scope.eventDeWiseValueMap[evuid + "-docname"] = doc_name;
                     $scope.eventDeWiseValueMap[evuid + "-contactno"] = contact_no;
                     $scope.eventDeWiseValueMap[evuid + "-teiid"] = tei_id;
-                    
-
                     $scope.eventDeWiseValueMap[evuid + "-activity"] = "";
-
-                    
-                   
-
-                }
 
                 $scope.eventMap[evuid].data.push({
                     de: deuid,
@@ -1307,21 +1302,19 @@ if(program=="HTCqTWEF1XS" &&programname=='Anaesthetist - PBR monitoring(under CM
                                             }
                                         }
                                     }
-                                    $scope.total=(Number(case1_point)+Number(case2_point)+Number(case3_point)).toFixed(2);
-                                    var percen=0;
-                                    if($scope.total>0 && $scope.total<=10)
-                                             percen="20%"
-                                            if($scope.total>=11 && $scope.total<=20)
-                                             percen="50%"
-                                            if($scope.total>=21 && $scope.total<=30)
-                                             percen="75%"
-                                            if($scope.total>=31 && $scope.total<=40)
-                                             percen="100%"
-                                    
-                                     
-                                    
-                                }
-                                   if($scope.total=="NaN")
+                                   }
+								$scope.total=(Number(case1_point)+Number(case2_point)+Number(case3_point)).toFixed(2);
+									$scope.total=parseInt($scope.total)
+											if($scope.total>0 && $scope.total<=10)
+                                             $scope.percen="20%"
+                                            else if($scope.total>=11 && $scope.total<=20)
+                                             $scope.percen="50%"
+                                            else if($scope.total>=21 && $scope.total<=30)
+                                             $scope.percen="75%"
+                                            else if($scope.total>=31 && $scope.total<=40)
+                                             $scope.percen="100%"
+											else $scope.percen=""
+										if($scope.total=="NaN")
                                             $scope.total=0;
                                             
                                             $scope.dataimport=$(
@@ -1342,7 +1335,7 @@ if(program=="HTCqTWEF1XS" &&programname=='Anaesthetist - PBR monitoring(under CM
                                                 "<th>"+case3_point+"</th>"+
                                                 
                                                 "<th>"+$scope.total+"</th>"+
-                                                "<th>"+percen+"</th>"+
+                                                "<th>"+$scope.percen+"</th>"+
                                                 
                                                 "</tr>"
                                                 
@@ -1585,15 +1578,17 @@ if(program=="HTCqTWEF1XS" &&programname=='Anaesthetist - PBR monitoring(under CM
                             }
                                 
                             $scope.total=(Number(case1_point)+Number(case2_point)+Number(case3_point)).toFixed(2);
-                            var percen=0;
-                            if($scope.total>0 && $scope.total<=10)
-                                             percen="20%"
-                                            if($scope.total>=11 && $scope.total<=20)
-                                             percen="50%"
-                                            if($scope.total>=21 && $scope.total<=30)
-                                             percen="75%"
-                                            if($scope.total>=31 && $scope.total<=40)
-                                             percen="100%"
+							$scope.total=parseInt($scope.total)
+											if($scope.total>0 && $scope.total<=10)
+                                             $scope.percen="20%"
+                                            else if($scope.total>=11 && $scope.total<=20)
+                                             $scope.percen="50%"
+                                            else if($scope.total>=21 && $scope.total<=30)
+                                             $scope.percen="75%"
+                                            else if($scope.total>=31 && $scope.total<=40)
+                                             $scope.percen="100%"
+											else if($scope.total=="")
+												$scope.percen=""
                             
                              
                                     
@@ -1615,7 +1610,7 @@ if(program=="HTCqTWEF1XS" &&programname=='Anaesthetist - PBR monitoring(under CM
                                         "<th>"+case3_point+"</th>"+
                                         
                                         "<th>"+$scope.total+"</th>"+
-                                        "<th>"+percen+"</th>"+
+                                        "<th>"+$scope.percen+"</th>"+
                                         
                                         "</tr>"
                                         
@@ -1667,7 +1662,7 @@ if(program=="HTCqTWEF1XS" &&programname=='Anaesthetist - PBR monitoring(under CM
                                     "<th>"+empty+"</th>"+
                                     
                                     "<th>"+empty+"</th>"+
-                                    
+                                    "<th>"+empty+"</th>"+
                                     
                                     "</tr>"
                                     
@@ -1964,15 +1959,16 @@ if(program=="HTCqTWEF1XS" &&programname=='Anaesthetist - PBR monitoring(under CM
                                     }}
                                         
                                     $scope.total=(Number(case1_point)+Number(case2_point)+Number(case3_point)).toFixed(2);
-                                            var percen=0;
+                                           
                                             if($scope.total>0 && $scope.total<=10)
-                                             percen="20%"
-                                            if($scope.total>=11 && $scope.total<=20)
-                                             percen="50%"
-                                            if($scope.total>=21 && $scope.total<=30)
-                                             percen="75%"
-                                            if($scope.total>=31 && $scope.total<=40)
-                                             percen="100%"
+                                             $scope.percen="20%"
+                                            else if($scope.total>=11 && $scope.total<=20)
+                                             $scope.percen="50%"
+                                            else if($scope.total>=21 && $scope.total<=30)
+                                             $scope.percen="75%"
+                                            else if($scope.total>=31 && $scope.total<=40)
+                                             $scope.percen="100%"
+											else $scope.percen=""
                                             
                                              
                                             
@@ -1994,7 +1990,7 @@ if(program=="HTCqTWEF1XS" &&programname=='Anaesthetist - PBR monitoring(under CM
                                                 "<th>"+case3_point+"</th>"+
                                                 
                                                 "<th>"+$scope.total+"</th>"+
-                                                "<th>"+percen+"</th>"+
+                                                "<th>"+$scope.percen+"</th>"+
                                                 
                                                 
                                                 "</tr>"
@@ -2239,15 +2235,16 @@ if(program=="HTCqTWEF1XS" &&programname=='Anaesthetist - PBR monitoring(under CM
                             }
                                 
                             $scope.total=(Number(case1_point)+Number(case2_point)+Number(case3_point)).toFixed(2);
-                            var percen=0;
+                           
                             if($scope.total>0 && $scope.total<=10)
-                            percen="20%"
-                           if($scope.total>=11 && $scope.total<=20)
-                            percen="50%"
-                           if($scope.total>=21 && $scope.total<=30)
-                            percen="75%"
-                           if($scope.total>=31 && $scope.total<=40)
-                            percen="100%"
+                                             $scope.percen="20%"
+                                            else if($scope.total>=11 && $scope.total<=20)
+                                             $scope.percen="50%"
+                                            else if($scope.total>=21 && $scope.total<=30)
+                                             $scope.percen="75%"
+                                            else if($scope.total>=31 && $scope.total<=40)
+                                             $scope.percen="100%"
+											else $scope.percen=""
                           
                                     
                                     $scope.dataimport=$(
@@ -2268,7 +2265,7 @@ if(program=="HTCqTWEF1XS" &&programname=='Anaesthetist - PBR monitoring(under CM
                                         "<th>"+case3_point+"</th>"+
                                         
                                         "<th>"+$scope.total+"</th>"+
-                                        "<th>"+percen+"</th>"+
+                                        "<th>"+$scope.percen+"</th>"+
                                         
                                         "</tr>"
                                         
@@ -2318,7 +2315,7 @@ if(program=="HTCqTWEF1XS" &&programname=='Anaesthetist - PBR monitoring(under CM
                                 "<th>"+empty+"</th>"+
                                 
                                 "<th>"+empty+"</th>"+
-                                
+                                "<th>"+empty+"</th>"+
                                 
                                 "</tr>"
                                 
@@ -3318,15 +3315,16 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
                            }
                         } 
                            $scope.total=(Number(case1_point)+Number(case2_point)+Number(case3_point)+Number(case4_point)).toFixed(2);
-                           var percen=0;
+                          
                            if($scope.total>0 && $scope.total<=10)
-                            percen="20%"
-                        if($scope.total>=11 && $scope.total<=20)
-                            percen="50%"
-                        if($scope.total>=21 && $scope.total<=30)
-                            percen="75%"
-                        if($scope.total>=31 && $scope.total<=40)
-                            percen="100%"
+                                             $scope.percen="20%"
+                                            else if($scope.total>=11 && $scope.total<=20)
+                                             $scope.percen="50%"
+                                            else if($scope.total>=21 && $scope.total<=30)
+                                             $scope.percen="75%"
+                                            else if($scope.total>=31 && $scope.total<=40)
+                                             $scope.percen="100%"
+											else $scope.percen=""
                            
            
                                    $scope.dataimport=$(
@@ -3351,7 +3349,7 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
                                           "<th>"+case4_point+"</th>"+
                                           
                                           "<th>"+$scope.total+"</th>"+
-                                          "<th>"+percen+"</th>"+
+                                          "<th>"+$scope.percen+"</th>"+
                                           
                                        "</tr>"
                                        
@@ -3649,15 +3647,16 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
                                     }
                                    
                                     $scope.total=(Number(case1_point)+Number(case2_point)+Number(case3_point)+Number(case4_point)).toFixed(2);
-                                    var percen=0;
+                                   
                                     if($scope.total>0 && $scope.total<=10)
-                                             percen="20%"
-                                            if($scope.total>=11 && $scope.total<=20)
-                                             percen="50%"
-                                            if($scope.total>=21 && $scope.total<=30)
-                                             percen="75%"
-                                            if($scope.total>=31 && $scope.total<=40)
-                                             percen="100%"
+                                             $scope.percen="20%"
+                                            else if($scope.total>=11 && $scope.total<=20)
+                                             $scope.percen="50%"
+                                            else if($scope.total>=21 && $scope.total<=30)
+                                             $scope.percen="75%"
+                                            else if($scope.total>=31 && $scope.total<=40)
+                                             $scope.percen="100%"
+											else $scope.percen=""
                                    
                                     $scope.dataimport=$(
                                         "<tr>"+
@@ -3681,7 +3680,7 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
                                            "<th>"+case4_point+"</th>"+
                                            
                                            "<th>"+$scope.total+"</th>"+
-                                           "<th>"+percen+"</th>"+
+                                           "<th>"+$scope.percen+"</th>"+
                                            
                                         "</tr>"
                                         
@@ -3733,7 +3732,7 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
                                    "<th>"+empty+"</th>"+
                                    
                                    "<th>"+empty+"</th>"+
-                                   
+                                   "<th>"+empty+"</th>"+
                                    
                                 "</tr>"
                                 
@@ -3772,7 +3771,7 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
           var param1="var=programuid:"+program+"&var=orgunitid:"+$scope.selorgunitid[0]
             MetadataService.getSQLView(SQLViewsName2IdMap["TRACKER_ALLDOC_CMS"],param1).then(function (doc) {
                
-                for(var i=0;i<doc.listGrid.listGrid.rows.length;i++)
+                for(var i=0;i<doc.listGrid.rows.length;i++)
                 {
                     $scope.ALLregisteredDoc_name_CMS[doc.listGrid.rows[i][0]]={name:doc.listGrid.rows[i][1],ouid:doc.listGrid.rows[i][2]}
                     if(doc.listGrid.rows[i][3]=='true')
@@ -4081,15 +4080,16 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
                            }
                         }
                            $scope.total=(Number(case1_point)+Number(case2_point)+Number(case3_point)+Number(case4_point)).toFixed(2);
-                           var percen=0;
+                          
                            if($scope.total>0 && $scope.total<=10)
-                            percen="20%"
-                        if($scope.total>=11 && $scope.total<=20)
-                            percen="50%"
-                        if($scope.total>=21 && $scope.total<=30)
-                            percen="75%"
-                        if($scope.total>=31 && $scope.total<=40)
-                            percen="100%"
+                                             $scope.percen="20%"
+                                            else if($scope.total>=11 && $scope.total<=20)
+                                             $scope.percen="50%"
+                                            else if($scope.total>=21 && $scope.total<=30)
+                                             $scope.percen="75%"
+                                            else if($scope.total>=31 && $scope.total<=40)
+                                             $scope.percen="100%"
+											else $scope.percen=""
                            
                             
            
@@ -4115,7 +4115,7 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
                                           "<th>"+case4_point+"</th>"+
                                           
                                           "<th>"+$scope.total+"</th>"+
-                                          "<th>"+percen+"</th>"+
+                                          "<th>"+$scope.percen+"</th>"+
                                           
                                        "</tr>"
                                        
@@ -4412,15 +4412,16 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
                                     }
                                    
                            $scope.total=(Number(case1_point)+Number(case2_point)+Number(case3_point)+Number(case4_point)).toFixed(2);
-                           var percen=0;
+                          
                            if($scope.total>0 && $scope.total<=10)
-                                             percen="20%"
-                                            if($scope.total>=11 && $scope.total<=20)
-                                             percen="50%"
-                                            if($scope.total>=21 && $scope.total<=30)
-                                             percen="75%"
-                                            if($scope.total>=31 && $scope.total<=40)
-                                             percen="100%"
+                                             $scope.percen="20%"
+                                            else if($scope.total>=11 && $scope.total<=20)
+                                             $scope.percen="50%"
+                                            else if($scope.total>=21 && $scope.total<=30)
+                                             $scope.percen="75%"
+                                            else if($scope.total>=31 && $scope.total<=40)
+                                             $scope.percen="100%"
+											else $scope.percen=""
                            
                             
                                     $scope.dataimport=$(
@@ -4445,7 +4446,7 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
                                            "<th>"+case4_point+"</th>"+
                                            
                                            "<th>"+$scope.total+"</th>"+
-                                           "<th>"+percen+"</th>"+
+                                           "<th>"+$scope.percen+"</th>"+
                                            
                                         "</tr>"
                                         
@@ -4498,7 +4499,7 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
                                    "<th>"+empty+"</th>"+
                                    
                                    "<th>"+empty+"</th>"+
-                                   
+                                   "<th>"+empty+"</th>"+
                                    
                                 "</tr>"
                                 
@@ -5024,7 +5025,7 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
 
                     for(var i=0;i<doc.listGrid.rows.length;i++)
                     {
-                        $scope.ALLregisteredDoc_name_Paediatric[doc.listGrid.rows[i][0]]={name:doc.listGrid.rows[i][1],ouid:doc.listGrid.rows[i][2],inactive:doc.rows[i][3]}
+                        $scope.ALLregisteredDoc_name_Paediatric[doc.listGrid.rows[i][0]]={name:doc.listGrid.rows[i][1],ouid:doc.listGrid.rows[i][2],inactive:doc.listGrid.rows[i][3]}
                         if(doc.listGrid.rows[i][3]=='true')
                         $scope.inactivedata[doc.listGrid.rows[i][0]]='true'
                     }
@@ -5365,15 +5366,16 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
                                   
                            
                            $scope.total=(Number(case1_point)+Number(case2_point)+Number(case3_point)+Number(case4_point)+Number(case5_point)).toFixed(2);
-                           var percen=0;
+                          
                            if($scope.total>0 && $scope.total<=10)
-                            percen="20%"
-                           if($scope.total>=11 && $scope.total<=20)
-                            percen="50%"
-                           if($scope.total>=21 && $scope.total<=30)
-                            percen="75%"
-                           if($scope.total>=31 && $scope.total<=40)
-                            percen="100%"
+                                             $scope.percen="20%"
+                                            else if($scope.total>=11 && $scope.total<=20)
+                                             $scope.percen="50%"
+                                            else if($scope.total>=21 && $scope.total<=30)
+                                             $scope.percen="75%"
+                                            else if($scope.total>=31 && $scope.total<=40)
+                                             $scope.percen="100%"
+											else $scope.percen=""
            
                                    $scope.dataimport=$(
                                        "<tr>"+
@@ -5401,7 +5403,7 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
                                           "<th>"+case5_point+"</th>"+
                                           
                                           "<th>"+$scope.total+"</th>"+
-                                          "<th>"+percen+"</th>"+
+                                          "<th>"+$scope.percen+"</th>"+
                                           
                                        "</tr>"
                                        
@@ -5734,15 +5736,16 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
                                    
                             
                             $scope.total=(Number(case1_point)+Number(case2_point)+Number(case3_point)+Number(case4_point)+Number(case5_point)).toFixed(2);
-                            var percen=0;
-                            if($scope.total>0 && $scope.total<=10)
-                             percen="20%"
-                            if($scope.total>=11 && $scope.total<=20)
-                             percen="50%"
-                            if($scope.total>=21 && $scope.total<=30)
-                             percen="75%"
-                            if($scope.total>=31 && $scope.total<=40)
-                             percen="100%"
+                           
+											if($scope.total>0 && $scope.total<=10)
+                                             $scope.percen="20%"
+                                            else if($scope.total>=11 && $scope.total<=20)
+                                             $scope.percen="50%"
+                                            else if($scope.total>=21 && $scope.total<=30)
+                                             $scope.percen="75%"
+                                            else if($scope.total>=31 && $scope.total<=40)
+                                             $scope.percen="100%"
+											else $scope.percen=""
             
                                     $scope.dataimport=$(
                                         "<tr>"+
@@ -5771,7 +5774,7 @@ if(program=="K3XysZ53B4r"    && programname=="Gynaecologist - PBR monitoring(Agg
                                            "<th>"+case5_point+"</th>"+
                                            
                                            "<th>"+$scope.total+"</th>"+
-                                           "<th>"+percen+"</th>"+
+                                           "<th>"+$scope.percen+"</th>"+
                                            
                                         "</tr>"
                                         
