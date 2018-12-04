@@ -155,8 +155,6 @@ msfReportsApp
                         $scope.newObject = []
                     }
 
-
-
                 }
 
             }

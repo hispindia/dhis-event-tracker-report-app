@@ -109,7 +109,7 @@ var trackerReportsAppServices = angular.module('trackerReportsAppServices', [])
                 async: false,
                 dataType: "json",
                 contentType: "application/json",
-                url: '../../sqlViews/'+sqlViewUID+"/data?paging=False",
+                url: '../../sqlViews/'+sqlViewUID+"/data?&paging=False",
                 success: function (data) {
                     def.resolve(data);
                 }
