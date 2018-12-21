@@ -142,13 +142,14 @@ msfReportsApp
                         }
                     }
                 }
+                
             }
 
             //  var param = "var=program:"+program.id + "&var=orgunit:"+$scope.selectedOrgUnit.id+"&var=startdate:"+moment($scope.date.startDate).format("YYYY-MM-DD")+"&var=enddate:"+moment($scope.date.endDate).format("YYYY-MM-DD");
             var param = "var=program:" + program.id + "&var=orgunit:" + $scope.selectedOrgUnit.id + "&var=startdate:" + $scope.startdateSelected + "&var=enddate:" + $scope.enddateSelected;
 
             MetadataService.getSQLView(SQLViewsName2IdMap[SQLQUERY_EVENT_NAME], param).then(function (stageData) {
-                $scope.stageData = stageData;
+                $scope.stageData = stageData.listGrid;
                 arrangeDataX($scope.stageData);
             })
         };

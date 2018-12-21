@@ -99,10 +99,11 @@ msfReportsApp
                $scope.program = program;
 
            for(var i=0; i<$scope.program.programTrackedEntityAttributes.length;i++){
+               $scope.program.programTrackedEntityAttributes[i].displayName=$scope.program.programTrackedEntityAttributes[i].name
                var str = $scope.program.programTrackedEntityAttributes[i].displayName;
-               var n = str.lastIndexOf('-');
-               $scope.program.programTrackedEntityAttributes[i].displayName = str.substring(n + 1);
-
+               var n = str.split($scope.program.name);
+               $scope.program.programTrackedEntityAttributes[i].displayName = n[1];
+                
            }
                $scope.psDEs = [];
            $scope.Options =[];
@@ -118,7 +119,7 @@ msfReportsApp
                $scope.psDEs.push({dataElement : {id : "eventDate",name : "eventDate",ps:psuid}});
 
                for (var j=0;j<$scope.program.programStages[i].programStageDataElements.length;j++){
-
+                   
                        $scope.program.programStages[i].programStageDataElements[j].dataElement.ps = psuid;
                    var de =$scope.program.programStages[i].programStageDataElements[j];
                        $scope.psDEs.push(de);
@@ -146,10 +147,10 @@ msfReportsApp
            var param = "var=program:"+program.id + "&var=orgunit:"+$scope.selectedOrgUnit.id+"&var=startdate:"+$scope.startdateSelected+"&var=enddate:"+$scope.enddateSelected;
 
                     MetadataService.getSQLView(SQLViewsName2IdMap[SQLQUERY_TEI_DATA_VALUE_NAME], param).then(function (stageData) {
-                        $scope.stageData = stageData;
+                        $scope.stageData = stageData.listGrid;
 
                         MetadataService.getSQLView(SQLViewsName2IdMap[SQLQUERY_TEI_ATTR_NAME], param).then(function (attrData) {
-                            $scope.attrData = attrData;
+                            $scope.attrData = attrData.listGrid;
 
                             MetadataService.getALLAttributes().then(function (allattr) {
                                 $scope.allattr = allattr;
