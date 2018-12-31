@@ -1,3 +1,14 @@
+<div id="leftBar">
+    <d2-left-bar></d2-left-bar>
+
+    <div id="orgUnitTree">
+        <ul>
+        </ul>
+    </div>
+
+</div>
+
+<div id="mainPage">
 <div class="row" >
     <div class="col-md-6">
         <div class="well well-lg">
@@ -75,14 +86,10 @@
     <table id="tableid" border="1" class="table table-hover">
         <tr>
             <th colspan="{{program.programTrackedEntityAttributes.length+2}}">{{attribute}}</th>
-            <th ng-repeat="ps in program.programStages"
-                colspan="{{ps.programStageDataElements.length+2}}">{{ps.name}}</th>
-
         </tr>
         <tr style="background-color:antiquewhite">
             <th ng-repeat="enrol in enrollment">{{enrol}}</th>
             <th ng-repeat="attr in program.programTrackedEntityAttributes">{{attr.displayName}}</th>
-            <th ng-repeat="de in psDEs">{{de.dataElement.name}}</th>
         </tr>
         
         <tbody ng-repeat="tei in teiListnew">
@@ -94,7 +101,7 @@
         </tr>
        
        </tbody>
-    </tbody>
+    <tbody>
        <tr   ng-repeat="tei in teiList" >
         <td  >{{teiEnrollMap[tei+"-enrollDate"]}}</td>
         <td >{{teiEnrollOrgMap[tei+"-ouname"]}}</td>
@@ -108,7 +115,7 @@
     </div>
 
 
-
+</div>
 
 
 

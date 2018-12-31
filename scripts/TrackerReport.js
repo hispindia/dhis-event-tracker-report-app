@@ -17,7 +17,7 @@ msfReportsApp.directive('calendar', function () {
     };
 });
 msfReportsApp
-    .controller('TodayScheduleController', function( $rootScope,
+    .controller('TrackerReportController', function( $rootScope,
                                             $scope,
                                             $timeout,
                                             MetadataService){
@@ -164,20 +164,22 @@ msfReportsApp
                     MetadataService.getSQLView(SQLViewsName2IdMap[SQLQUERY_TEI_DATA_VALUE_NAME], param).then(function (stageData) {
                         $scope.stageData = stageData;
 
-                        MetadataService.getSQLView(SQLViewsName2IdMap[SQLQUERY_TEI_ATTR_NAME], param).then(function (attrData) {
+                        MetadataService.getSQLView(SQLViewsName2IdMap["TRACKER_REPORTS_TEI_ATTR_ENROLLED"], param).then(function (attrData) {
                             $scope.attrData = attrData;
-                        
-                           MetadataService.getSQLView(SQLViewsName2IdMap["OptionValue"], " ").then(function (optionsetValue) {
-                            $scope.optionsetValue = optionsetValue.rows;
+                           
+                           
                             MetadataService.getALLAttributes().then(function (allattr) {
                                 $scope.allattr = allattr;
-                               arrangeDataX($scope.stageData, $scope.attrData, $scope.allattr, $scope.optionsetValue);
-                         })
+                               // MetadataService.getSQLView(SQLViewsName2IdMap['TRACKER_REPORTS_ALL_TEI_ATTR'], param).then(function (AllstageData) {
+                    
+                                   // $scope.AllstageData = AllstageData;
+
+                                arrangeDataX($scope.stageData, $scope.attrData, $scope.allattr);
+                          //  })
+                        
                         })
                     })
                     })
-
-                    
 
        }
 
@@ -201,22 +203,11 @@ msfReportsApp
 
         }
 
-        function arrangeDataX(stageData,attrData,allattr,optionsetValue){
-            var arr1 = "john".split('');
-            var arr2 = arr1.reverse();
-            var arr3 = "jones".split('');
-            arr2.push(arr3);
-            console.log("array 1: length=" + arr1.length + " last=" + arr1.slice(-1));
-            console.log("array 2: length=" + arr2.length + " last=" + arr2.slice(-1));
-            
+        function arrangeDataX(stageData,attrData,allattr){
+
             var report = [{
                 teiuid : ""
             }]
-            
-            $scope.optionsetValue=[]
-            optionsetValue.forEach(element => {
-                $scope.optionsetValue[element[2]+"-"+element[1]]=element[0];
-               });
 
             var teiWiseAttrMap = [];
             $scope.attrMap = [];
@@ -277,14 +268,7 @@ msfReportsApp
                         }
                     }
                 }
-                if(attrvalue=="true")
-                {
-                    attrvalue="Yes";
-                }
-                else if( attrvalue=="false")
-                {
-                    attrvalue="No";
-                }
+
                     if (teiWiseAttrMap[teiuid] == undefined){
                     teiWiseAttrMap[teiuid] = [];
                 }
@@ -309,23 +293,7 @@ msfReportsApp
                 }
 
             }
-             for(var attkey in $scope.attrMap){
-                    var attrkey=attkey.split('-')
-                for (var opskey in $scope.optionsetValue){
-                        var optionSetKey=opskey.split('-')
-                       
-                    if(attrkey[1]==optionSetKey[0] ){
-                            {
-                                console.log(optionSetKey[1]+"----"+$scope.attrMap[attkey])
-                                if(optionSetKey[1]==$scope.attrMap[attkey])
-                                 $scope.attrMap[attkey]=$scope.optionsetValue[opskey]
-                            }
-                        }
-                        
-                }
-            }
-            
-        
+           
 
             $scope.allteiuid = allteiuid.filter(function(elem, index, self) {
                 return index === self.indexOf(elem);
@@ -348,7 +316,7 @@ msfReportsApp
 
        
 
-            for (var i=0;i<stageData.rows.length;i++) {
+           /* for (var i=0;i<stageData.rows.length;i++) {
                 var teiuid = stageData.rows[i][index_tei];
                 var psuid = stageData.rows[i][index_ps];
                 var evuid = stageData.rows[i][index_ev];
@@ -385,7 +353,7 @@ msfReportsApp
 
                 eventToMiscMap[evuid] = {ou : ou , evDate : evDate};
                 teiPsEventDeMap[teiuid + "-" + evuid + "-" + deuid] = devalue;
-            }
+            }*/
                 $scope.TheRows = [];
                 var psDes = $scope.psDEs;
                
@@ -429,7 +397,7 @@ msfReportsApp
                             } else if (deuid == "eventDate") {
                                 val = eventToMiscMap[evuid].evDate;//debugger
                             }
-                            if($scope.psDEs[x].dataElement.optionSet != undefined){
+                           /* if($scope.psDEs[x].dataElement.optionSet != undefined){
 
                                 if($scope.psDEs[x].dataElement.optionSet.options != undefined){
 
@@ -439,22 +407,8 @@ msfReportsApp
                                     //  dataValues.push(value);
 
                                 }
-                            }
+                            }*/
                             $scope.TheRows.push(val?val:"");
-                        }
-                        for(var i=0;i<$scope.TheRows.length;i++)
-                        {
-                        
-                            if($scope.TheRows[i]=="true")
-                            {
-                                $scope.TheRows[i]="Yes";
-                            }
-                            if($scope.TheRows[i]=="false")
-                            {
-                                $scope.TheRows[i]="No";
-                            } 
-
-                            
                         }
                         $scope.eventList[teiuid].push($scope.TheRows);
                     }

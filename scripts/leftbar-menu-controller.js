@@ -8,6 +8,8 @@ msfReportsApp.controller('LeftBarMenuController',
             $scope.showEventReport = function(){
                 $location.path('/event-report').search();
             };
-
-
+            
+            $scope.showTrackerReport = function(){
+                $location.path('/tracker-report').search();
+            };
         });
