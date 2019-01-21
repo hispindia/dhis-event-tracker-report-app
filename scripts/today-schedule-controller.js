@@ -298,11 +298,11 @@ msfReportsApp
                 
                 
                 allteiuid.push(teiuid)
-                for(m in $scope.Options){
+                for(m in $scope.optionsetValue){
 
                     if(attrvalue+'_index' == m){
 
-                        $scope.attrMap[teiuid+"-"+attruid] = $scope.Options[m];
+                        $scope.attrMap[teiuid+"-"+attruid] = $scope.optionsetValue[m];
                         
                     }
 
