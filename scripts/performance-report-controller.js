@@ -287,7 +287,7 @@ msfReportsApp
                     var div = document.getElementById("Scoringtable")
                     div.style.display = "block";
 
-                    $scope.new_psuid = $scope.program.programStages[i].id;
+                    $scope.psDEs1.push({ dataElement: { id: "last-update", name: "Last Updated Date", ps: psuid } });
                     $scope.psDEs1.push({ dataElement: { id: "orgUnit", name: "orgUnit", ps: psuid } });
                     $scope.psDEs1.push({ dataElement: { id: "Specialist-Name", name: "Specialist Name", ps: psuid } });
 
@@ -560,6 +560,7 @@ msfReportsApp
             const index_sname = 12;
             const index_tei = 13;
             const index_act = 14;
+            const index_lastupdate = 15;
 
             $scope.eventList = [];
             $scope.eventMap = [];
@@ -613,6 +614,7 @@ msfReportsApp
                 var ou_id = stageData.rows[i][index_ouid];
                 var tei_id = stageData.rows[i][index_tei];
                 var activeval = stageData.rows[i][index_act];
+                var lastupdate = stageData.rows[i][index_lastupdate];
 
                 if (activeval == 'true')
                     $scope.inactivedata[evuid] = true
@@ -651,7 +653,7 @@ msfReportsApp
                     $scope.eventDeWiseValueMap[evuid + "-docname"] = doc_name;
                     $scope.eventDeWiseValueMap[evuid + "-contactno"] = contact_no;
                     $scope.eventDeWiseValueMap[evuid + "-teiid"] = tei_id;
-
+                    $scope.eventDeWiseValueMap[evuid + "-lastUpdate"] = lastupdate;
 
                     $scope.eventDeWiseValueMap[evuid + "-activity"] = "";
 
@@ -988,7 +990,7 @@ msfReportsApp
                 MetadataService.getSQLView(SQLViewsName2IdMap["TRACKER_ALLDOC_CMO"], param1).then(function (doc) {
 
                     for (var i = 0; i < doc.listGrid.rows.length; i++) {
-                        $scope.ALLregisteredDoc_name_CMO[doc.listGrid.rows[i][0]] = { name: doc.listGrid.rows[i][1], ouid: doc.listGrid.rows[i][2] }
+                        $scope.ALLregisteredDoc_name_CMO[doc.listGrid.rows[i][0]] = { name: doc.listGrid.rows[i][1], ouid: doc.listGrid.rows[i][2] ,lastupdate: doc.listGrid.rows[i][4]}
                         if (doc.listGrid.rows[i][3] == true)
                             $scope.inactivedata[doc.listGrid.rows[i][0]] = 'true'
                     }
@@ -1225,6 +1227,7 @@ msfReportsApp
 
                             $scope.dataimport = $(
                                 "<tr>" +
+                                "<th></th>" +
                                 "<th>" + org + "</th>" +
                                 "<th>" + specialist_name + "</th>" +
 
@@ -1465,6 +1468,7 @@ msfReportsApp
 
                                 $scope.dataimport = $(
                                     "<tr>" +
+                                    "<th></th>" +
                                     "<th>" + org + "</th>" +
                                     "<th>" + specialist_name + "</th>" +
 
@@ -1510,11 +1514,13 @@ msfReportsApp
                         var returnorgunitid = checkorgunit($scope.ALLregisteredDoc_name_CMO[returnteiuid[0][x]].ouid, programname)
                         if (returnorgunitid == "true") {
                             var checkeddata = checkInactiveData(returnteiuid[0][x])
+                            var lastupdate_date = $scope.ALLregisteredDoc_name_CMS[returnteiuid[0][x]].lastupdate
                             var org = getheirarchy($scope.ALLregisteredDoc_name_CMO[returnteiuid[0][x]].ouid)
                             var specialist_name = $scope.ALLregisteredDoc_name_CMO[returnteiuid[0][x]].name
                             var empty = ""
                             $scope.dataimport = $(
                                 "<tr>" +
+                                "<th>" + lastupdate_date + "</th>" +
                                 "<th>" + org + "</th>" +
                                 "<th>" + specialist_name + "</th>" +
 
@@ -1573,7 +1579,7 @@ msfReportsApp
                 MetadataService.getSQLView(SQLViewsName2IdMap["TRACKER_ALLDOC_CMS"], param1).then(function (doc) {
 
                     for (var i = 0; i < doc.listGrid.rows.length; i++) {
-                        $scope.ALLregisteredDoc_name_CMS[doc.listGrid.rows[i][0]] = { name: doc.listGrid.rows[i][1], ouid: doc.listGrid.rows[i][2] }
+                        $scope.ALLregisteredDoc_name_CMS[doc.listGrid.rows[i][0]] = { name: doc.listGrid.rows[i][1], ouid: doc.listGrid.rows[i][2], lastupdate: doc.listGrid.rows[i][4] }
                         if (doc.listGrid.rows[i][3] == true)
                             $scope.inactivedata[doc.listGrid.rows[i][0]] = 'true'
                     }
@@ -1639,9 +1645,7 @@ msfReportsApp
                         if ($scope.keyspresent[x] == $scope.duplicateval[i]) {
                             var val1 = x.split('-');
                             $scope.neweventval.push(val1[0]);
-                            //$scope.duplicateval.push($scope.keyspresent[$scope.key[i]]);
-                            //hh= $scope.keyspresent.splice($scope.key[i+1],1);
-                        }
+                         }
 
 
                     }
@@ -1809,6 +1813,7 @@ msfReportsApp
 
                             $scope.dataimport = $(
                                 "<tr>" +
+                                "<th></th>" +
                                 "<th>" + org + "</th>" +
                                 "<th>" + specialist_name + "</th>" +
 
@@ -2049,6 +2054,7 @@ msfReportsApp
 
                                 $scope.dataimport = $(
                                     "<tr>" +
+                                    "<th></th>" +
                                     "<th>" + org + "</th>" +
                                     "<th>" + specialist_name + "</th>" +
 
@@ -2090,12 +2096,13 @@ msfReportsApp
                         var returnorgunitid = checkorgunit($scope.ALLregisteredDoc_name_CMS[returnteiuid[0][x]].ouid, programname)
                         if (returnorgunitid == "true") {
 
-
+                            var lastupdate_date = $scope.ALLregisteredDoc_name_CMS[returnteiuid[0][x]].lastupdate
                             var org = getheirarchy($scope.ALLregisteredDoc_name_CMS[returnteiuid[0][x]].ouid)
                             var specialist_name = $scope.ALLregisteredDoc_name_CMS[returnteiuid[0][x]].name
                             var empty = ""
                             $scope.dataimport = $(
                                 "<tr>" +
+                                "<th>" + lastupdate_date + "</th>" +
                                 "<th>" + org + "</th>" +
                                 "<th>" + specialist_name + "</th>" +
 
@@ -2732,7 +2739,7 @@ msfReportsApp
                 MetadataService.getSQLView(SQLViewsName2IdMap["TRACKER_ALLDOC_CMO"], param1).then(function (doc) {
 
                     for (var i = 0; i < doc.listGrid.rows.length; i++) {
-                        $scope.ALLregisteredDoc_name_CMO[doc.listGrid.rows[i][0]] = { name: doc.listGrid.rows[i][1], ouid: doc.listGrid.rows[i][2] }
+                        $scope.ALLregisteredDoc_name_CMO[doc.listGrid.rows[i][0]] = { name: doc.listGrid.rows[i][1], ouid: doc.listGrid.rows[i][2] ,lastupdate: doc.listGrid.rows[i][4]}
                         if (doc.listGrid.rows[i][3] == true)
                             $scope.inactivedata[doc.listGrid.rows[i][0]] = 'true'
                     }
@@ -3013,6 +3020,7 @@ msfReportsApp
 
                             $scope.dataimport = $(
                                 "<tr>" +
+                                "<th></th>" +
                                 "<th>" + org + "</th>" +
                                 "<th>" + specialist_name + "</th>" +
 
@@ -3303,6 +3311,7 @@ msfReportsApp
 
                                 $scope.dataimport = $(
                                     "<tr>" +
+                                    "<th></th>" +
                                     "<th>" + org + "</th>" +
                                     "<th>" + specialist_name + "</th>" +
 
@@ -3347,13 +3356,15 @@ msfReportsApp
                     for (var x = 0; x < returnteiuid[0].length; x++) {
                         var returnorgunitid = checkorgunit($scope.ALLregisteredDoc_name_CMO[returnteiuid[0][x]].ouid, programname)
                         if (returnorgunitid == "true") {
-                            var checkeddata = checkInactiveData(returnteiuid[0][x])
-                            var org = getheirarchy($scope.ALLregisteredDoc_name_CMO[returnteiuid[0][x]].ouid)
-                            var specialist_name = $scope.ALLregisteredDoc_name_CMO[returnteiuid[0][x]].name
+                            var checkeddata = checkInactiveData(returnteiuid[0][x]);
+                            var lastupdate_date = $scope.ALLregisteredDoc_name_CMS[returnteiuid[0][x]].lastupdate;
+                            var org = getheirarchy($scope.ALLregisteredDoc_name_CMO[returnteiuid[0][x]].ouid);
+                            var specialist_name = $scope.ALLregisteredDoc_name_CMO[returnteiuid[0][x]].name;
                             var empty = ""
 
                             $scope.dataimport = $(
                                 "<tr>" +
+                                "<th>" + lastupdate_date + "</th>" +
                                 "<th>" + org + "</th>" +
                                 "<th>" + specialist_name + "</th>" +
 
@@ -3412,7 +3423,7 @@ msfReportsApp
                 MetadataService.getSQLView(SQLViewsName2IdMap["TRACKER_ALLDOC_CMS"], param1).then(function (doc) {
 
                     for (var i = 0; i < doc.listGrid.rows.length; i++) {
-                        $scope.ALLregisteredDoc_name_CMS[doc.listGrid.rows[i][0]] = { name: doc.listGrid.rows[i][1], ouid: doc.listGrid.rows[i][2] }
+                        $scope.ALLregisteredDoc_name_CMS[doc.listGrid.rows[i][0]] = { name: doc.listGrid.rows[i][1], ouid: doc.listGrid.rows[i][2] , lastupdate: doc.listGrid.rows[i][4]}
                         if (doc.listGrid.rows[i][3] == true)
                             $scope.inactivedata[doc.listGrid.rows[i][0]] = 'true'
                     }
@@ -3695,6 +3706,7 @@ msfReportsApp
 
                             $scope.dataimport = $(
                                 "<tr>" +
+                                "<th></th>" +
                                 "<th>" + org + "</th>" +
                                 "<th>" + specialist_name + "</th>" +
 
@@ -3985,6 +3997,7 @@ msfReportsApp
 
                                 $scope.dataimport = $(
                                     "<tr>" +
+                                    "<th></th>" +
                                     "<th>" + org + "</th>" +
                                     "<th>" + specialist_name + "</th>" +
 
@@ -4032,11 +4045,13 @@ msfReportsApp
                         var returnorgunitid = checkorgunit($scope.ALLregisteredDoc_name_CMS[returnteiuid[0][x]].ouid, programname)
                         if (returnorgunitid == "true") {
                             var checkeddata = checkInactiveData(returnteiuid[0][x])
+                            var lastupdate_date = $scope.ALLregisteredDoc_name_CMS[returnteiuid[0][x]].lastupdate
                             var org = getheirarchy($scope.ALLregisteredDoc_name_CMS[returnteiuid[0][x]].ouid)
                             var specialist_name = $scope.ALLregisteredDoc_name_CMS[returnteiuid[0][x]].name
                             var empty = ""
                             $scope.dataimport = $(
                                 "<tr>" +
+                                "<th>" + lastupdate_date + "</th>" +
                                 "<th>" + org + "</th>" +
                                 "<th>" + specialist_name + "</th>" +
 
