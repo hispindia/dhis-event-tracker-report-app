@@ -42,7 +42,7 @@ msfReportsApp
             hideLoad();
 
 
-        })
+        });
         $timeout(function () {
             $scope.date = {};
             $scope.date.startDate = new Date();
@@ -75,7 +75,7 @@ msfReportsApp
                     for (var i = 0; i < org.organisationUnits.length; i++) {
                         $scope.orgunit_CMS[org.organisationUnits[i].id] = "true";
                     }
-                })
+                });
                 MetadataService.filterCMO_CMS(CMO_uid).then(function (org) {
                     for (var i = 0; i < org.organisationUnits.length; i++) {
                         $scope.orgunit_CMO[org.organisationUnits[i].id] = "true";
@@ -84,22 +84,22 @@ msfReportsApp
 
 
 
-            }, 2000)
+            }, 2000);
             MetadataService.getSQLViewData(SQLViewsName2IdMap["UPHMIS_Heirarchy"]).then(function (orguinit) {
 
                 for (var i = 0; i < orguinit.listGrid.rows.length; i++) {
                     $scope.orgunitheirarchy[orguinit.listGrid.rows[i][0]] = orguinit.listGrid.rows[i][1]
                 }
-            })
-            $scope.allContactNo = []
+            });
+            $scope.allContactNo = [];
             MetadataService.getSQLViewData(SQLViewsName2IdMap["Get_contactno"]).then(function (contact) {
 
                 for (var i = 0; i < contact.listGrid.rows.length; i++) {
                     $scope.allContactNo[contact.listGrid.rows[i][0]] = contact.listGrid.rows[i][1]
                 }
-            })
+            });
 
-            $scope.selorgunitid = []
+            $scope.selorgunitid = [];
             var param = "var=orgUnitId:" + $scope.selectedOrgUnitUid[0];
             MetadataService.getSQLView(SQLViewsName2IdMap["GetOrgUnitId"], param).then(function (org) {
 
@@ -108,7 +108,7 @@ msfReportsApp
             })
 
 
-        }
+        };
 
         getAllPrograms = function () {
 
@@ -291,7 +291,7 @@ msfReportsApp
                     $scope.psDEs1.push({ dataElement: { id: "orgUnit", name: "orgUnit", ps: psuid } });
                     $scope.psDEs1.push({ dataElement: { id: "Specialist-Name", name: "Specialist Name", ps: psuid } });
 
-                    $scope.header = ['', ''];
+                    $scope.header = ['', '', ''];
 
                     for (var j = 0; j < $scope.program.programStages[i].programStageDataElements.length; j++) {
 
@@ -1513,11 +1513,15 @@ msfReportsApp
 
                         var returnorgunitid = checkorgunit($scope.ALLregisteredDoc_name_CMO[returnteiuid[0][x]].ouid, programname)
                         if (returnorgunitid == "true") {
-                            var checkeddata = checkInactiveData(returnteiuid[0][x])
-                            var lastupdate_date = $scope.ALLregisteredDoc_name_CMS[returnteiuid[0][x]].lastupdate
-                            var org = getheirarchy($scope.ALLregisteredDoc_name_CMO[returnteiuid[0][x]].ouid)
-                            var specialist_name = $scope.ALLregisteredDoc_name_CMO[returnteiuid[0][x]].name
-                            var empty = ""
+                            var lastupdate_date = '';
+                            var checkeddata = checkInactiveData(returnteiuid[0][x]);
+                            if (checkeddata == 'true') {
+                                lastupdate_date = $scope.ALLregisteredDoc_name_CMO[returnteiuid[0][x]].lastupdate;
+                            }
+                            //var lastupdate_date = $scope.ALLregisteredDoc_name_CMO[returnteiuid[0][x]].lastupdate;
+                            var org = getheirarchy($scope.ALLregisteredDoc_name_CMO[returnteiuid[0][x]].ouid);
+                            var specialist_name = $scope.ALLregisteredDoc_name_CMO[returnteiuid[0][x]].name;
+                            var empty = "";
                             $scope.dataimport = $(
                                 "<tr>" +
                                 "<th>" + lastupdate_date + "</th>" +
@@ -1544,7 +1548,7 @@ msfReportsApp
                             )
                             $("#showdata").append($scope.dataimport);
                             if (checkeddata == 'true') {
-                                var tdd = $scope.dataimport[0].cells
+                                var tdd = $scope.dataimport[0].cells;
                                 for (i = 0; i < tdd.length; i++)
                                     tdd[i].id = 'table-row'
                             }
@@ -2092,14 +2096,17 @@ msfReportsApp
 
                 if (returnteiuid[0].length != 0) {
                     for (var x = 0; x < returnteiuid[0].length; x++) {
-                        var checkeddata = checkInactiveData(returnteiuid[0][x])
+                        var checkeddata = checkInactiveData(returnteiuid[0][x]);
                         var returnorgunitid = checkorgunit($scope.ALLregisteredDoc_name_CMS[returnteiuid[0][x]].ouid, programname)
                         if (returnorgunitid == "true") {
-
-                            var lastupdate_date = $scope.ALLregisteredDoc_name_CMS[returnteiuid[0][x]].lastupdate
-                            var org = getheirarchy($scope.ALLregisteredDoc_name_CMS[returnteiuid[0][x]].ouid)
-                            var specialist_name = $scope.ALLregisteredDoc_name_CMS[returnteiuid[0][x]].name
-                            var empty = ""
+                            var lastupdate_date = '';
+                            if (checkeddata == "true") {
+                                lastupdate_date = $scope.ALLregisteredDoc_name_CMS[returnteiuid[0][x]].lastupdate;
+                            }
+                            //var lastupdate_date = $scope.ALLregisteredDoc_name_CMS[returnteiuid[0][x]].lastupdate;
+                            var org = getheirarchy($scope.ALLregisteredDoc_name_CMS[returnteiuid[0][x]].ouid);
+                            var specialist_name = $scope.ALLregisteredDoc_name_CMS[returnteiuid[0][x]].name;
+                            var empty = "";
                             $scope.dataimport = $(
                                 "<tr>" +
                                 "<th>" + lastupdate_date + "</th>" +
@@ -2119,7 +2126,6 @@ msfReportsApp
                                 "<th>" + empty + "</th>" +
 
                                 "<th>" + empty + "</th>" +
-
 
                                 "</tr>"
 
@@ -2146,8 +2152,6 @@ msfReportsApp
                 }
             }
 
-
-
             ////Anaesthetist - PBR monitoring
             if (program == "HTCqTWEF1XS" && programname == 'Anaesthetist - PBR monitoring') {
                 var count = 0; $scope.dataimport = $();
@@ -2170,8 +2174,6 @@ msfReportsApp
                                 case1_val = 0;
                             else
                                 case1_val = case1;
-
-
 
                             ///////////case 2
                             if (case2 == undefined)
@@ -3356,8 +3358,12 @@ msfReportsApp
                     for (var x = 0; x < returnteiuid[0].length; x++) {
                         var returnorgunitid = checkorgunit($scope.ALLregisteredDoc_name_CMO[returnteiuid[0][x]].ouid, programname)
                         if (returnorgunitid == "true") {
+                            var lastupdate_date = '';
                             var checkeddata = checkInactiveData(returnteiuid[0][x]);
-                            var lastupdate_date = $scope.ALLregisteredDoc_name_CMS[returnteiuid[0][x]].lastupdate;
+                            if (checkeddata == "true") {
+                                lastupdate_date = $scope.ALLregisteredDoc_name_CMO[returnteiuid[0][x]].lastupdate;
+                            }
+                            //var lastupdate_date = $scope.ALLregisteredDoc_name_CMO[returnteiuid[0][x]].lastupdate;
                             var org = getheirarchy($scope.ALLregisteredDoc_name_CMO[returnteiuid[0][x]].ouid);
                             var specialist_name = $scope.ALLregisteredDoc_name_CMO[returnteiuid[0][x]].name;
                             var empty = ""
@@ -3386,10 +3392,9 @@ msfReportsApp
 
                                 "<th>" + empty + "</th>" +
 
-
                                 "</tr>"
 
-                            )
+                            );
                             $("#showdata").append($scope.dataimport);
                             if (checkeddata == "true") {
                                 var tdd = $scope.dataimport[0].cells
@@ -4044,11 +4049,15 @@ msfReportsApp
                     for (var x = 0; x < returnteiuid[0].length; x++) {
                         var returnorgunitid = checkorgunit($scope.ALLregisteredDoc_name_CMS[returnteiuid[0][x]].ouid, programname)
                         if (returnorgunitid == "true") {
-                            var checkeddata = checkInactiveData(returnteiuid[0][x])
-                            var lastupdate_date = $scope.ALLregisteredDoc_name_CMS[returnteiuid[0][x]].lastupdate
-                            var org = getheirarchy($scope.ALLregisteredDoc_name_CMS[returnteiuid[0][x]].ouid)
-                            var specialist_name = $scope.ALLregisteredDoc_name_CMS[returnteiuid[0][x]].name
-                            var empty = ""
+                            var lastupdate_date = '';
+                            var checkeddata = checkInactiveData(returnteiuid[0][x]);
+                            if (checkeddata == "true") {
+                                lastupdate_date = $scope.ALLregisteredDoc_name_CMS[returnteiuid[0][x]].lastupdate;
+                            }
+                            //var lastupdate_date = $scope.ALLregisteredDoc_name_CMS[returnteiuid[0][x]].lastupdate;
+                            var org = getheirarchy($scope.ALLregisteredDoc_name_CMS[returnteiuid[0][x]].ouid);
+                            var specialist_name = $scope.ALLregisteredDoc_name_CMS[returnteiuid[0][x]].name;
+                            var empty = "";
                             $scope.dataimport = $(
                                 "<tr>" +
                                 "<th>" + lastupdate_date + "</th>" +
