@@ -39,6 +39,9 @@ msfReportsApp
             $scope.date.endDate = new Date();
         },0);
 
+        //For displaying "Download excel Report"
+        $scope.allLoaded = false;
+
         //initially load tree
         selection.load();
 
@@ -74,12 +77,21 @@ msfReportsApp
         }
 
         $scope.updateStartDate = function(startdate){
+            if(startdate > $scope.enddateSelected) {
+                alert("Selected Start date is greater than the end date!");
+            }
             $scope.startdateSelected = startdate;
+            $scope.allLoaded = false;
             //  alert("$scope.startdateSelected---"+$scope.startdateSelected);
         };
 
         $scope.updateEndDate = function(enddate){
+            if($scope.startdateSelected > enddate) {
+                alert("Selected End date is smaller than the start date!");
+            }
             $scope.enddateSelected = enddate;
+            $scope.allLoaded = false;
+
             //  alert("$scope.enddateSelected---"+ $scope.enddateSelected);
         };
 
@@ -175,6 +187,7 @@ msfReportsApp
                                    // $scope.AllstageData = AllstageData;
 
                                 arrangeDataX($scope.stageData, $scope.attrData, $scope.allattr);
+                                $scope.allLoaded = true;
                           //  })
                         
                         })

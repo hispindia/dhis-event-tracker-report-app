@@ -41,7 +41,7 @@
                 <span class="input-group-addon">
                     <b>Start Date:-</b>
                 </span>
-                <input calendar ng-model='startdate' class="form-control" ng-change="updateStartDate(startdate);" style="margin:0px;padding: 16px;"
+                <input calendar ng-model='startdate' class="form-control" ng-change="updateStartDate(startdate);"  ng-disabled="!selectedProgram" style="margin:0px;padding: 16px;"
                     required placeholder="Start Date" />
             </div>
         </div>
@@ -50,17 +50,17 @@
                 <span class="input-group-addon">
                     <b>End Date:-</b>
                 </span>
-                <input calendar ng-model='enddate' class="form-control" ng-change="updateEndDate(enddate);" required style="margin:0px;padding: 16px;"
+                <input calendar ng-model='enddate' class="form-control" ng-change="updateEndDate(enddate);"  ng-disabled="!selectedProgram" required style="margin:0px;padding: 16px;"
                     placeholder="End Date" />
             </div>
         </div>
 
         <div class="col-md-3">
             <button type="button" class="btn btn-primary" ng-click="generateReport(selectedProgram, report, selectedOuMode);showLoad();"
-                ng-disabled="!selectedProgram">{{'generate_report'| translate}}</button>
+            ng-if="selectedProgram && enddate > startdate">{{'generate_report'| translate}}</button>
         </div>
         <div class="col-md-3" style="margin-left: -130px">
-            <button id="btnExport" class="btn btn-success" ng-click="fnExcelReport();" ng-disabled="!selectedProgram"> Export To Excel </button>
+            <button id="btnExport" class="btn btn-success" ng-click="fnExcelReport();" ng-show="allLoaded && selectedProgram"> Export To Excel </button>
         </div>
     </div>
 
@@ -75,7 +75,7 @@
 <!-- Table Display -->
 
 
-<div id="loader" style="display: none" class="lds-facebook">
+<div id="loader" style="display: none" ng-show="!allLoaded" class="lds-facebook">
     <div></div>
     <div></div>
     <div></div>

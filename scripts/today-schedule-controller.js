@@ -39,6 +39,9 @@ msfReportsApp
             $scope.date.endDate = new Date();
         },0);
 
+        //For displaying "Download excel Report"
+        $scope.allLoaded = false;
+
         //initially load tree
         selection.load();
 
@@ -74,12 +77,21 @@ msfReportsApp
         }
 
         $scope.updateStartDate = function(startdate){
-            $scope.startdateSelected = startdate;
+            if(startdate > $scope.enddateSelected) {
+                alert("Selected Start date is greater than the End date!");
+        }
+        $scope.startdateSelected = startdate;
+            $scope.allLoaded = false;
             //  alert("$scope.startdateSelected---"+$scope.startdateSelected);
         };
 
         $scope.updateEndDate = function(enddate){
+            if($scope.startdateSelected > enddate) {
+                alert("Selected End date is smaller than the Start date!");
+            }
             $scope.enddateSelected = enddate;
+            $scope.allLoaded = false;
+
             //  alert("$scope.enddateSelected---"+ $scope.enddateSelected);
         };
 
@@ -102,7 +114,8 @@ msfReportsApp
            
         }
         $scope.generateReport=function(prog){
-          $('#loader').attr('style','display:block !important');
+                $('#loader').attr('style','display:block !important');
+              
           //document.getElementById("loader").style.display="block";
          // document.getElementById("loader-wrapper").style.display="block";
          $timeout(function(){$scope.createReport(prog)}, 2000);
@@ -120,7 +133,7 @@ msfReportsApp
                $scope.program.programTrackedEntityAttributes[i].displayName = str.substring(n + 1);
 
            }
-               $scope.psDEs = [];
+            $scope.psDEs = [];
            $scope.Options =[];
            $scope.attribute = "Attributes";
            $scope.enrollment =["Enrollment date" , "Enrolling orgUnit"];
@@ -172,6 +185,7 @@ msfReportsApp
                             MetadataService.getALLAttributes().then(function (allattr) {
                                 $scope.allattr = allattr;
                                arrangeDataX($scope.stageData, $scope.attrData, $scope.allattr, $scope.optionsetValue);
+                               $scope.allLoaded = true;
                          })
                         })
                     })

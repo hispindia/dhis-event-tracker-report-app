@@ -6,6 +6,7 @@ html, body {
     font-size: 10pt;
 }
 
+
 .not-for-screen {
     display: none;
 }
@@ -942,12 +943,12 @@ a:active {
 }
 
 .ui-datepicker-group .ui-datepicker-header {
-    //height: 1.5em; 
-    height: inherit;  //this is to make it play nice with bootstrap
+    /*height: 1.5em; */
+    height: inherit;  /*this is to make it play nice with bootstrap*/
 }
 
 #ui-datepicker-div, .calendars-popup {
-    z-index: 2000; //has to be greater than bootsrap's modal z-index
+    z-index: 2000; /*has to be greater than bootsrap's modal z-index*/
 }
 
 .panel-group .panel {
