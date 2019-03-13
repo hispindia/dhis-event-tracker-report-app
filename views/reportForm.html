@@ -129,7 +129,7 @@
 
             </tbody>
             <tbody>
-                <tr ng-repeat="tei in teiList1">
+                <tr ng-repeat="tei in teiList">
                     <td>{{teiEnrollMap[tei+"-enrollDate"]}}</td>
                     <td>{{teiEnrollOrgMap[tei+"-ouname"]}}</td>
                     <td ng-repeat="attr in program.programTrackedEntityAttributes">{{attrMap1[tei+"-"+attr.trackedEntityAttribute.id]}}

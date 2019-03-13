@@ -1,6 +1,6 @@
 {
-    "version": "0.1",
-    "name": "Tracker & Event Report App",
+    "version": "1.1",
+    "name": "Tracker/Event Report App",
     "description": "Tracker & Event Report App",
     "launch_path": "/index.html",
     "appType": "APP",

@@ -360,7 +360,8 @@ msfReportsApp
             }
 
             $scope.emptyval = [];
-
+            evuid = "dummy";
+            if(eventToMiscMap[evuid].evDate == ""){
             for (key in teiList) {
                 var teiuid = key;
                 $scope.eventList[teiuid] = [];
@@ -414,6 +415,7 @@ msfReportsApp
                     $scope.eventList[teiuid].push($scope.TheRows);
                 }
             }
+        }
             for (var i = 0; i < $scope.TheRows.length; i++)
                 $scope.emptyval.push("");
             $('#divIdmmm').attr('style', 'display:block !important');
