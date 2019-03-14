@@ -74,12 +74,14 @@
 <div id ="divId" class="container" style="margin-left: 2px">
     <table id="tableid" border="1" class="table table-hover">
         <tr>
+            <th>S/N</th>
             <th colspan="{{program.programTrackedEntityAttributes.length+2}}">{{attribute}}</th>
             <th ng-repeat="ps in program.programStages"
                 colspan="{{ps.programStageDataElements.length+2}}">{{ps.name}}</th>
 
         </tr>
         <tr style="background-color:antiquewhite">
+            <th></th>
             <th ng-repeat="enrol in enrollment">{{enrol}}</th>
             <th ng-repeat="attr in program.programTrackedEntityAttributes">{{attr.displayName}}</th>
             <th ng-repeat="de in psDEs">{{de.dataElement.name}}</th>
@@ -87,7 +89,8 @@
         
         <tbody ng-repeat="tei in teiListnew">
         <tr  ng-repeat="event in eventList[tei] track by $index" >
-            <td  >{{teiEnrollMap[tei+"-enrollDate"]}}</td>
+            <td>{{getSerialNumber[tei][$index]}}</td>
+            <td >{{teiEnrollMap[tei+"-enrollDate"]}}</td>
             <td >{{teiEnrollOrgMap[tei+"-ouname"]}}</td>
             <td  ng-repeat="attr in program.programTrackedEntityAttributes">{{attrMap[tei+"-"+attr.trackedEntityAttribute.id]}} </td>
             <td ng-repeat="value in event track by $index">{{value}}</td>

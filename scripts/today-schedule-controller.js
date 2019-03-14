@@ -236,6 +236,7 @@ msfReportsApp
             $scope.attrMap = [];
             $scope.teiList = [];
             $scope.eventList = [];
+            $scope.getSerialNumber = [];
             $scope.maxEventPerTei = [];
 
             $scope.teiEnrollOrgMap = [];
@@ -417,9 +418,11 @@ msfReportsApp
 
                 $scope.emptyval=[];
 
+                var serialNumber = 0;
                 for (key in teiList){
                     var teiuid = key;
                     $scope.eventList[teiuid] = [];
+                    $scope.getSerialNumber[teiuid] =[];
 
                     var maxEventCount = teiPerPsEventListMap[teiuid].max;
 
@@ -470,6 +473,10 @@ msfReportsApp
 
                             
                         }
+
+                        serialNumber += 1;
+                        $scope.getSerialNumber[teiuid].push(serialNumber);
+
                         $scope.eventList[teiuid].push($scope.TheRows);
                     }
                 }
