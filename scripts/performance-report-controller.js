@@ -286,12 +286,13 @@ msfReportsApp
                     $("#showdata").empty();
                     var div = document.getElementById("Scoringtable")
                     div.style.display = "block";
-
+                    
+                    $scope.psDEs1.push({dataElement: {id:"Total-No-Of-Enrolled-dates", name:" Total No. of Enrolled dates", ps: psuid}});
                     $scope.psDEs1.push({ dataElement: { id: "last-update", name: "Last Updated Date", ps: psuid } });
                     $scope.psDEs1.push({ dataElement: { id: "orgUnit", name: "orgUnit", ps: psuid } });
                     $scope.psDEs1.push({ dataElement: { id: "Specialist-Name", name: "Specialist Name", ps: psuid } });
 
-                    $scope.header = ['', '', ''];
+                    $scope.header = ['', '', '', ''];
 
                     for (var j = 0; j < $scope.program.programStages[i].programStageDataElements.length; j++) {
 
@@ -1227,6 +1228,7 @@ msfReportsApp
 
                             $scope.dataimport = $(
                                 "<tr>" +
+                                "<th>" + $scope.neweventval.length + "</th>"+
                                 "<th></th>" +
                                 "<th>" + org + "</th>" +
                                 "<th>" + specialist_name + "</th>" +
@@ -1524,6 +1526,7 @@ msfReportsApp
                             var empty = "";
                             $scope.dataimport = $(
                                 "<tr>" +
+                                "<th></th>"+
                                 "<th>" + lastupdate_date + "</th>" +
                                 "<th>" + org + "</th>" +
                                 "<th>" + specialist_name + "</th>" +
@@ -1817,6 +1820,7 @@ msfReportsApp
 
                             $scope.dataimport = $(
                                 "<tr>" +
+                                "<th>"+ $scope.neweventval.length +"</th>"+
                                 "<th></th>" +
                                 "<th>" + org + "</th>" +
                                 "<th>" + specialist_name + "</th>" +
@@ -2109,6 +2113,7 @@ msfReportsApp
                             var empty = "";
                             $scope.dataimport = $(
                                 "<tr>" +
+                                "<th></th>"+
                                 "<th>" + lastupdate_date + "</th>" +
                                 "<th>" + org + "</th>" +
                                 "<th>" + specialist_name + "</th>" +
@@ -3022,6 +3027,7 @@ msfReportsApp
 
                             $scope.dataimport = $(
                                 "<tr>" +
+                                "<th>"+ $scope.neweventval.length +"</th>" +
                                 "<th></th>" +
                                 "<th>" + org + "</th>" +
                                 "<th>" + specialist_name + "</th>" +
@@ -3370,6 +3376,7 @@ msfReportsApp
 
                             $scope.dataimport = $(
                                 "<tr>" +
+                                "<th></th>" +
                                 "<th>" + lastupdate_date + "</th>" +
                                 "<th>" + org + "</th>" +
                                 "<th>" + specialist_name + "</th>" +
@@ -3711,6 +3718,7 @@ msfReportsApp
 
                             $scope.dataimport = $(
                                 "<tr>" +
+                                "<th>" + $scope.neweventval.length + "</th>" +
                                 "<th></th>" +
                                 "<th>" + org + "</th>" +
                                 "<th>" + specialist_name + "</th>" +
@@ -4060,6 +4068,7 @@ msfReportsApp
                             var empty = "";
                             $scope.dataimport = $(
                                 "<tr>" +
+                                "<th></th>"+
                                 "<th>" + lastupdate_date + "</th>" +
                                 "<th>" + org + "</th>" +
                                 "<th>" + specialist_name + "</th>" +
