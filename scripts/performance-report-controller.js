@@ -287,7 +287,7 @@ msfReportsApp
                     var div = document.getElementById("Scoringtable")
                     div.style.display = "block";
                     
-                    $scope.psDEs1.push({dataElement: {id:"Total-No-Of-Enrolled-dates", name:" Total No. of Enrolled dates", ps: psuid}});
+                    $scope.psDEs1.push({dataElement: {id:"Total-No-Of-Working Days", name:"Total-No-Of-Working Days", ps: psuid}});
                     $scope.psDEs1.push({ dataElement: { id: "last-update", name: "Last Updated Date", ps: psuid } });
                     $scope.psDEs1.push({ dataElement: { id: "orgUnit", name: "orgUnit", ps: psuid } });
                     $scope.psDEs1.push({ dataElement: { id: "Specialist-Name", name: "Specialist Name", ps: psuid } });
