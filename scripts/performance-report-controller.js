@@ -336,6 +336,7 @@ msfReportsApp
                     div.style.display = "block";
 
                     $scope.psDEs1.push({dataElement: {id:"Total-No-Of-Working Days", name:"Total-No-Of-Working Days", ps: psuid}});
+                    $scope.psDEs1.push({ dataElement: { id: "last-update", name: "Last Updated Date", ps: psuid } });
                     $scope.psDEs1.push({ dataElement: { id: "orgUnit", name: "orgUnit", ps: psuid } });
                     $scope.psDEs1.push({ dataElement: { id: "Specialist-Name", name: "Specialist Name", ps: psuid } });
                     $scope.psDEs.push({ dataElement: { id: "DE1", name: "Attend pediatric OPD/ newborn babies  of the hospital (follow-up OPD post discharge from SNCU.) as per schedule.", ps: psuid } });
@@ -344,7 +345,7 @@ msfReportsApp
                     $scope.psDEs.push({ dataElement: { id: "DE4", name: "No of Paediatric cases treated as inpatient a. Out-Born admissions (During the Shift) b. Out-Born admissions (During the Shift) c. Pre-term/ Low-Birth weight admissions (During the Shift) (Reported from Emergency in duty hours) By Self (Doctors/Specialist)", ps: psuid } });
                     $scope.psDEs.push({ dataElement: { id: "DE5", name: "Monthly Reporting a. Submission of Complete monthly SNCU report by 5th of next month b. Bed occupancy rate (BOR)", ps: psuid } });
 
-                    $scope.header = ['', '', ''];
+                    $scope.header = ['', '', '', ''];
 
                     for (var j = 0; j < $scope.program.programStages[i].programStageDataElements.length; j++) {
                         $scope.new_psuid = $scope.program.programStages[i].id;
