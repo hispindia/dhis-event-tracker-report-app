@@ -1473,6 +1473,7 @@ msfReportsApp
                                 $scope.dataimport = $(
                                     "<tr>" +
                                     "<th></th>" +
+                                    "<th></th>" +
                                     "<th>" + org + "</th>" +
                                     "<th>" + specialist_name + "</th>" +
 
@@ -2064,6 +2065,7 @@ msfReportsApp
 
                                 $scope.dataimport = $(
                                     "<tr>" +
+                                    "<th></th>" +
                                     "<th></th>" +
                                     "<th>" + org + "</th>" +
                                     "<th>" + specialist_name + "</th>" +
@@ -3322,6 +3324,7 @@ msfReportsApp
                                 $scope.dataimport = $(
                                     "<tr>" +
                                     "<th></th>" +
+                                    "<th></th>" +
                                     "<th>" + org + "</th>" +
                                     "<th>" + specialist_name + "</th>" +
 
@@ -4013,6 +4016,7 @@ msfReportsApp
                                 $scope.dataimport = $(
                                     "<tr>" +
                                     "<th></th>" +
+                                    "<th></th>" +
                                     "<th>" + org + "</th>" +
                                     "<th>" + specialist_name + "</th>" +
 
@@ -4553,7 +4557,7 @@ msfReportsApp
                 MetadataService.getSQLView(SQLViewsName2IdMap["TRACKER_ALLDOC_Paediatric"], param1).then(function (doc) {
 
                     for (var i = 0; i < doc.listGrid.rows.length; i++) {
-                        $scope.ALLregisteredDoc_name_Paediatric[doc.listGrid.rows[i][0]] = { name: doc.listGrid.rows[i][1], ouid: doc.listGrid.rows[i][2], inactive: doc.listGrid.rows[i][3] }
+                        $scope.ALLregisteredDoc_name_Paediatric[doc.listGrid.rows[i][0]] = { name: doc.listGrid.rows[i][1], ouid: doc.listGrid.rows[i][2], inactive: doc.listGrid.rows[i][3], lastupdate: doc.listGrid.rows[i][4] }
                         if (doc.listGrid.rows[i][3] == true)
                             $scope.inactivedata[doc.listGrid.rows[i][0]] = 'true'
                     }
@@ -4863,6 +4867,7 @@ msfReportsApp
                         $scope.dataimport = $(
                             "<tr>" +
                             "<th>" + $scope.neweventval.length + "</th>"+
+                            "<th></th>" +
                             "<th>" + org + "</th>" +
                             "<th>" + specialist_name + "</th>" +
 
@@ -5190,6 +5195,8 @@ msfReportsApp
 
                             $scope.dataimport = $(
                                 "<tr>" +
+                                "<th></th>" +
+                                "<th></th>" +
                                 "<th>" + org + "</th>" +
 
                                 "<th>" + specialist_name + "</th>" +
@@ -5236,16 +5243,20 @@ msfReportsApp
                 var returnteiuid = checkteiuid($scope.eventDeWiseValueMap, programname, $scope.ALLregisteredDoc_name_Paediatric)
                 if (returnteiuid[0].length != 0) {
                     for (var x = 0; x < returnteiuid[0].length; x++) {
-
-
-                        var checkeddata = checkInactiveData(returnteiuid[0][x])
-
-                        var org = getheirarchy($scope.ALLregisteredDoc_name_Paediatric[returnteiuid[0][x]].ouid)
-                        var specialist_name = $scope.ALLregisteredDoc_name_Paediatric[returnteiuid[0][x]].name
-                        var empty = ""
+                        var org = getheirarchy($scope.ALLregisteredDoc_name_Paediatric[returnteiuid[0][x]].ouid);
+                        var specialist_name = $scope.ALLregisteredDoc_name_Paediatric[returnteiuid[0][x]].name;
+                        var empty = "";
+                         var lastupdate_date = '';
+                                var checkeddata = checkInactiveData(returnteiuid[0][x])                       
+                                if (checkeddata == "true") {
+                                    lastupdate_date = $scope.ALLregisteredDoc_name_Paediatric[returnteiuid[0][x]].lastupdate;
+                                }
+                            
 
                         $scope.dataimport = $(
                             "<tr>" +
+                            "<th></th>" +
+                            "<th>" + lastupdate_date + "</th>" +
                             "<th>" + org + "</th>" +
                             "<th>" + specialist_name + "</th>" +
 
