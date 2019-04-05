@@ -12,7 +12,9 @@ var msfReportsApp = angular.module('msfReportsApp',['ui.bootstrap',
     'd2Filters',
     'd2Services',
     'pascalprecht.translate',
-    'trackerReportsAppServices'
+    'trackerReportsAppServices',
+    'angularUtils.directives.dirPagination'
+    
 ])
 
 .config(function($routeProvider,$translateProvider){

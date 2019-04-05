@@ -425,7 +425,7 @@ msfReportsApp
                     $scope.getSerialNumber[teiuid] =[];
 
                     var maxEventCount = teiPerPsEventListMap[teiuid].max;
-
+                    console.log(teiuid + "***" + maxEventCount);
                     if (maxEventCount == 0){debugger}
                     for (var y=0;y<maxEventCount;y++){
 

@@ -87,7 +87,7 @@
             <th ng-repeat="de in psDEs">{{de.dataElement.name}}</th>
         </tr>
         
-        <tbody ng-repeat="tei in teiListnew">
+        <tbody dir-paginate="tei in teiListnew|itemsPerPage:5">
         <tr  ng-repeat="event in eventList[tei] track by $index" >
             <td>{{getSerialNumber[tei][$index]}}</td>
             <td >{{teiEnrollMap[tei+"-enrollDate"]}}</td>
@@ -95,7 +95,7 @@
             <td  ng-repeat="attr in program.programTrackedEntityAttributes">{{attrMap[tei+"-"+attr.trackedEntityAttribute.id]}} </td>
             <td ng-repeat="value in event track by $index">{{value}}</td>
         </tr>
-       
+        
        </tbody>
     </tbody>
        <tr   ng-repeat="tei in teiList" >
@@ -107,14 +107,13 @@
        </tr>
     </tbody>
     </table>
+    <dir-pagination-controls
+        max-size="5"
+        direction-links="true"
+        boundary-links="true" >
+    </dir-pagination-controls>
 </div>
     </div>
-
-
-
-
-
-
     <div class="row" ng-if="selectedOrgUnit.programs.length > 0 && !selectedProgram">
     <div class="col-sm-8 col-md-6 vertical-spacing">
         <div class="alert alert-warning">{{'please_select_program_report'| translate}}</div> 
