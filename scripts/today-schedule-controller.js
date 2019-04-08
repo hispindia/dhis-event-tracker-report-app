@@ -157,13 +157,13 @@ msfReportsApp
             var param = "var=program:" + program.id + "&var=orgunit:" + $scope.selectedOrgUnit.id + "&var=startdate:" + $scope.startdateSelected + "&var=enddate:" + $scope.enddateSelected;
 
             MetadataService.getSQLView(SQLViewsName2IdMap[SQLQUERY_TEI_DATA_VALUE_NAME], param).then(function (stageData) {
-                $scope.stageData = stageData;
+                $scope.stageData = stageData.listGrid;
 
                 MetadataService.getSQLView(SQLViewsName2IdMap[SQLQUERY_TEI_ATTR_NAME], param).then(function (attrData) {
-                    $scope.attrData = attrData;
+                    $scope.attrData = attrData.listGrid;
 
                     MetadataService.getSQLView(SQLViewsName2IdMap["OptionValue"], " ").then(function (optionsetValue) {
-                        $scope.optionsetValue = optionsetValue.rows;
+                        $scope.optionsetValue = optionsetValue.listGrid.rows;
                         MetadataService.getALLAttributes().then(function (allattr) {
                             $scope.allattr = allattr;
                             getwithoutEnroll($scope.stageData, $scope.attrData, $scope.allattr, $scope.optionsetValue,program);
