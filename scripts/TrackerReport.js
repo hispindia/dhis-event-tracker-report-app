@@ -316,7 +316,44 @@ msfReportsApp
 
        
 
-         
+           /* for (var i=0;i<stageData.rows.length;i++) {
+                var teiuid = stageData.rows[i][index_tei];
+                var psuid = stageData.rows[i][index_ps];
+                var evuid = stageData.rows[i][index_ev];
+                var evDate = stageData.rows[i][index_evDate];
+                evDate = evDate.substring(0, 10);
+                var deuid = stageData.rows[i][index_deuid];
+                var devalue = stageData.rows[i][index_devalue];
+                var ou = stageData.rows[i][index_ou];
+
+                if (!teiList[teiuid]){
+                    teiList[teiuid] = true;
+                }
+                if (!teiPerPsEventListMap[teiuid]) {
+                    teiPerPsEventListMap[teiuid] = [];
+                    teiPerPsEventListMap[teiuid].max = 0;
+                }
+
+                if (!teiPerPsEventListMap[teiuid][psuid]) {
+                    teiPerPsEventListMap[teiuid][psuid] = [];
+
+                }
+
+                if (!teiToEventListMap[evuid]) {
+                    teiToEventListMap[evuid] = true;
+                    teiPerPsEventListMap[teiuid][psuid].push(evuid);
+                    if (teiPerPsEventListMap[teiuid][psuid].length > teiPerPsEventListMap[teiuid].max) {
+                        teiPerPsEventListMap[teiuid].max = teiPerPsEventListMap[teiuid][psuid].length;
+                    }
+                }
+
+                if (!teiPsEventMap[teiuid + "-" + psuid + "-" + evuid]){
+                    teiPsEventMap[teiuid + "-" + psuid + "-" + evuid] = [];
+                }
+
+                eventToMiscMap[evuid] = {ou : ou , evDate : evDate};
+                teiPsEventDeMap[teiuid + "-" + evuid + "-" + deuid] = devalue;
+            }*/
                 $scope.TheRows = [];
                 var psDes = $scope.psDEs;
                
