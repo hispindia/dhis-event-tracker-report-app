@@ -39,9 +39,9 @@ const SQLQUERY_TEI_DATA_VALUE = "select tei.uid tei,ps.uid psuid,min(ps.name) ps
  and psi.organisationunitid IN (select organisationunitid\
  from organisationunit\
  where path like '%${orgunit}%')\
- and pi.enrollmentdate between '${startdate}' and '${enddate}'\
+ and psi.executiondate between '${startdate}' and '${enddate}'\
  group by tei.uid,ps.uid,psi.uid,psi.executiondate,de.uid,ou.name, pi.enrollmentdate\
- order by pi.enrollmentdate,tei.uid,psi.executiondate";
+ order by psi.executiondate,tei.uid,psi.executiondate";
 
 const SQLQUERY_TEI_DATA_VALUE_NAME = "SQLQUERY_TEI_DATA_VALUE_V1";
 

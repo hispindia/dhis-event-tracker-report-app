@@ -107,12 +107,13 @@ msfReportsApp
          // document.getElementById("loader-wrapper").style.display="block";
          $timeout(function(){$scope.createReport(prog)}, 2000);
       }
-
+        //http://apps.hispindia.org/punjab230/api/sqlViews/HOnZ038FMkq/data?var=program:JuZA8mxRZV2&var=orgunit:cV6EKuxSWXT&var=startdate:2019-06-01&var=enddate:2019-07-31
+    //ORGANISATION_UNIT -- ORGANISATION_UNIT_UID_ID_NAME
      // $scope.progval=[]
       $scope.createReport = function (program) {
          // $scope.progval.push(prog)
-
-               $scope.program = program;
+          $scope.organisationUnitsMap = [];
+          $scope.program = program;
 
            for(var i=0; i<$scope.program.programTrackedEntityAttributes.length;i++){
                var str = $scope.program.programTrackedEntityAttributes[i].displayName;
@@ -166,19 +167,25 @@ msfReportsApp
 
                         MetadataService.getSQLView(SQLViewsName2IdMap[SQLQUERY_TEI_ATTR_NAME], param).then(function (attrData) {
                             $scope.attrData = attrData.listGrid;
-                           
-                           
-                            MetadataService.getALLAttributes().then(function (allattr) {
-                                $scope.allattr = allattr;
-                               // MetadataService.getSQLView(SQLViewsName2IdMap['TRACKER_REPORTS_ALL_TEI_ATTR'], param).then(function (AllstageData) {
-                    
-                                   // $scope.AllstageData = AllstageData;
 
-                                arrangeDataX($scope.stageData, $scope.attrData, $scope.allattr);
-                          //  })
-                        
+                            MetadataService.getALLOrganisationUnits().then(function (organisationUnitsValue) {
+                                for (var j = 0; j < organisationUnitsValue.organisationUnits.length; j++) {
+                                    $scope.organisationUnitsMap[organisationUnitsValue.organisationUnits[j].id] = organisationUnitsValue.organisationUnits[j].name;
+                                }
+
+
+                                MetadataService.getALLAttributes().then(function (allattr) {
+
+                                    $scope.allattr = allattr;
+                                   // MetadataService.getSQLView(SQLViewsName2IdMap['TRACKER_REPORTS_ALL_TEI_ATTR'], param).then(function (AllstageData) {
+
+                                       // $scope.AllstageData = AllstageData;
+
+                                    arrangeDataX($scope.stageData, $scope.attrData, $scope.allattr );
+                              //  })
+                                })
+                          })
                         })
-                    })
                     })
 
        }
@@ -203,7 +210,7 @@ msfReportsApp
 
         }
 
-        function arrangeDataX(stageData,attrData,allattr){
+        function arrangeDataX(stageData,attrData,allattr ){
 
             var report = [{
                 teiuid : ""
@@ -264,6 +271,9 @@ msfReportsApp
                                 if (allattr.trackedEntityAttributes[m].attributeValues[k].attribute.code == 'Anonymous?' && allattr.trackedEntityAttributes[m].attributeValues[k].value == 'true') {
                                     attrvalue = 'PRIVATE';
                                 }
+                                //else if (allattr.trackedEntityAttributes[m].valueType === 'ORGANISATION_UNIT' ) {
+                                //    attrvalue = 'PRIVATE';
+                                //}
                            // }
                         }
                     }
@@ -292,6 +302,11 @@ msfReportsApp
 
                 }
 
+                for( var orgUnitKey in $scope.organisationUnitsMap ){
+                    if( $scope.attrMap[teiuid+"-"+attruid] === orgUnitKey){
+                        $scope.attrMap[teiuid+"-"+attruid] = $scope.organisationUnitsMap[orgUnitKey];
+                    }
+                }
             }
            
 

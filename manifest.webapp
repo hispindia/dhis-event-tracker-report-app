@@ -1,7 +1,7 @@
 {
     "version": "2.30",
-    "name": "Tracker/Event Report App",
-    "description": "Tracker & Event Report App",
+    "name": "Data Capture Report",
+    "description": "Data Capture Report",
     "launch_path": "/index.html",
     "appType": "APP",
     "icons": {
