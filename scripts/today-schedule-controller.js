@@ -102,6 +102,7 @@ msfReportsApp
                $scope.program.programTrackedEntityAttributes[i].displayName=$scope.program.programTrackedEntityAttributes[i].name
                var str = $scope.program.programTrackedEntityAttributes[i].displayName;
                var n = str.split($scope.program.name);
+              // console.log(":"+n[1]);
                $scope.program.programTrackedEntityAttributes[i].displayName = n[1];
                 
            }
@@ -148,14 +149,14 @@ msfReportsApp
 
                     MetadataService.getSQLView(SQLViewsName2IdMap[SQLQUERY_TEI_DATA_VALUE_NAME], param).then(function (stageData) {
                         $scope.stageData = stageData.listGrid;
+                        console.log("$scope.stageData: "+Object.entries($scope.stageData).length);
 
                         MetadataService.getSQLView(SQLViewsName2IdMap[SQLQUERY_TEI_ATTR_NAME], param).then(function (attrData) {
                             $scope.attrData = attrData.listGrid;
 
                             MetadataService.getALLAttributes().then(function (allattr) {
                                 $scope.allattr = allattr;
-
-
+                               // console.log("$scope.allattr: "+Object.entries($scope.allattr));
                                 arrangeDataX($scope.stageData, $scope.attrData, $scope.allattr);
                             })
                         })
@@ -191,6 +192,7 @@ msfReportsApp
 
             var teiWiseAttrMap = [];
             $scope.attrMap = [];
+            $scope.colorMap = [];
             $scope.teiList = [];
             $scope.eventList = [];
             $scope.maxEventPerTei = [];
@@ -220,9 +222,11 @@ msfReportsApp
             const index_evDate = 4;
             const index_ou = 8;
 
+            //console.log("$scope.attrData: "+attrData.height);
 
             for (var i=0;i<attrData.height;i++){
 
+                //console.log("attrData.rows[i][index_attrvalue]: "+attrData.rows[i][index_attrvalue]);
                 var teiuid = attrData.rows[i][index_tei];
                 var attruid = attrData.rows[i][index_attruid];
                 var attrvalue = attrData.rows[i][index_attrvalue];
@@ -246,11 +250,12 @@ msfReportsApp
                 }
 
           
-                    if (teiWiseAttrMap[teiuid] == undefined){
+                if (teiWiseAttrMap[teiuid] === undefined){
+                    //console.log("teiuid: "+ teiuid);
                     teiWiseAttrMap[teiuid] = [];
                 }
+                //console.log("Attr Value: "+ attrData.rows[i]);
                 teiWiseAttrMap[teiuid].push(attrData.rows[i]);
-                // $scope.attrMap[teiuid+"-"+attruid] = ouname;
                 $scope.attrMap[teiuid+"-"+attruid] = attrvalue;
 
                 $scope.teiEnrollMap[teiuid+"-enrollDate"] = enrollDate;
@@ -269,9 +274,8 @@ msfReportsApp
 
             for (key in teiWiseAttrMap){
                 $scope.teiList.push({teiuid : key});
-            //    $scope.attrMap =$scope.attrMap;
+                 //console.log("length "+$scope.teiList.length);
             }
-
             $timeout(function(){
                 $scope.teiList = $scope.teiList;
             })
@@ -302,7 +306,6 @@ msfReportsApp
 
                 if (!teiPerPsEventListMap[teiuid][psuid]) {
                     teiPerPsEventListMap[teiuid][psuid] = [];
-
                 }
 
                 if (!teiToEventListMap[evuid]) {
@@ -322,7 +325,7 @@ msfReportsApp
             }
                 var TheRows = [];
                 var psDes = $scope.psDEs;
-
+                console.log("teiList: "+ teiList.length);
                 for (key in teiList){
                     var teiuid = key;
                     $scope.eventList[teiuid] = [];
@@ -363,6 +366,11 @@ msfReportsApp
                             TheRows.push(val?val:"");
                         }
                         $scope.eventList[teiuid].push(TheRows);
+
+                       if($scope.program.id === 'RkQYxA3ICCs')
+                        {
+                            $scope.colorMap[teiuid] = (colorCodeForDecisionTracker(TheRows));
+                        }
                     }
                 }
 
@@ -371,6 +379,22 @@ msfReportsApp
             hideLoad();
         }
 
+        function colorCodeForDecisionTracker(value)
+        {
+            //value = value.toLowerCase().trim();
+            var color = '#F8F8F8';
+            if(value.includes('In progress'))
+            { color = '#F0ED8A'; }
+            else if(value.includes('Complete'))
+            { color = '#8AF08D'; }
+            else if(value.includes('Not done'))
+            { color = '#F4836A'; }
+            else if(value.includes('Dropped'))
+            { color = '#89E4EC'; }
+            else
+            { color = '#F8F8F8'; }
+            return color;
+        }
 
 
     });

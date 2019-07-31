@@ -82,12 +82,12 @@
 
       
         <tbody ng-repeat="tei in teiList">
-        <tr  ng-repeat="event in eventList[tei] track by $index" >
+        <tr  ng-repeat="event in eventList[tei] track by $index" bgcolor="{{colorMap[tei]}}">
             <td  >{{teiEnrollMap[tei+"-enrollDate"]}}</td>
             <td >{{teiEnrollOrgMap[tei+"-ouname"]}}</td>
             <td  ng-repeat="attr in program.programTrackedEntityAttributes">{{attrMap[tei+"-"+attr.trackedEntityAttribute.id]}} </td>
 
-            <td ng-repeat="value in event track by $index">{{value}}</td>
+            <td ng-repeat="value in event track by $index" >{{value}}</td>
         </tr>
 
         
@@ -96,7 +96,6 @@
     </table>
     </div>
 </div>
-
 <div class="row" ng-if="selectedOrgUnit.programs.length > 0 && !selectedProgram">
     <div class="col-sm-8 col-md-6 vertical-spacing">
         <div class="alert alert-warning">{{'please_select_program_report'| translate}}</div> 
