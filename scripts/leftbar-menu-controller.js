@@ -12,6 +12,11 @@ msfReportsApp.controller('LeftBarMenuController',
             $scope.showPerformanceIndicator = function(){
                 $location.path('/performance-report').search();
             };
-
+            $scope.showDecisionTracker = function(){
+                $location.path('/decision-tracker-report').search();
+            };
+            $scope.active = function () {
+                
+            }
 
         });

@@ -17,19 +17,15 @@ msfReportsApp.directive('calendar', function () {
     };
 });
 msfReportsApp
-    .controller('TodayScheduleController', function( $rootScope,
+    .controller('decisionTrackerController', function( $rootScope,
                                             $scope,
                                             $timeout,
                                             MetadataService){
 
-
-//PSI
-        //const SQLVIEW_TEI_PS =  "FcXYoEGIQIR";
-        // const SQLVIEW_TEI_ATTR = "WMIMrJEYUxl";
         var def = $.Deferred();
+        const progid = 'RkQYxA3ICCs';
         //MSF
-        const SQLVIEW_TEI_PS =  "Ysi6iyNK1Ha";
-        const SQLVIEW_TEI_ATTR = "GoPX942y3eV";
+        $scope.selectedProgram = [];
         jQuery(document).ready(function () {
             hideLoad();
         })
@@ -42,7 +38,7 @@ msfReportsApp
         //initially load tree
         selection.load();
 
-        getAllPrograms();
+        getDecisionTrackerProgram();
 
         // Listen for OU changes
         selection.setListenerFunction(function(){
@@ -57,13 +53,16 @@ msfReportsApp
                 });
             });
         }
-        function getAllPrograms(){
+        function getDecisionTrackerProgram(){
+
             MetadataService.getAllPrograms().then(function(prog) {
                 $scope.allPrograms = prog.programs;
                 $scope.programs = [];
                 for(var i=0; i<prog.programs.length;i++){
-                    if(prog.programs[i].withoutRegistration == false && prog.programs[i].id != 'RkQYxA3ICCs'){
-                        $scope.programs.push(prog.programs[i]);
+                    if(prog.programs[i].withoutRegistration == false){
+                        if(prog.programs[i].id === progid){
+                            $scope.selectedProgram = prog.programs[i];
+                        }
                     }
                 }
             });
@@ -96,17 +95,19 @@ msfReportsApp
 
        $scope.generateReport = function(program){
 
+
+            console.log("program: "+Object.entries(program));
                $scope.program = program;
 
-           for(var i=0; i<$scope.program.programTrackedEntityAttributes.length;i++){
+         /*  for(var i=0; i<$scope.program.programTrackedEntityAttributes.length;i++){
                $scope.program.programTrackedEntityAttributes[i].displayName=$scope.program.programTrackedEntityAttributes[i].name
                var str = $scope.program.programTrackedEntityAttributes[i].displayName;
                var n = str.split($scope.program.name);
               // console.log(":"+n[1]);
                $scope.program.programTrackedEntityAttributes[i].displayName = n[1];
-                
-           }
-               $scope.psDEs = [];
+
+           }*/
+           $scope.psDEs = [];
            $scope.Options =[];
            $scope.attribute = "Attributes";
            $scope.enrollment =["Enrollment date" , "Enrolling orgUnit"];
@@ -120,7 +121,7 @@ msfReportsApp
                $scope.psDEs.push({dataElement : {id : "eventDate",name : "eventDate",ps:psuid}});
 
                for (var j=0;j<$scope.program.programStages[i].programStageDataElements.length;j++){
-                   
+
                        $scope.program.programStages[i].programStageDataElements[j].dataElement.ps = psuid;
                    var de =$scope.program.programStages[i].programStageDataElements[j];
                        $scope.psDEs.push(de);
@@ -230,7 +231,7 @@ msfReportsApp
                 var teiuid = attrData.rows[i][index_tei];
                 var attruid = attrData.rows[i][index_attruid];
                 var attrvalue = attrData.rows[i][index_attrvalue];
-                var ouname = attrData.rows[0][index_ouname];
+                var ouname = attrData.rows[i][index_ouname];
                 var enrollDate = attrData.rows[i][index_enrollmentDate]; // enrollment date
                 enrollDate = enrollDate.substring(0, 10);
 
@@ -249,7 +250,7 @@ msfReportsApp
                     }
                 }
 
-          
+
                 if (teiWiseAttrMap[teiuid] === undefined){
                     //console.log("teiuid: "+ teiuid);
                     teiWiseAttrMap[teiuid] = [];
@@ -366,16 +367,20 @@ msfReportsApp
                             TheRows.push(val?val:"");
                         }
                         $scope.eventList[teiuid].push(TheRows);
-
-                       if($scope.program.id === 'RkQYxA3ICCs')
-                        {
-                            $scope.colorMap[teiuid] = (colorCodeForDecisionTracker(TheRows));
-                        }
+                        $scope.colorMap[teiuid] = (colorCodeForDecisionTracker(TheRows));
                     }
                 }
 
             $scope.teiPerPsEventListMap = teiPerPsEventListMap;
             $scope.teiList = Object.keys(teiList);
+            $scope.noDataTei = [];
+            for (var i=0;i<$scope.teis.length;i++){
+                var key= $scope.teis[i][0][0];
+                if (!teiList[key]){
+                    $scope.noDataTei.push(key);
+                }
+            }
+
             hideLoad();
         }
 

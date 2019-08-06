@@ -10,14 +10,6 @@
                         <input type="text" class="form-control" value="{{selectedOrgUnit.name|| 'please_select'| translate}}" ng-disabled="true">
                     </td>
                 </tr>
-                <tr>
-                    <td>Program</td>
-                    <td class='col-sm-4 col-md-3'>
-                        <select ng-model="selectedProgram" class="form-control" ng-options="program.name for program in programs | orderBy: 'name'">
-                            <option value="">Please select program</option>
-                        </select>
-                    </td>
-                </tr>
             </table>
         </div>
     </div>
@@ -47,10 +39,10 @@
 
         <div class="col-md-3">
             <button type="button" class="btn btn-primary" ng-click="generateReport(selectedProgram, report, selectedOuMode);showLoad();"
-                ng-disabled="!selectedProgram">{{'Generate Report'| translate}}</button>
+                ng-disabled="!selectedOrgUnit">{{'Generate Report'| translate}}</button>
         </div>
         <div class="col-md-3">
-            <button id="btnExport" class="btn btn-success" ng-click="fnExcelReport();" ng-disabled="!selectedProgram"> Export To Excel </button>
+            <button id="btnExport" class="btn btn-success" ng-click="fnExcelReport();" ng-disabled="!teiList"> Export To Excel </button>
         </div>
     </div>
 
@@ -82,22 +74,33 @@
          </thead>
       
         <tbody ng-repeat="tei in teiList">
-        <tr  ng-repeat="event in eventList[tei] track by $index">
+        <tr  ng-repeat="event in eventList[tei] track by $index" bgcolor="{{colorMap[tei]}}">
             <td  >{{teiEnrollMap[tei+"-enrollDate"]}}</td>
             <td >{{teiEnrollOrgMap[tei+"-ouname"]}}</td>
             <td  ng-repeat="attr in program.programTrackedEntityAttributes">{{attrMap[tei+"-"+attr.trackedEntityAttribute.id]}} </td>
 
             <td ng-repeat="value in event track by $index" >{{value}}</td>
         </tr>
-
-        
         </tbody>
+            <tbody ng-repeat="tei in noDataTei"><tr>
+                <td  >{{teiEnrollMap[tei+"-enrollDate"]}}</td>
+                <td >{{teiEnrollOrgMap[tei+"-ouname"]}}</td>
+                <td  ng-repeat="attr in program.programTrackedEntityAttributes">{{attrMap[tei+"-"+attr.trackedEntityAttribute.id]}} </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            </tbody>
 
-    </table>
+        </table>
     </div>
 </div>
 <div class="row" ng-if="selectedOrgUnit.programs.length > 0 && !selectedProgram">
     <div class="col-sm-8 col-md-6 vertical-spacing">
-        <div class="alert alert-warning">{{'please_select_program_report'| translate}}</div> 
+        <div class="alert alert-warning">{{'please_select_program_report'| translate}}</div>
     </div>
 </div>
