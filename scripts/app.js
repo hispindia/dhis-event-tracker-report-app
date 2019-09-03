@@ -54,16 +54,21 @@ function initSQLView() {
     getAllSQLViews().then(function(sqlViews){
         var requiredViews = [];
         requiredViews[SQLQUERY_TEI_ATTR_NAME] = false;
+        requiredViews[SQLQUERY_DTR_ATTR_NAME] = false;
         requiredViews[SQLQUERY_EVENT_NAME] = false;
         requiredViews[SQLQUERY_TEI_DATA_VALUE_NAME] = false;
+        requiredViews[SQLQUERY_DTR_DATA_VALUE_NAME] = false;
 
         for (var i=0;i<sqlViews.length;i++){
             SQLViewsName2IdMap[sqlViews[i].name] = sqlViews[i].id;
 
             if (sqlViews[i].name == SQLQUERY_TEI_ATTR_NAME){
                 delete requiredViews[SQLQUERY_TEI_ATTR_NAME];
-            }
-            else if (sqlViews[i].name == SQLQUERY_TEI_DATA_VALUE_NAME){
+            }else if (sqlViews[i].name == SQLQUERY_DTR_ATTR_NAME){
+                delete requiredViews[SQLQUERY_DTR_ATTR_NAME];
+            }else if (sqlViews[i].name == SQLQUERY_DTR_DATA_VALUE_NAME){
+                delete requiredViews[SQLQUERY_DTR_DATA_VALUE_NAME];
+            }else if (sqlViews[i].name == SQLQUERY_TEI_DATA_VALUE_NAME){
                delete requiredViews[SQLQUERY_TEI_DATA_VALUE_NAME];
             }
             else if (sqlViews[i].name == SQLQUERY_EVENT_NAME){
