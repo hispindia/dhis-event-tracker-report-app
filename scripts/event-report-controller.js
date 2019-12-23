@@ -90,7 +90,14 @@ msfReportsApp
 
         };
 
-        $scope.generateReport = function(program){
+        $scope.generateReport=function(prog){
+            $('#loader').attr('style','display:block !important');
+            //document.getElementById("loader").style.display="block";
+           // document.getElementById("loader-wrapper").style.display="block";
+           $timeout(function(){$scope.createReport(prog)}, 2000);
+        }
+
+        $scope.createReport = function(program){
 
             $scope.program = program;
 
@@ -139,7 +146,7 @@ msfReportsApp
             var param = "var=program:"+program.id + "&var=orgunit:"+$scope.selectedOrgUnit.id+"&var=startdate:"+$scope.startdateSelected+"&var=enddate:"+$scope.enddateSelected;
 
             MetadataService.getSQLView(SQLViewsName2IdMap[SQLQUERY_EVENT_NAME], param).then(function (stageData) {
-                $scope.stageData = stageData;
+                $scope.stageData = stageData.listGrid;
                 arrangeDataX($scope.stageData);
             })
         };
@@ -211,12 +218,14 @@ msfReportsApp
 
                 }
             }
-
+            
             $timeout(function(){
                 $scope.eventList = prepareListFromMap($scope.eventMap);
 
             })
-
+            $('#divIdmmm').attr('style','display:block !important');
+            document.getElementById("loader").style.display="none";
+         
         }
 
     });

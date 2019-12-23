@@ -53,13 +53,25 @@ var trackerReportsAppServices = angular.module('trackerReportsAppServices', [])
                    type: "GET",
                    dataType: "json",
                    contentType: "application/json",
-                   url: '../../trackedEntityAttributes.json?fields=id,name,attributeValues[*,attribute[id,name,code]]&paging=false',
+                   url: '../../trackedEntityAttributes.json?fields=id,name,code,valueType,attributeValues[*,attribute[id,name,code]]&paging=false',
+                   success: function (data) {
+                       def.resolve(data);
+                   }
+               });
+               return def;
+           },
+           getALLOrganisationUnits : function(){
+               var def = $.Deferred();
+               $.ajax({
+                   type: "GET",
+                   dataType: "json",
+                   contentType: "application/json",
+                   url: '../../organisationUnits.json?fields=id,name,code&paging=false',
                    success: function (data) {
                        def.resolve(data);
                    }
                });
                return def;
            }
-
        }
     });

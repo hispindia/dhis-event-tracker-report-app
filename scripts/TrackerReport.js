@@ -17,7 +17,7 @@ msfReportsApp.directive('calendar', function () {
     };
 });
 msfReportsApp
-    .controller('TodayScheduleController', function( $rootScope,
+    .controller('TrackerReportController', function( $rootScope,
                                             $scope,
                                             $timeout,
                                             MetadataService){
@@ -107,13 +107,12 @@ msfReportsApp
          // document.getElementById("loader-wrapper").style.display="block";
          $timeout(function(){$scope.createReport(prog)}, 2000);
       }
-        //http://apps.hispindia.org/punjab230/api/sqlViews/HOnZ038FMkq/data?var=program:JuZA8mxRZV2&var=orgunit:cV6EKuxSWXT&var=startdate:2019-06-01&var=enddate:2019-07-31
-    //ORGANISATION_UNIT -- ORGANISATION_UNIT_UID_ID_NAME
+
      // $scope.progval=[]
       $scope.createReport = function (program) {
          // $scope.progval.push(prog)
-          $scope.organisationUnitsMap = [];
-          $scope.program = program;
+
+               $scope.program = program;
 
            for(var i=0; i<$scope.program.programTrackedEntityAttributes.length;i++){
                var str = $scope.program.programTrackedEntityAttributes[i].displayName;
@@ -158,9 +157,9 @@ msfReportsApp
 
                }
 
-
+               
          //  var param = "var=program:"+program.id + "&var=orgunit:"+$scope.selectedOrgUnit.id+"&var=startdate:"+moment($scope.date.startDate).format("YYYY-MM-DD")+"&var=enddate:"+moment($scope.date.endDate).format("YYYY-MM-DD");
-           var param = "var=program:"+program.id + "&var=orgunit:"+$scope.selectedOrgUnit.id+"&var=startdate:"+$scope.startdateSelected+"&var=enddate:"+$scope.enddateSelected + "&paging=false";
+           var param = "var=program:"+program.id + "&var=orgunit:"+$scope.selectedOrgUnit.id+"&var=startdate:"+$scope.startdateSelected+"&var=enddate:"+$scope.enddateSelected +"&paging=false";
 
                     MetadataService.getSQLView(SQLViewsName2IdMap[SQLQUERY_TEI_DATA_VALUE_NAME], param).then(function (stageData) {
                         var changedRow = [];
@@ -187,27 +186,21 @@ msfReportsApp
                         stageData.listGrid.rows = changedRow
                         $scope.stageData = stageData.listGrid;
 
-                        MetadataService.getSQLView(SQLViewsName2IdMap[SQLQUERY_TEI_ATTR_NAME], param).then(function (attrData) {
+                        MetadataService.getSQLView(SQLViewsName2IdMap["TRACKER_REPORTS_TEI_ATTR_ENROLLED"], param).then(function (attrData) {
                             $scope.attrData = attrData.listGrid;
+                           
+                           
+                            MetadataService.getALLAttributes().then(function (allattr) {
+                                $scope.allattr = allattr;
+                               // MetadataService.getSQLView(SQLViewsName2IdMap['TRACKER_REPORTS_ALL_TEI_ATTR'], param).then(function (AllstageData) {
+                    
+                                   // $scope.AllstageData = AllstageData;
 
-                            MetadataService.getALLOrganisationUnits().then(function (organisationUnitsValue) {
-                                for (var j = 0; j < organisationUnitsValue.organisationUnits.length; j++) {
-                                    $scope.organisationUnitsMap[organisationUnitsValue.organisationUnits[j].id] = organisationUnitsValue.organisationUnits[j].name;
-                                }
-
-
-                                MetadataService.getALLAttributes().then(function (allattr) {
-
-                                    $scope.allattr = allattr;
-                                   // MetadataService.getSQLView(SQLViewsName2IdMap['TRACKER_REPORTS_ALL_TEI_ATTR'], param).then(function (AllstageData) {
-
-                                       // $scope.AllstageData = AllstageData;
-
-                                    arrangeDataX($scope.stageData, $scope.attrData, $scope.allattr );
-                              //  })
-                                })
-                          })
+                                arrangeDataX($scope.stageData, $scope.attrData, $scope.allattr);
+                          //  })
+                        
                         })
+                    })
                     })
 
        }
@@ -232,7 +225,7 @@ msfReportsApp
 
         }
 
-        function arrangeDataX(stageData,attrData,allattr ){
+        function arrangeDataX(stageData,attrData,allattr){
 
             var report = [{
                 teiuid : ""
@@ -293,9 +286,6 @@ msfReportsApp
                                 if (allattr.trackedEntityAttributes[m].attributeValues[k].attribute.code == 'Anonymous?' && allattr.trackedEntityAttributes[m].attributeValues[k].value == 'true') {
                                     attrvalue = 'PRIVATE';
                                 }
-                                //else if (allattr.trackedEntityAttributes[m].valueType === 'ORGANISATION_UNIT' ) {
-                                //    attrvalue = 'PRIVATE';
-                                //}
                            // }
                         }
                     }
@@ -324,11 +314,6 @@ msfReportsApp
 
                 }
 
-                for( var orgUnitKey in $scope.organisationUnitsMap ){
-                    if( $scope.attrMap[teiuid+"-"+attruid] === orgUnitKey){
-                        $scope.attrMap[teiuid+"-"+attruid] = $scope.organisationUnitsMap[orgUnitKey];
-                    }
-                }
             }
            
 
@@ -353,7 +338,7 @@ msfReportsApp
 
        
 
-            for (var i=0;i<stageData.rows.length;i++) {
+           /* for (var i=0;i<stageData.rows.length;i++) {
                 var teiuid = stageData.rows[i][index_tei];
                 var psuid = stageData.rows[i][index_ps];
                 var evuid = stageData.rows[i][index_ev];
@@ -390,7 +375,7 @@ msfReportsApp
 
                 eventToMiscMap[evuid] = {ou : ou , evDate : evDate};
                 teiPsEventDeMap[teiuid + "-" + evuid + "-" + deuid] = devalue;
-            }
+            }*/
                 $scope.TheRows = [];
                 var psDes = $scope.psDEs;
                
@@ -434,7 +419,7 @@ msfReportsApp
                             } else if (deuid == "eventDate") {
                                 val = eventToMiscMap[evuid].evDate;//debugger
                             }
-                            if($scope.psDEs[x].dataElement.optionSet != undefined){
+                           /* if($scope.psDEs[x].dataElement.optionSet != undefined){
 
                                 if($scope.psDEs[x].dataElement.optionSet.options != undefined){
 
@@ -444,7 +429,7 @@ msfReportsApp
                                     //  dataValues.push(value);
 
                                 }
-                            }
+                            }*/
                             $scope.TheRows.push(val?val:"");
                         }
                         $scope.eventList[teiuid].push($scope.TheRows);
