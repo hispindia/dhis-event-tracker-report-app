@@ -1,1 +1,23 @@
-{"version":"0.1","name":"MSF Tracker/Event Report APP","description":"Reports ","icons":{"16":"/img/mortar-16.png","48":"/img/mortar-16.png","128":"/img/mortar-16.png"},"developer":{"url":"http://dhis2.org","name":"HISP","company":null,"email":null},"activities":{"dhis":{"href":"http://localhost:8080/dhis","namespace":null}},"folderName":null,"baseUrl":null,"launchUrl":null,"key":null,"launch_path":"index.html","installs_allowed_from":null,"default_locale":"en"}
+{
+    "version": "2.30",
+    "name": "Tracker/Event Report App",
+    "description": "Tracker and Event Report App",
+    "launch_path": "/index.html",
+    "appType": "APP",
+    "icons": {
+        "16": "/img/mortar-16.png",
+        "48": "/img/mortar-16.png",
+        "128": "/img/mortar-16.png"
+    },
+    "developer": {
+        "name":"HISP",
+        "url": "http://dhis2.org"
+    },
+    "default_locale": "en",
+    "activities": {
+        "dhis": {
+            "href": "*",
+            "namespace": "my-namespace"
+        }
+    }
+}
