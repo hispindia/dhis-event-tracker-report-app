@@ -154,38 +154,16 @@ msfReportsApp
 
 
             //  var param = "var=program:"+program.id + "&var=orgunit:"+$scope.selectedOrgUnit.id+"&var=startdate:"+moment($scope.date.startDate).format("YYYY-MM-DD")+"&var=enddate:"+moment($scope.date.endDate).format("YYYY-MM-DD");
-            var param = "var=program:" + program.id + "&var=orgunit:" + $scope.selectedOrgUnit.id + "&var=startdate:" + $scope.startdateSelected + "&var=enddate:" + $scope.enddateSelected + "&paging=false";
+            var param = "var=program:" + program.id + "&var=orgunit:" + $scope.selectedOrgUnit.id + "&var=startdate:" + $scope.startdateSelected + "&var=enddate:" + $scope.enddateSelected;
 
             MetadataService.getSQLView(SQLViewsName2IdMap[SQLQUERY_TEI_DATA_VALUE_NAME], param).then(function (stageData) {
-                var changedRow = [];
-                var index = -1;
-                stageData.listGrid.rows.forEach(row => {
-                    let values = JSON.parse(row["7"]["value"]);
-                    if (Object.keys(values).length) {
+                $scope.stageData = stageData;
 
-                        row.pop();
-                        let enrolldate = row.pop();
-                        let name = row.pop();
-                        for (key in values) {
-                            index++;
-                            changedRow[index] = [];
-                            changedRow[index].push(...row);
-                            changedRow[index].push(key);
-                            changedRow[index].push("");
-                            changedRow[index].push(values[key]["value"]);
-                            changedRow[index].push(name);
-                            changedRow[index].push(enrolldate);
-                        }
-                    }
-                })
-                stageData.listGrid.rows = changedRow
-                $scope.stageData = stageData.listGrid;
-                
                 MetadataService.getSQLView(SQLViewsName2IdMap[SQLQUERY_TEI_ATTR_NAME], param).then(function (attrData) {
-                    $scope.attrData = attrData.listGrid;
+                    $scope.attrData = attrData;
 
                     MetadataService.getSQLView(SQLViewsName2IdMap["OptionValue"], " ").then(function (optionsetValue) {
-                        $scope.optionsetValue = optionsetValue.listGrid.rows;
+                        $scope.optionsetValue = optionsetValue.rows;
                         MetadataService.getALLAttributes().then(function (allattr) {
                             $scope.allattr = allattr;
                             getwithoutEnroll($scope.stageData, $scope.attrData, $scope.allattr, $scope.optionsetValue,program);
@@ -449,34 +427,12 @@ msfReportsApp
             $scope.teiList = $scope.teiList.filter(val => !$scope.teiListnew.includes(val));
             
             
-            var param = "var=program:" + program.id + "&var=orgunit:" + $scope.selectedOrgUnit.id + "&var=startdate:" + $scope.startdateSelected + "&var=enddate:" + $scope.enddateSelected + "&paging=false";
+            var param = "var=program:" + program.id + "&var=orgunit:" + $scope.selectedOrgUnit.id + "&var=startdate:" + $scope.startdateSelected + "&var=enddate:" + $scope.enddateSelected;
             MetadataService.getSQLView(SQLViewsName2IdMap[SQLQUERY_TEI_DATA_VALUE_NAME], param).then(function (stageData) {
-                var changedRow = [];
-                var index = -1;
-                stageData.listGrid.rows.forEach(row => {
-                    let values = JSON.parse(row["7"]["value"]);
-                    if (Object.keys(values).length) {
-
-                        row.pop();
-                        let enrolldate = row.pop();
-                        let name = row.pop();
-                        for (key in values) {
-                            index++;
-                            changedRow[index] = [];
-                            changedRow[index].push(...row);
-                            changedRow[index].push(key);
-                            changedRow[index].push("");
-                            changedRow[index].push(values[key]["value"]);
-                            changedRow[index].push(name);
-                            changedRow[index].push(enrolldate);
-                        }
-                    }
-                })
-                stageData.listGrid.rows = changedRow
-                $scope.stageData = stageData.listGrid;
-
+                $scope.stageData = stageData;
+                
                 MetadataService.getSQLView(SQLViewsName2IdMap["TRACKER_REPORTS_TEI_ATTR_ENROLLED"], param).then(function (attrData) {
-                    $scope.attrData =  attrData.listGrid;;
+                    $scope.attrData = attrData;
                     MetadataService.getALLAttributes().then(function (allattr) {
                         $scope.allattr = allattr;
                         getWithEnroll($scope.stageData, $scope.attrData, $scope.allattr);
