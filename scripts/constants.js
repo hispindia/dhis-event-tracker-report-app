@@ -2,8 +2,8 @@
  * Created by harsh on 2/12/16.
  */
 
-    const Anonymous_Attribute_Code = "Anonymous?";
-const SQLQUERY_TEI_ATTR = "select tei.uid tei ,min(tea.name) attrname,tea.uid attruid,min(teav.value) attrvalue,ou.name,tei.created,pi.enrollmentdate enrolldate\
+const Anonymous_Attribute_Code = "Anonymous?";
+const SQLQUERY_TEI_ATTR = "select tei.uid tei ,min(tea.name) attrname,tea.uid attruid,min(teav.value) attrvalue,ou.name,tei.created,pi.enrollmentdate::date enrolldate\
  from programstageinstance psi\
  INNER JOIN programinstance pi ON  psi.programinstanceid = pi.programinstanceid\
  INNER JOIN trackedentityinstance tei ON  pi.trackedentityinstanceid = tei.trackedentityinstanceid\
@@ -20,11 +20,11 @@ const SQLQUERY_TEI_ATTR = "select tei.uid tei ,min(tea.name) attrname,tea.uid at
  where path like '%${orgunit}%')\
  and pi.enrollmentdate between '${startdate}' and '${enddate}'\
  group by tei.uid,pi.enrollmentdate,tea.uid,ou.name,tei.created\
- order by pi.enrollmentdate,tei.uid";
+ order by pi.enrollmentdate;";
 
 const SQLQUERY_TEI_ATTR_NAME = "TRACKER_REPORTS_TEI_ATTR_V1";
 
-const SQLQUERY_TEI_DATA_VALUE = "select tei.uid tei,ps.uid psuid,min(ps.name) psname,psi.uid ev ,psi.executiondate evdate,de.uid deuid,min(de.name) dename,min(tedv.value) devalue,ou.name, pi.enrollmentdate enrollDate\
+const SQLQUERY_TEI_DATA_VALUE = "select tei.uid tei,ps.uid psuid,min(ps.name) psname,psi.uid ev ,psi.executiondate::date evdate,de.uid deuid,min(de.name) dename,min(tedv.value) devalue,ou.name, pi.enrollmentdate::date enrollDate\
  from programstageinstance psi\
  INNER JOIN programinstance pi ON  psi.programinstanceid = pi.programinstanceid\
  INNER JOIN trackedentityinstance tei ON  pi.trackedentityinstanceid = tei.trackedentityinstanceid\
@@ -39,13 +39,13 @@ const SQLQUERY_TEI_DATA_VALUE = "select tei.uid tei,ps.uid psuid,min(ps.name) ps
  and psi.organisationunitid IN (select organisationunitid\
  from organisationunit\
  where path like '%${orgunit}%')\
- and pi.enrollmentdate between '${startdate}' and '${enddate}'\
+ and psi.executiondate between '${startdate}' and '${enddate}'\
  group by tei.uid,ps.uid,psi.uid,psi.executiondate,de.uid,ou.name, pi.enrollmentdate\
- order by pi.enrollmentdate,tei.uid,psi.executiondate";
+ order by psi.executiondate;";
 
 const SQLQUERY_TEI_DATA_VALUE_NAME = "SQLQUERY_TEI_DATA_VALUE_V1";
 
-const SQLQUERY_EVENT= "select ps.uid psuid,min(ps.name) psname,psi.uid ev ,psi.executiondate evdate,de.uid deuid,min(de.name) dename,min(tedv.value) devalue,ou.name, psi.executiondate::DATE\
+const SQLQUERY_EVENT= "select ps.uid psuid,min(ps.name) psname,psi.uid ev ,psi.executiondate::date evdate,de.uid deuid,min(de.name) dename,min(tedv.value) devalue,ou.name, psi.executiondate::date\
  from programstageinstance psi\
  INNER JOIN programinstance pi ON  psi.programinstanceid = pi.programinstanceid\
  INNER JOIN trackedentitydatavalue tedv ON tedv.programstageinstanceid = psi.programstageinstanceid\
@@ -61,7 +61,7 @@ const SQLQUERY_EVENT= "select ps.uid psuid,min(ps.name) psname,psi.uid ev ,psi.e
  where path like '%${orgunit}%')\
  and psi.executiondate between '${startdate}' and '${enddate}'\
  group by ps.uid,psi.uid,psi.executiondate,de.uid,ou.name, psi.executiondate\
- order by psi.executiondate";
+ order by psi.executiondate;";
 
 const SQLQUERY_EVENT_NAME = "SQLQUERY_EVENT_V1";
 
