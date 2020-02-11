@@ -154,15 +154,14 @@ msfReportsApp
 
 
             //  var param = "var=program:"+program.id + "&var=orgunit:"+$scope.selectedOrgUnit.id+"&var=startdate:"+moment($scope.date.startDate).format("YYYY-MM-DD")+"&var=enddate:"+moment($scope.date.endDate).format("YYYY-MM-DD");
-            var param = "var=program:" + program.id + "&var=orgunit:" + $scope.selectedOrgUnit.id + "&var=startdate:" + $scope.startdateSelected + "&var=enddate:" + $scope.enddateSelected;
+            var param = "var=program:" + program.id + "&var=orgunit:" + $scope.selectedOrgUnit.id + "&var=startdate:" + $scope.startdateSelected + "&var=enddate:" + $scope.enddateSelected + "&paging=false";
 
             MetadataService.getSQLView(SQLViewsName2IdMap[SQLQUERY_TEI_DATA_VALUE_NAME], param).then(function (stageData) {
                 $scope.stageData = stageData;
-
                 MetadataService.getSQLView(SQLViewsName2IdMap[SQLQUERY_TEI_ATTR_NAME], param).then(function (attrData) {
                     $scope.attrData = attrData;
 
-                    MetadataService.getSQLView(SQLViewsName2IdMap["OptionValue"], " ").then(function (optionsetValue) {
+                    MetadataService.getSQLView(SQLViewsName2IdMap[TRACKER_REPORT_OPTION_VALUE_NAME], " ").then(function (optionsetValue) {
                         $scope.optionsetValue = optionsetValue.rows;
                         MetadataService.getALLAttributes().then(function (allattr) {
                             $scope.allattr = allattr;
@@ -427,11 +426,11 @@ msfReportsApp
             $scope.teiList = $scope.teiList.filter(val => !$scope.teiListnew.includes(val));
             
             
-            var param = "var=program:" + program.id + "&var=orgunit:" + $scope.selectedOrgUnit.id + "&var=startdate:" + $scope.startdateSelected + "&var=enddate:" + $scope.enddateSelected;
+            var param = "var=program:" + program.id + "&var=orgunit:" + $scope.selectedOrgUnit.id + "&var=startdate:" + $scope.startdateSelected + "&var=enddate:" + $scope.enddateSelected + "&paging=false";
             MetadataService.getSQLView(SQLViewsName2IdMap[SQLQUERY_TEI_DATA_VALUE_NAME], param).then(function (stageData) {
                 $scope.stageData = stageData;
                 
-                MetadataService.getSQLView(SQLViewsName2IdMap["TRACKER_REPORTS_TEI_ATTR_ENROLLED"], param).then(function (attrData) {
+                MetadataService.getSQLView(SQLViewsName2IdMap[TRACKER_REPORT_TEI_ATTR_ENROLLED_NAME], param).then(function (attrData) {
                     $scope.attrData = attrData;
                     MetadataService.getALLAttributes().then(function (allattr) {
                         $scope.allattr = allattr;
