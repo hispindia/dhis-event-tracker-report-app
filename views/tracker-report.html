@@ -59,8 +59,8 @@
             <button type="button" class="btn btn-primary" ng-click="generateReport(selectedProgram, report, selectedOuMode);showLoad();"
                 ng-disabled="!selectedProgram">{{'generate_report'| translate}}</button>
         </div>
-        <div class="col-md-3" style="margin-left: -130px">
-            <button id="btnExport" class="btn btn-success" ng-click="fnExcelReport();" ng-disabled="!selectedProgram"> Export To Excel </button>
+        <div class="col-md-3" style="margin-left: -100px">
+            <button id="btnExport" class="btn btn-success" ng-click="tableToExcel('divId', 'Report', 'Report.xls');"  alt="xls" ng-disabled="!selectedProgram"> Export To Excel </button>
         </div>
     </div>
 
@@ -80,6 +80,9 @@
     <div></div>
     <div></div>
 </div>
+
+
+<a id="dlink" style="display:none;"></a>
 <div id="divIdmmm" style="display: none"  class="selcsection">
 
 <div id ="divId"  class="container" style="margin-left: 2px">

@@ -49,10 +49,18 @@
             <button type="button" class="btn btn-primary" ng-click="generateReport(selectedProgram, report, selectedOuMode);showLoad();"
                 ng-disabled="!selectedProgram">{{'generate_report'| translate}}</button>
         </div>
-        <div class="col-md-3" style="margin-left: -130px">
-            <button id="btnExport" class="btn btn-success" ng-click="fnExcelReport();" ng-disabled="!selectedProgram">
+        <!--
+        <div class="col-md-3" style="margin-left: -100px">
+            <button id="btnExport" class="btn btn-success" ng-click="fnExcelReport();" ng-disabled="!selectedProgram" >
                 Export To Excel </button>
         </div>
+        -->
+
+        <div class="col-md-3" style="margin-left: -100px">
+            <button id="btnExport" class="btn btn-success" ng-click="tableToExcel('divId', 'Report', 'Report.xls');" alt="xls" ng-disabled="!selectedProgram" >
+                Export To Excel </button>
+        </div>
+
     </div>
 
     <div id="showdiv" class="row" style="display: none;">
@@ -71,11 +79,12 @@
     <div></div>
     <div></div>
 </div>
+<a id="dlink" style="display:none;"></a>
 <div id="divIdmmm" style="display: none" class="selcsection">
 
     <div id="divId" class="container" style="margin-left: 2px">
         <h2>All Enrollments with Events</h2>
-        <table id="tableid" border="1" class="table table-hover">
+        <table id="tableID1" border="1" class="table table-hover">
             <tr>
                 <th colspan="{{program.programTrackedEntityAttributes.length+2}}">{{attribute}}</th>
                 <th ng-repeat="ps in program.programStages" colspan="{{ps.programStageDataElements.length+2}}">{{ps.name}}</th>
@@ -109,7 +118,7 @@
             </tbody>
         </table>
         <h2>All Enrollments without Events</h2>
-        <table id="tableid" border="1" class="table table-hover">
+        <table id="tableID2" border="1" class="table table-hover">
             <tr>
                 <th colspan="{{program.programTrackedEntityAttributes.length+2}}">{{attribute}}</th>
             </tr>
@@ -143,12 +152,10 @@
 </div>
 
 
-
-
-
-
 <div class="row" ng-if="selectedOrgUnit.programs.length > 0 && !selectedProgram">
     <div class="col-sm-8 col-md-6 vertical-spacing">
         <div class="alert alert-warning">{{'please_select_program_report'| translate}}</div>
     </div>
 </div>
+
+
