@@ -4783,6 +4783,11 @@ msfReportsApp
                                     case3_val = case3;
                                     case3_point = "10";
                                 }
+                                else if (case3 > 100) {
+                                    case3_Load = "75% to 100%";
+                                    case3_val = case3;
+                                    case3_point = "10";
+                                }
                                 else if (case3 === "NaN") {
                                     case3_Load = "0";
                                     case3_val = "0";
@@ -5118,6 +5123,11 @@ msfReportsApp
                                         case3_point = "7.5";
                                     }
                                     else if (case3 >= 76 && case3 <= 100) {
+                                        case3_Load = "75% to 100%";
+                                        case3_val = case3;
+                                        case3_point = "10";
+                                    }
+                                    else if (case3 > 100) {
                                         case3_Load = "75% to 100%";
                                         case3_val = case3;
                                         case3_point = "10";
