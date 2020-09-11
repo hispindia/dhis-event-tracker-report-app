@@ -1,13 +1,13 @@
 {
-    "version": "1.1",
+    "version": "32.1",
     "name": "Tracker/Event Report App",
     "description": "Tracker & Event Report App",
     "launch_path": "index.html",
     "appType": "APP",
     "icons": {
-        "16": "/img/mortar-16.png",
-        "48": "/img/mortar-16.png",
-        "128": "/img/mortar-16.png"
+        "16": "img/mortar-16.png",
+        "48": "img/mortar-16.png",
+        "128": "img/mortar-16.png"
     },
     "developer": {
         "name":"HISP",

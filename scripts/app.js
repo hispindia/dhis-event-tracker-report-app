@@ -58,19 +58,19 @@ function initSQLView() {
         for (var i=0;i<sqlViews.length;i++){
             SQLViewsName2IdMap[sqlViews[i].name] = sqlViews[i].id;
 
-            if (sqlViews[i].name == SQLQUERY_TEI_ATTR_NAME){
+            if (sqlViews[i].name === SQLQUERY_TEI_ATTR_NAME){
                 delete requiredViews[SQLQUERY_TEI_ATTR_NAME];
             }
-            else if (sqlViews[i].name == SQLQUERY_TEI_DATA_VALUE_NAME){
+            else if (sqlViews[i].name === SQLQUERY_TEI_DATA_VALUE_NAME){
                delete requiredViews[SQLQUERY_TEI_DATA_VALUE_NAME];
             }
-            else if (sqlViews[i].name == SQLQUERY_EVENT_NAME){
+            else if (sqlViews[i].name === SQLQUERY_EVENT_NAME){
                 delete requiredViews[SQLQUERY_EVENT_NAME];
             }
-            else if (sqlViews[i].name == TRACKER_REPORT_TEI_ATTR_ENROLLED_NAME){
+            else if (sqlViews[i].name === TRACKER_REPORT_TEI_ATTR_ENROLLED_NAME){
                 delete requiredViews[TRACKER_REPORT_TEI_ATTR_ENROLLED_NAME];
             }
-            else if (sqlViews[i].name == TRACKER_REPORT_OPTION_VALUE_NAME){
+            else if (sqlViews[i].name === TRACKER_REPORT_OPTION_VALUE_NAME){
                 delete requiredViews[TRACKER_REPORT_OPTION_VALUE_NAME];
             }
         }

@@ -6,7 +6,7 @@
                     <td>Selected Organisation Unit</td>
                     <td>
                         <input type="text" class="form-control" value="{{selectedOrgUnit.name|| 'please_select'| translate}}"
-                            ng-disabled="true">
+                               ng-disabled="true">
                     </td>
                 </tr>
                 <tr>
@@ -32,7 +32,7 @@
                     <b>Start Date:-</b>
                 </span>
                 <input calendar ng-model='startdate' class="form-control" ng-change="updateStartDate(startdate);" style="margin:0px;padding: 16px;"
-                    required placeholder="Start Date" />
+                       required placeholder="Start Date" />
             </div>
         </div>
         <div class="col-md-3">
@@ -41,15 +41,15 @@
                     <b>End Date:-</b>
                 </span>
                 <input calendar ng-model='enddate' class="form-control" ng-change="updateEndDate(enddate);" required
-                    style="margin:0px;padding: 16px;" placeholder="End Date" />
+                       style="margin:0px;padding: 16px;" placeholder="End Date" />
             </div>
         </div>
 
         <div class="col-md-3">
             <button type="button" class="btn btn-primary" ng-click="generateReport(selectedProgram, report, selectedOuMode);showLoad();"
-                ng-disabled="!selectedProgram">{{'generate_report'| translate}}</button>
+                    ng-disabled="!selectedProgram">{{'generate_report'| translate}}</button>
         </div>
-        <div class="col-md-3" style="margin-left: -130px">
+        <div class="col-md-3" style="margin-right: -130px">
             <button id="btnExport" class="btn btn-success" ng-click="fnExcelReport();" ng-disabled="!selectedProgram">
                 Export To Excel </button>
         </div>
@@ -88,13 +88,13 @@
             </tr>
 
             <tbody ng-repeat="tei in teiListnew">
-                <tr ng-repeat="event in eventList[tei] track by $index">
-                    <td>{{teiEnrollMap[tei+"-enrollDate"]}}</td>
-                    <td>{{teiEnrollOrgMap[tei+"-ouname"]}}</td>
-                    <td ng-repeat="attr in program.programTrackedEntityAttributes">{{attrMap[tei+"-"+attr.trackedEntityAttribute.id]}}
-                    </td>
-                    <td ng-repeat="value in event track by $index">{{value}}</td>
-                </tr>
+            <tr ng-repeat="event in eventList[tei] track by $index">
+                <td>{{teiEnrollMap[tei+"-enrollDate"]}}</td>
+                <td>{{teiEnrollOrgMap[tei+"-ouname"]}}</td>
+                <td ng-repeat="attr in program.programTrackedEntityAttributes">{{attrMap[tei+"-"+attr.trackedEntityAttribute.id]}}
+                </td>
+                <td ng-repeat="value in event track by $index">{{value}}</td>
+            </tr>
 
             </tbody>
             </tbody>
@@ -119,24 +119,24 @@
             </tr>
 
             <tbody ng-repeat="tei in teiListnew1">
-                <tr ng-repeat="event in eventList1[tei] track by $index">
-                    <td>{{teiEnrollMap[tei+"-enrollDate"]}}</td>
-                    <td>{{teiEnrollOrgMap[tei+"-ouname"]}}</td>
-                    <td ng-repeat="attr in program.programTrackedEntityAttributes">{{attrMap1[tei+"-"+attr.trackedEntityAttribute.id]}}
-                    </td>
-                    <td ng-repeat="value in event track by $index">{{value}}</td>
-                </tr>
+            <tr ng-repeat="event in eventList1[tei] track by $index">
+                <td>{{teiEnrollMap[tei+"-enrollDate"]}}</td>
+                <td>{{teiEnrollOrgMap[tei+"-ouname"]}}</td>
+                <td ng-repeat="attr in program.programTrackedEntityAttributes">{{attrMap1[tei+"-"+attr.trackedEntityAttribute.id]}}
+                </td>
+                <td ng-repeat="value in event track by $index">{{value}}</td>
+            </tr>
 
             </tbody>
             <tbody>
-                <tr ng-repeat="tei in teiList">
-                    <td>{{teiEnrollMap[tei+"-enrollDate"]}}</td>
-                    <td>{{teiEnrollOrgMap[tei+"-ouname"]}}</td>
-                    <td ng-repeat="attr in program.programTrackedEntityAttributes">{{attrMap1[tei+"-"+attr.trackedEntityAttribute.id]}}
-                    </td>
-                    <td ng-repeat="emptyval in emptyval track by $index">{{emptyval}}</td>
+            <tr ng-repeat="tei in teiList">
+                <td>{{teiEnrollMap[tei+"-enrollDate"]}}</td>
+                <td>{{teiEnrollOrgMap[tei+"-ouname"]}}</td>
+                <td ng-repeat="attr in program.programTrackedEntityAttributes">{{attrMap1[tei+"-"+attr.trackedEntityAttribute.id]}}
+                </td>
+                <td ng-repeat="emptyval in emptyval track by $index">{{emptyval}}</td>
 
-                </tr>
+            </tr>
             </tbody>
         </table>
     </div>

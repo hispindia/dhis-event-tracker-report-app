@@ -59,7 +59,7 @@
                 <button type="button" class="btn btn-primary" ng-click="generateReport(selectedProgram, report, selectedOuMode);showLoad();"
                         ng-disabled="!selectedProgram">{{'generate_report'| translate}}</button>
             </div>
-            <div class="col-md-3" style="margin-left: -130px">
+            <div class="col-md-3" style="margin-right: -130px">
                 <button id="btnExport" class="btn btn-success" ng-click="fnExcelReport();" ng-disabled="!selectedProgram"> Export To Excel </button>
             </div>
         </div>
@@ -86,19 +86,17 @@
 
             </tr>
 
-           <tbody>
+            <tbody>
             <tr ng-repeat="event in eventList track by $index">
                 <td ng-repeat="de in psDEs">{{eventDeWiseValueMap[event.event + "-" +de.dataElement.id]}}</td>
             </tr>
-
             </tbody>
-
         </table>
     </div>
-</div>
 
-<div class="row" ng-if="selectedOrgUnit.programs.length > 0 && !selectedProgram">
-    <div class="col-sm-8 col-md-6 vertical-spacing">
-        <div class="alert alert-warning">{{'please_select_program_report'| translate}}</div>
+
+    <div class="row" ng-if="selectedOrgUnit.programs.length > 0 && !selectedProgram">
+        <div class="col-sm-8 col-md-6 vertical-spacing">
+            <div class="alert alert-warning">{{'please_select_program_report'| translate}}</div>
+        </div>
     </div>
-</div>

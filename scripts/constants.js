@@ -1,5 +1,5 @@
 /**
- * Created by hisp on 2/12/16.
+ * Created by mithilesh
  */
 
     const Anonymous_Attribute_Code = "Anonymous?";
@@ -24,6 +24,7 @@ const SQLQUERY_TEI_ATTR = "select tei.uid tei ,min(tea.name) attrname,tea.uid at
 
 const SQLQUERY_TEI_ATTR_NAME = "TRACKER_REPORTS_TEI_ATTR_V1";
 
+/*
 const SQLQUERY_TEI_DATA_VALUE = "select tei.uid tei,ps.uid psuid,min(ps.name) psname,psi.uid ev ,psi.executiondate evdate,de.uid deuid,min(de.name) dename,min(tedv.value) devalue,ou.name, pi.enrollmentdate enrollDate\
  from programstageinstance psi\
  INNER JOIN programinstance pi ON  psi.programinstanceid = pi.programinstanceid\
@@ -42,9 +43,23 @@ const SQLQUERY_TEI_DATA_VALUE = "select tei.uid tei,ps.uid psuid,min(ps.name) ps
  and pi.enrollmentdate between '${startdate}' and '${enddate}'\
  group by tei.uid,ps.uid,psi.uid,psi.executiondate,de.uid,ou.name, pi.enrollmentdate\
  order by pi.enrollmentdate,tei.uid,psi.executiondate";
+*/
+
+// for 2.32
+const SQLQUERY_TEI_DATA_VALUE = "select tei.uid tei,ps.uid psuid,min(ps.name) psname,psi.uid ev ,psi.executiondate evdate,ou.name, \
+pi.enrollmentdate enrollDate, psi.eventdatavalues from programstageinstance psi \
+INNER JOIN programinstance pi ON psi.programinstanceid = pi.programinstanceid \
+INNER JOIN trackedentityinstance tei ON pi.trackedentityinstanceid = tei.trackedentityinstanceid \
+INNER JOIN programstage ps ON ps.programstageid = psi.programstageid \
+INNER JOIN organisationunit ou ON ou.organisationunitid = psi.organisationunitid \
+WHERE psi.programstageid IN(select programstageid from programstage where programid IN(select programid from program where uid = '${program}')) \
+and psi.organisationunitid IN(select organisationunitid from organisationunit where path like '%${orgunit}%') and pi.enrollmentdate between '${startdate}' \
+and '${enddate}'group by tei.uid, ps.uid, psi.uid, psi.executiondate, ou.name, psi.eventdatavalues, pi.enrollmentdate order by pi.enrollmentdate,  \
+tei.uid, psi.executiondate;";
+
 
 const SQLQUERY_TEI_DATA_VALUE_NAME = "SQLQUERY_TEI_DATA_VALUE_V1";
-
+/*
 const SQLQUERY_EVENT= "select ps.uid psuid,min(ps.name) psname,psi.uid ev ,psi.executiondate evdate,de.uid deuid,min(de.name) dename,min(tedv.value) devalue,ou.name, psi.executiondate::DATE\
  from programstageinstance psi\
  INNER JOIN programinstance pi ON  psi.programinstanceid = pi.programinstanceid\
@@ -62,6 +77,27 @@ const SQLQUERY_EVENT= "select ps.uid psuid,min(ps.name) psname,psi.uid ev ,psi.e
  and psi.executiondate between '${startdate}' and '${enddate}'\
  group by ps.uid,psi.uid,psi.executiondate,de.uid,ou.name, psi.executiondate\
  order by psi.executiondate";
+*/
+// for 2.32
+const SQLQUERY_EVENT= "select ps.uid psuid,min(ps.name) psname,psi.uid ev ,psi.executiondate evdate,ou.name, \
+psi.executiondate::DATE, psi.eventdatavalues from programstageinstance psi \
+ INNER JOIN programinstance pi ON  psi.programinstanceid = pi.programinstanceid \
+ INNER JOIN programstage ps ON ps.programstageid = psi.programstageid \
+ INNER JOIN organisationunit ou ON ou.organisationunitid = psi.organisationunitid \
+ WHERE psi.programstageid IN (select programstageid from programstage \
+ where programid IN (select programid \
+ from program \
+ where uid = '${program}')) \
+ and psi.organisationunitid IN (select organisationunitid \
+ from organisationunit\
+ where path like '%${orgunit}%') \
+ and psi.executiondate between '${startdate}' and '${enddate}' \
+ group by ps.uid,psi.uid,psi.executiondate,de.uid,ou.name, psi.executiondate\
+ order by psi.executiondate;";
+
+
+
+
 
 const SQLQUERY_EVENT_NAME = "SQLQUERY_EVENT_V1";
 

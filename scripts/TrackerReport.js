@@ -48,7 +48,7 @@ msfReportsApp
         selection.setListenerFunction(function(){
             $scope.selectedOrgUnitUid = selection.getSelected();
 
-            if($scope.selectedOrgUnitUid=="wnDm6jbp27v")
+            if($scope.selectedOrgUnitUid=="eK8otXM3M7E")
               alert("Please select the Level below 1")
                else
               loadPrograms();
@@ -165,8 +165,8 @@ msfReportsApp
                         $scope.stageData = stageData;
 
                         MetadataService.getSQLView(SQLViewsName2IdMap[TRACKER_REPORT_TEI_ATTR_ENROLLED_NAME], param).then(function (attrData) {
-                            $scope.attrData = attrData;
-                           
+                            //$scope.attrData = attrData;
+                            $scope.attrData =  attrData.listGrid;;
                            
                             MetadataService.getALLAttributes().then(function (allattr) {
                                 $scope.allattr = allattr;

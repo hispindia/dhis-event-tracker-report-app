@@ -18,9 +18,9 @@ msfReportsApp.directive('calendar', function () {
 });
 msfReportsApp
     .controller('TodayScheduleController', function ($rootScope,
-        $scope,
-        $timeout,
-        MetadataService) {
+                                                     $scope,
+                                                     $timeout,
+                                                     MetadataService) {
 
 
         //PSI
@@ -46,7 +46,7 @@ msfReportsApp
         selection.setListenerFunction(function () {
             $scope.selectedOrgUnitUid = selection.getSelected();
 
-            if ($scope.selectedOrgUnitUid == "wnDm6jbp27v")
+            if ($scope.selectedOrgUnitUid == "eK8otXM3M7E")
                 alert("Please select the Level below 1")
             else
                 loadPrograms();
@@ -157,12 +157,35 @@ msfReportsApp
             var param = "var=program:" + program.id + "&var=orgunit:" + $scope.selectedOrgUnit.id + "&var=startdate:" + $scope.startdateSelected + "&var=enddate:" + $scope.enddateSelected + "&paging=false";
 
             MetadataService.getSQLView(SQLViewsName2IdMap[SQLQUERY_TEI_DATA_VALUE_NAME], param).then(function (stageData) {
-                $scope.stageData = stageData;
+                var changedRow = [];
+                var index = -1;
+                stageData.listGrid.rows.forEach(row => {
+                    let values = JSON.parse(row["7"]["value"]);
+                    if (Object.keys(values).length) {
+
+                        row.pop();
+                        let enrolldate = row.pop();
+                        let name = row.pop();
+                        for (key in values) {
+                            index++;
+                            changedRow[index] = [];
+                            changedRow[index].push(...row);
+                            changedRow[index].push(key);
+                            changedRow[index].push("");
+                            changedRow[index].push(values[key]["value"]);
+                            changedRow[index].push(name);
+                            changedRow[index].push(enrolldate);
+                        }
+                    }
+                })
+                stageData.listGrid.rows = changedRow
+                $scope.stageData = stageData.listGrid;
+
                 MetadataService.getSQLView(SQLViewsName2IdMap[SQLQUERY_TEI_ATTR_NAME], param).then(function (attrData) {
-                    $scope.attrData = attrData;
+                    $scope.attrData = attrData.listGrid;
 
                     MetadataService.getSQLView(SQLViewsName2IdMap[TRACKER_REPORT_OPTION_VALUE_NAME], " ").then(function (optionsetValue) {
-                        $scope.optionsetValue = optionsetValue.rows;
+                        $scope.optionsetValue = optionsetValue.listGrid.rows;
                         MetadataService.getALLAttributes().then(function (allattr) {
                             $scope.allattr = allattr;
                             getwithoutEnroll($scope.stageData, $scope.attrData, $scope.allattr, $scope.optionsetValue,program);
@@ -170,13 +193,16 @@ msfReportsApp
                     })
                 })
             })
-            
+
         }
         function getwithoutEnroll(stageData, attrData, allattr, optionsetValue,program) {
-            $scope.optionsetValue = []
-            optionsetValue.forEach(element => {
-                $scope.optionsetValue[element[2] + "-" + element[1]] = element[0];
-            });
+
+            if( optionsetValue !== undefined && optionsetValue.length > 0 ){
+                $scope.optionsetValue = []
+                optionsetValue.forEach(element => {
+                    $scope.optionsetValue[element[2] + "-" + element[1]] = element[0];
+                });
+            }
 
             var teiWiseAttrMap = [];
             $scope.attrMap = [];
@@ -311,7 +337,10 @@ msfReportsApp
                 var psuid = stageData.rows[i][index_ps];
                 var evuid = stageData.rows[i][index_ev];
                 var evDate = stageData.rows[i][index_evDate];
-                evDate = evDate.substring(0, 10);
+                if( evDate !== null ){
+                    evDate = evDate.substring(0, 10);
+                }
+
                 var deuid = stageData.rows[i][index_deuid];
                 var devalue = stageData.rows[i][index_devalue];
                 var ou = stageData.rows[i][index_ou];
@@ -361,60 +390,60 @@ msfReportsApp
             $scope.emptyval = [];
             evuid = "dummy";
             if(eventToMiscMap[evuid].evDate == ""){
-            for (key in teiList) {
-                var teiuid = key;
-                $scope.eventList[teiuid] = [];
+                for (key in teiList) {
+                    var teiuid = key;
+                    $scope.eventList[teiuid] = [];
 
-                var maxEventCount = teiPerPsEventListMap[teiuid].max;
+                    var maxEventCount = teiPerPsEventListMap[teiuid].max;
 
-                if (maxEventCount == 0) { debugger }
-                for (var y = 0; y < maxEventCount; y++) {
+                    if (maxEventCount == 0) { debugger }
+                    for (var y = 0; y < maxEventCount; y++) {
 
-                    $scope.TheRows = [];
-                    for (var x = 0; x < psDes.length; x++) {
-                        var psuid = psDes[x].dataElement.ps;
-                        var deuid = psDes[x].dataElement.id;
-                        var evuid = undefined;
-                        if (teiPerPsEventListMap[teiuid][psuid]) {
-                            evuid = teiPerPsEventListMap[teiuid][psuid][y];
-                        }
-                        if (!evuid) {
-                            evuid = "dummy";
-                        }
-                        var val = teiPsEventDeMap[teiuid + "-" + evuid + "-" + deuid];
-                        if (deuid == "orgUnit") {
-                            val = eventToMiscMap[evuid].ou;//debugger
-                        } else if (deuid == "eventDate") {
-                            val = eventToMiscMap[evuid].evDate;//debugger
-                        }
-                        if ($scope.psDEs[x].dataElement.optionSet != undefined) {
-
-                            if ($scope.psDEs[x].dataElement.optionSet.options != undefined) {
-
-                                val = $scope.Options[val + '_index'];
-                                if (!val)
-                                    val = "";
-                                //  dataValues.push(value);
-
+                        $scope.TheRows = [];
+                        for (var x = 0; x < psDes.length; x++) {
+                            var psuid = psDes[x].dataElement.ps;
+                            var deuid = psDes[x].dataElement.id;
+                            var evuid = undefined;
+                            if (teiPerPsEventListMap[teiuid][psuid]) {
+                                evuid = teiPerPsEventListMap[teiuid][psuid][y];
                             }
+                            if (!evuid) {
+                                evuid = "dummy";
+                            }
+                            var val = teiPsEventDeMap[teiuid + "-" + evuid + "-" + deuid];
+                            if (deuid == "orgUnit") {
+                                val = eventToMiscMap[evuid].ou;//debugger
+                            } else if (deuid == "eventDate") {
+                                val = eventToMiscMap[evuid].evDate;//debugger
+                            }
+                            if ($scope.psDEs[x].dataElement.optionSet != undefined) {
+
+                                if ($scope.psDEs[x].dataElement.optionSet.options != undefined) {
+
+                                    val = $scope.Options[val + '_index'];
+                                    if (!val)
+                                        val = "";
+                                    //  dataValues.push(value);
+
+                                }
+                            }
+                            $scope.TheRows.push(val ? val : "");
                         }
-                        $scope.TheRows.push(val ? val : "");
+                        for (var i = 0; i < $scope.TheRows.length; i++) {
+
+                            if ($scope.TheRows[i] == "true") {
+                                $scope.TheRows[i] = "Yes";
+                            }
+                            if ($scope.TheRows[i] == "false") {
+                                $scope.TheRows[i] = "No";
+                            }
+
+
+                        }
+                        $scope.eventList[teiuid].push($scope.TheRows);
                     }
-                    for (var i = 0; i < $scope.TheRows.length; i++) {
-
-                        if ($scope.TheRows[i] == "true") {
-                            $scope.TheRows[i] = "Yes";
-                        }
-                        if ($scope.TheRows[i] == "false") {
-                            $scope.TheRows[i] = "No";
-                        }
-
-
-                    }
-                    $scope.eventList[teiuid].push($scope.TheRows);
                 }
             }
-        }
             for (var i = 0; i < $scope.TheRows.length; i++)
                 $scope.emptyval.push("");
             $('#divIdmmm').attr('style', 'display:block !important');
@@ -424,14 +453,36 @@ msfReportsApp
             $scope.teiList = $scope.allteiuid;
 
             $scope.teiList = $scope.teiList.filter(val => !$scope.teiListnew.includes(val));
-            
-            
+
+
             var param = "var=program:" + program.id + "&var=orgunit:" + $scope.selectedOrgUnit.id + "&var=startdate:" + $scope.startdateSelected + "&var=enddate:" + $scope.enddateSelected + "&paging=false";
             MetadataService.getSQLView(SQLViewsName2IdMap[SQLQUERY_TEI_DATA_VALUE_NAME], param).then(function (stageData) {
-                $scope.stageData = stageData;
-                
+                var changedRow = [];
+                var index = -1;
+                stageData.listGrid.rows.forEach(row => {
+                    let values = JSON.parse(row["7"]["value"]);
+                    if (Object.keys(values).length) {
+
+                        row.pop();
+                        let enrolldate = row.pop();
+                        let name = row.pop();
+                        for (key in values) {
+                            index++;
+                            changedRow[index] = [];
+                            changedRow[index].push(...row);
+                            changedRow[index].push(key);
+                            changedRow[index].push("");
+                            changedRow[index].push(values[key]["value"]);
+                            changedRow[index].push(name);
+                            changedRow[index].push(enrolldate);
+                        }
+                    }
+                })
+                stageData.listGrid.rows = changedRow
+                $scope.stageData = stageData.listGrid;
+
                 MetadataService.getSQLView(SQLViewsName2IdMap[TRACKER_REPORT_TEI_ATTR_ENROLLED_NAME], param).then(function (attrData) {
-                    $scope.attrData = attrData;
+                    $scope.attrData =  attrData.listGrid;
                     MetadataService.getALLAttributes().then(function (allattr) {
                         $scope.allattr = allattr;
                         getWithEnroll($scope.stageData, $scope.attrData, $scope.allattr);
