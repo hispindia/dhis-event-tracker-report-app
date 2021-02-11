@@ -88,6 +88,7 @@
                 <th colspan="{{program.programTrackedEntityAttributes.length+2}}">{{attribute}}</th>
             </tr>
             <tr style="background-color:antiquewhite">
+                <th>SN</th>
                 <th ng-repeat="enrol in enrollment">{{enrol}}</th>
                 <th ng-repeat="attr in program.programTrackedEntityAttributes">{{attr.displayName}}</th>
             </tr>
@@ -103,6 +104,7 @@
            </tbody>
         <tbody>
            <tr   ng-repeat="tei in teiList" >
+            <td>{{$index+1}}</td>
             <td  >{{teiEnrollMap[tei+"-enrollDate"]}}</td>
             <td >{{teiEnrollOrgMap[tei+"-ouname"]}}</td>
             <td  ng-repeat="attr in program.programTrackedEntityAttributes">{{attrMap[tei+"-"+attr.trackedEntityAttribute.id]}} </td>
