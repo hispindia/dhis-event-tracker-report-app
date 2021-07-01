@@ -13,7 +13,7 @@ var trackerReportsAppServices = angular.module('trackerReportsAppServices', [])
                    contentType: "application/json",
                    //url: '../../organisationUnits/'+id+".json?fields=id,name,programs[id,name,programTrackedEntityAttributes[*],programStages[id,name,programStageDataElements[id,dataElement[id,name],sortOrder]]]",
                   // url: '../../organisationUnits/'+id+".json?fields=id,name,programs[id,name,programTrackedEntityAttributes[*],programStages[id,name,programStageDataElements[id,dataElement[id,name,optionSet[options[code,displayName]]],sortOrder]]]&paging=false",
-                    url: '../../organisationUnits/'+id+".json?fields=id,name,programs[id,name,programTrackedEntityAttributes[*],programStages[id,name,programStageDataElements[id,dataElement[id,name,optionSet[options[code,displayName]]],sortOrder]]]&paging=false",
+                    url: '../../organisationUnits/'+id+".json?fields=id,name,displayName,programs[id,name,displayName,programTrackedEntityAttributes[*],programStages[id,name,displayName,programStageDataElements[id,displayName,dataElement[id,name,displayName,optionSet[options[code,displayName]]],sortOrder]]]&paging=false",
                    success: function (data) {
                        def.resolve(data);
                    }
@@ -26,7 +26,7 @@ var trackerReportsAppServices = angular.module('trackerReportsAppServices', [])
                    type: "GET",
                    dataType: "json",
                    contentType: "application/json",
-                   url: '../../programs.json?fields=id,name,withoutRegistration,programTrackedEntityAttributes[*],programStages[id,name,programStageDataElements[id,dataElement[id,name,optionSet[options[code,displayName]],sortOrder]]]&paging=false',
+                   url: '../../programs.json?fields=id,name,displayName,withoutRegistration,programTrackedEntityAttributes[*],programStages[id,name,displayName,programStageDataElements[id,displayName,dataElement[id,displayName,name,optionSet[options[code,displayName]],sortOrder]]]&paging=false',
                    success: function (data) {
                        def.resolve(data);
                    }
@@ -53,13 +53,12 @@ var trackerReportsAppServices = angular.module('trackerReportsAppServices', [])
                    type: "GET",
                    dataType: "json",
                    contentType: "application/json",
-                   url: '../../trackedEntityAttributes.json?fields=id,name,attributeValues[*,attribute[id,name,code]]&paging=false',
+                   url: '../../trackedEntityAttributes.json?fields=id,name,displayName,attributeValues[*,attribute[id,name,displayName,code]]&paging=false',
                    success: function (data) {
                        def.resolve(data);
                    }
                });
                return def;
-           }
-
+           },
        }
     });

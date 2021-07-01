@@ -3,17 +3,17 @@
         <div class="well well-lg">
             <table class="table table-borderless table-striped">
                 <tr>
-                    <td>Selected Organisation Unit</td>
+                    <td>{{translateLanguage.selectedOU}}</td>
                     <td>
-                        <input type="text" class="form-control" value="{{selectedOrgUnit.name|| 'please_select'| translate}}"
+                        <input type="text" class="form-control" value="{{selectedOrgUnit.displayName|| 'please_select'| translate}}"
                             ng-disabled="true">
                     </td>
                 </tr>
                 <tr>
-                    <td>Program</td>
+                    <td>{{translateLanguage.program}}</td>
                     <td class='col-sm-4 col-md-3'>
-                        <select ng-model="selectedProgram" class="form-control" ng-options="program.name for program in programs | orderBy: 'name'">
-                            <option value="">Please select program</option>
+                        <select ng-model="selectedProgram" class="form-control" ng-options="program.displayName for program in programs | orderBy: 'displayName'">
+                            <option value="">{{translateLanguage.PleaseSelectProgram}}</option>
                         </select>
                     </td>
                 </tr>
@@ -29,7 +29,7 @@
         <div class="col-md-3">
             <div class="input-group">
                 <span class="input-group-addon">
-                    <b>Start Date:-</b>
+                    <b>{{translateLanguage.startDate}}:-</b>
                 </span>
                 <input calendar ng-model='startdate' class="form-control" ng-change="updateStartDate(startdate);" style="margin:0px;padding: 16px;"
                     required placeholder="Start Date" />
@@ -38,7 +38,7 @@
         <div class="col-md-3">
             <div class="input-group">
                 <span class="input-group-addon">
-                    <b>End Date:-</b>
+                    <b>{{translateLanguage.endDate}}:-</b>
                 </span>
                 <input calendar ng-model='enddate' class="form-control" ng-change="updateEndDate(enddate);" required
                     style="margin:0px;padding: 16px;" placeholder="End Date" />
@@ -47,7 +47,7 @@
 
         <div class="col-md-3">
             <button type="button" class="btn btn-primary" ng-click="generateReport(selectedProgram, report, selectedOuMode);showLoad();"
-                ng-disabled="!selectedProgram">{{'generate_report'| translate}}</button>
+                ng-disabled="!selectedProgram">{{translateLanguage.generateReport}}</button>
         </div>
         <!--
         <div class="col-md-3" style="margin-left: -100px">
@@ -58,14 +58,14 @@
 
         <div class="col-md-3" style="margin-left: -100px">
             <button id="btnExport" class="btn btn-success" ng-click="tableToExcel('divId', 'Report', 'Report.xls');" alt="xls" ng-disabled="!selectedProgram" >
-                Export To Excel </button>
+                {{translateLanguage.exportToExcel}} </button>
         </div>
 
     </div>
 
     <div id="showdiv" class="row" style="display: none;">
         <div class="col-md-6 vertical-spacing">
-            <div class="alert alert-warning">No Data Avilable For the Current Selection.</div>
+            <div class="alert alert-warning">{{translateLanguage.NoData}}</div>
         </div>
     </div>
 </div>
@@ -83,17 +83,17 @@
 <div id="divIdmmm" style="display: none" class="selcsection">
 
     <div id="divId" class="container" style="margin-left: 2px">
-        <h2>All Enrollments with Events</h2>
+        <h2>{{translateLanguage.withEvent}}</h2>
         <table id="tableID1" border="1" class="table table-hover">
             <tr>
                 <th colspan="{{program.programTrackedEntityAttributes.length+2}}">{{attribute}}</th>
-                <th ng-repeat="ps in program.programStages" colspan="{{ps.programStageDataElements.length+2}}">{{ps.name}}</th>
+                <th ng-repeat="ps in program.programStages" colspan="{{ps.programStageDataElements.length+2}}">{{ps.displayName}}</th>
 
             </tr>
             <tr style="background-color:antiquewhite">
                 <th ng-repeat="enrol in enrollment">{{enrol}}</th>
                 <th ng-repeat="attr in program.programTrackedEntityAttributes">{{attr.displayName}}</th>
-                <th ng-repeat="de in psDEs">{{de.dataElement.name}}</th>
+                <th ng-repeat="de in psDEs">{{de.dataElement.displayName}}</th>
             </tr>
 
             <tbody ng-repeat="tei in teiListnew">
@@ -117,7 +117,7 @@
             </tr>
             </tbody>
         </table>
-        <h2>All Enrollments without Events</h2>
+        <h2>{{translateLanguage.withOutEvent}}</h2>
         <table id="tableID2" border="1" class="table table-hover">
             <tr>
                 <th colspan="{{program.programTrackedEntityAttributes.length+2}}">{{attribute}}</th>

@@ -30,16 +30,49 @@ msfReportsApp
         //MSF
         const SQLVIEW_TEI_PS = "Ysi6iyNK1Ha";
         const SQLVIEW_TEI_ATTR = "GoPX942y3eV";
-
+         $scope.language
+         $scope.translateLanguage={}
         $timeout(function () {
             $scope.date = {};
             $scope.date.startDate = new Date();
             $scope.date.endDate = new Date();
         }, 0);
-
+       
         //initially load tree
         selection.load();
+        var url = "../../../api/me.json?fields=settings";
+        $.get(url, function (data) {
+            $scope.language = data.settings.keyDbLocale
+           if(data.settings.keyDbLocale == "es"){
+            $scope.translateLanguage={
+                selectedOU :"Unidad organizativa seleccionada",
+                program:"Programa",
+                PleaseSelectProgram:"Por favor seleccione programa",
+                startDate:"Fecha de inicio",
+                endDate:"fecha final",
+                exportToExcel:"Exportar a Excel",
+                NoData:"No hay datos disponibles para la selección actual",
+                withOutEvent:"Todas las inscripciones sin eventos",
+                withEvent:"Todas las inscripciones con eventos",
+               generateReport:"Generar informe"
 
+            }  
+        } else {
+            $scope.translateLanguage={
+               selectedOU :"Selected Organisation Unit",
+               program:"Program",
+               PleaseSelectProgram:"Please select program",
+               startDate:"Start Date",
+               endDate:"End Date",
+               exportToExcel:"Export to Excel",
+               NoData:"No Data Avilable For the Current Selection.",
+               withOutEvent:"All Enrollments without Events",
+               withEvent:"All Enrollments with Events",
+               generateReport:"Generate Report"
+           }
+        }		
+        });
+       
         getAllPrograms();
 
         // Listen for OU changes
@@ -125,8 +158,14 @@ msfReportsApp
             }
             $scope.psDEs = [];
             $scope.Options = [];
-            $scope.attribute = "Attributes";
-            $scope.enrollment = ["Enrollment date", "Enrolling orgUnit"];
+            if($scope.language == "es"){
+                $scope.attribute = "Atributos";
+                $scope.enrollment = ["Fecha de inscripción", "Inscribiendo orgUnit"]; 
+            } else {
+                $scope.attribute = "Attributes";
+                $scope.enrollment = ["Enrollment date", "Enrolling orgUnit"];
+            }
+           
             var options = [];
 
             var index = 0;
@@ -303,7 +342,6 @@ msfReportsApp
 
                     if (attrkey[1] == optionSetKey[0]) {
                         {
-                            console.log(optionSetKey[1] + "----" + $scope.attrMap[attkey])
                             if (optionSetKey[1] == $scope.attrMap[attkey])
                                 $scope.attrMap[attkey] = $scope.optionsetValue[opskey]
                         }
@@ -311,8 +349,6 @@ msfReportsApp
 
                 }
             }
-
-
 
             $scope.allteiuid = allteiuid.filter(function (elem, index, self) {
                 return index === self.indexOf(elem);

@@ -144,7 +144,7 @@ getTEAttributes = function(){
         type: "GET",
         dataType: "json",
         contentType: "application/json",
-        url: '../../trackedEntityAttributes?fields=id,name,valueType,attributeValues[attribute[id,code],value]&paging=false',
+        url: '../../trackedEntityAttributes?fields=id,name,displayName,valueType,attributeValues[attribute[id,code],value]&paging=false',
         success: function (data) {
             def.resolve(data.trackedEntityAttributes);
         },
