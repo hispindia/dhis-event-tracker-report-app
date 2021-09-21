@@ -205,7 +205,8 @@ msfReportsApp
                 var changedRow = [];
                 var index = -1;
                 stageData.listGrid.rows.forEach(row => {
-                    let values = JSON.parse(row["7"]["value"]);
+                    //let values = JSON.parse(row["7"]["value"]);
+                    let values = JSON.parse(row["7"]);
                     if (Object.keys(values).length) {
 
                         row.pop();
@@ -496,7 +497,8 @@ msfReportsApp
                 var changedRow = [];
                 var index = -1;
                 stageData.listGrid.rows.forEach(row => {
-                    let values = JSON.parse(row["7"]["value"]);
+                    //let values = JSON.parse(row["7"]["value"]);
+                    let values = JSON.parse(row["7"]);
                     if (Object.keys(values).length) {
 
                         row.pop();
