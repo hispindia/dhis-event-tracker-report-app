@@ -49,7 +49,7 @@ INNER JOIN programinstance pi ON psi.programinstanceid = pi.programinstanceid\
 INNER JOIN trackedentityinstance tei ON pi.trackedentityinstanceid = tei.trackedentityinstanceid\
 INNER JOIN programstage ps ON ps.programstageid = psi.programstageid\
 INNER JOIN organisationunit ou ON ou.organisationunitid = psi.organisationunitid\
-WHERE psi.status != 'SCHEDULE'\
+WHERE psi.status not in( 'SCHEDULE','OVERDUE') and psi.executiondate is not null  \
 and psi.programstageid IN(select programstageid from programstage where programid IN(select programid from program where uid = '${program}'))\
 and psi.organisationunitid IN(select organisationunitid from organisationunit where path like '%${orgunit}%') and pi.enrollmentdate between '${startdate}'\
 and '${enddate}'\
