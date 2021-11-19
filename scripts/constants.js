@@ -44,7 +44,7 @@ const SQLQUERY_TEI_ATTR_NAME = "TRACKER_REPORTS_TEI_ATTR_V1";
 //  order by pi.enrollmentdate,tei.uid,psi.executiondate";
 
 const SQLQUERY_TEI_DATA_VALUE = "select tei.uid tei,ps.uid psuid,min(ps.name) psname,psi.uid ev ,psi.executiondate evdate,ou.name, \
-pi.enrollmentdate enrollDate, psi.eventdatavalues from programstageinstance psi\
+pi.enrollmentdate enrollDate, psi.eventdatavalues::TEXT from programstageinstance psi\
 INNER JOIN programinstance pi ON psi.programinstanceid = pi.programinstanceid\
 INNER JOIN trackedentityinstance tei ON pi.trackedentityinstanceid = tei.trackedentityinstanceid\
 INNER JOIN programstage ps ON ps.programstageid = psi.programstageid\
