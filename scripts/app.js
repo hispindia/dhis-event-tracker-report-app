@@ -16,28 +16,33 @@ var msfReportsApp = angular.module('msfReportsApp',['ui.bootstrap',
 ])
 
 .config(function($routeProvider,$translateProvider){
-        $routeProvider.when('/', {
-            templateUrl:'views/home.html',
-            controller: 'homeController'
-        }).when('/schedule-today', {
-            templateUrl:'views/schedule-today.html',
-            controller: 'TodayScheduleController'
+    $routeProvider.when('/', {
+        templateUrl:'views/home.html',
+        controller: 'homeController'
+    }).when('/schedule-today', {
+        templateUrl:'views/schedule-today.html',
+        controller: 'TodayScheduleController'
 
-        }).when('/event-report', {
-            templateUrl:'views/event-report.html',
-            controller: 'EventReportController'
+    }).when('/event-report', {
+        templateUrl:'views/event-report.html',
+        controller: 'EventReportController'
 
-        }).otherwise({
-            redirectTo : '/'
-        });
+    }).when('/tracker-report', {
+        templateUrl:'views/tracker-report.html',
+        controller: 'TrackerReportController'
 
-        $translateProvider.preferredLanguage('en');
-        $translateProvider.useSanitizeValueStrategy('escaped');
-        $translateProvider.useLoader('i18nLoader');
+    }).otherwise({
+        redirectTo : '/'
+    });
 
-        initSQLView();
+    $translateProvider.preferredLanguage('en');
+    $translateProvider.useSanitizeValueStrategy('escaped');
+    $translateProvider.useLoader('i18nLoader');
+
+    initSQLView();
 
 });
+
 
 function initSQLView() {
 
@@ -47,18 +52,26 @@ function initSQLView() {
         requiredViews[SQLQUERY_TEI_ATTR_NAME] = false;
         requiredViews[SQLQUERY_EVENT_NAME] = false;
         requiredViews[SQLQUERY_TEI_DATA_VALUE_NAME] = false;
+        requiredViews[TRACKER_REPORT_TEI_ATTR_ENROLLED_NAME] = false;
+        requiredViews[TRACKER_REPORT_OPTION_VALUE_NAME] = false;
 
         for (var i=0;i<sqlViews.length;i++){
             SQLViewsName2IdMap[sqlViews[i].name] = sqlViews[i].id;
 
-            if (sqlViews[i].name == SQLQUERY_TEI_ATTR_NAME){
+            if (sqlViews[i].name === SQLQUERY_TEI_ATTR_NAME){
                 delete requiredViews[SQLQUERY_TEI_ATTR_NAME];
             }
-            else if (sqlViews[i].name == SQLQUERY_TEI_DATA_VALUE_NAME){
+            else if (sqlViews[i].name === SQLQUERY_TEI_DATA_VALUE_NAME){
                delete requiredViews[SQLQUERY_TEI_DATA_VALUE_NAME];
             }
-            else if (sqlViews[i].name == SQLQUERY_EVENT_NAME){
+            else if (sqlViews[i].name === SQLQUERY_EVENT_NAME){
                 delete requiredViews[SQLQUERY_EVENT_NAME];
+            }
+            else if (sqlViews[i].name === TRACKER_REPORT_TEI_ATTR_ENROLLED_NAME){
+                delete requiredViews[TRACKER_REPORT_TEI_ATTR_ENROLLED_NAME];
+            }
+            else if (sqlViews[i].name === TRACKER_REPORT_OPTION_VALUE_NAME){
+                delete requiredViews[TRACKER_REPORT_OPTION_VALUE_NAME];
             }
         }
 

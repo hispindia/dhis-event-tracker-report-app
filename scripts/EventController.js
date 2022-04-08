@@ -77,13 +77,43 @@ msfReportsApp
         };
 
         $scope.fnExcelReport = function(){
-
             var blob = new Blob([document.getElementById('divId').innerHTML], {
                 type: 'text/plain;charset=utf-8'
             });
             saveAs(blob, "Report.xls");
-
         };
+        $scope.downloadCSV = function () {
+            const csvdata = csvmaker();
+             download(csvdata);
+           }
+           function download(data) {
+            const blob = new Blob([data], { type: 'text/csv;charset=utf-8' });
+            const url = window.URL.createObjectURL(blob)
+            const a = document.createElement('a')
+            a.setAttribute('href', url)
+            a.setAttribute('report', 'report.csv');
+            a.click()
+        }
+        function csvmaker() {
+            let arr = [...$scope.enrollment, ...$scope.program.programTrackedEntityAttributes.map(ele=>ele.name), ...$scope.psDEs.map(de =>de.dataElement.name)]
+            csvRows.push(arr.join(","))
+            $scope.teiListnew.forEach(tei=>{
+                $scope.eventList[tei].forEach(event=>{
+                const valArr = [], attrArr=[];
+                 $scope.program.programTrackedEntityAttributes.forEach(attr =>{
+                        attrArr.push($scope.attrMap[tei+"-"+attr.trackedEntityAttribute.id])
+                    })
+                    event.forEach(value=>{
+                        valArr.push(value) 
+                    })
+                    const val =  $scope.teiEnrollMap[tei+"-enrollDate"]+","+$scope.teiEnrollOrgMap[tei+"-ouname"]+","+attrArr.join(",")+valArr.join(",")
+                    csvRows.push(val)
+                })
+              
+            })
+            return csvRows.join('\n')
+
+          }
 
         $scope.generateReport = function(program){
 
@@ -134,7 +164,7 @@ msfReportsApp
 
 
             //  var param = "var=program:"+program.id + "&var=orgunit:"+$scope.selectedOrgUnit.id+"&var=startdate:"+moment($scope.date.startDate).format("YYYY-MM-DD")+"&var=enddate:"+moment($scope.date.endDate).format("YYYY-MM-DD");
-            var param = "var=program:"+program.id + "&var=orgunit:"+$scope.selectedOrgUnit.id+"&var=startdate:"+$scope.startdateSelected+"&var=enddate:"+$scope.enddateSelected;
+            var param = "var=program:"+program.id + "&var=orgunit:"+$scope.selectedOrgUnit.id+"&var=startdate:"+$scope.startdateSelected+"&var=enddate:"+$scope.enddateSelected + "&paging=false";
 
             MetadataService.getSQLView(SQLVIEW_TEI_PS, param).then(function (stageData) {
                 $scope.stageData = stageData;

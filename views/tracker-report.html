@@ -1,0 +1,124 @@
+<div id="leftBar">
+    <d2-left-bar></d2-left-bar>
+
+    <div id="orgUnitTree">
+        <ul>
+        </ul>
+    </div>
+
+</div>
+
+<div id="mainPage">
+<div class="row" >
+    <div class="col-md-6">
+        <div class="well well-lg">
+            <table class="table table-borderless table-striped">
+                <tr>
+                    <td>Selected Organisation Unit</td>
+                    <td>
+                        <input type="text" class="form-control" value="{{selectedOrgUnit.name|| 'please_select'| translate}}" ng-disabled="true">
+                    </td>
+                </tr>
+                <tr>
+                    <td>Program</td>
+                    <td class='col-sm-4 col-md-3'>
+                        <select ng-model="selectedProgram" class="form-control" ng-options="program.name for program in programs | orderBy: 'name'">
+                            <option value="">Please select program</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<!-- Selection Parameter -->
+<div class="well selcsection">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="input-group">
+                <span class="input-group-addon">
+                    <b>Start Date:-</b>
+                </span>
+                <input calendar ng-model='startdate' class="form-control" ng-change="updateStartDate(startdate);" style="margin:0px;padding: 16px;"
+                    required placeholder="Start Date" />
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="input-group">
+                <span class="input-group-addon">
+                    <b>End Date:-</b>
+                </span>
+                <input calendar ng-model='enddate' class="form-control" ng-change="updateEndDate(enddate);" required style="margin:0px;padding: 16px;"
+                    placeholder="End Date" />
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <button type="button" class="btn btn-primary" ng-click="generateReport(selectedProgram, report, selectedOuMode);showLoad();"
+                ng-disabled="!selectedProgram">{{'generate_report'| translate}}</button>
+        </div>
+        <div class="col-md-3" style="margin-right: -100px">
+            <button id="btnExport" class="btn btn-success" ng-click="fnExcelReport();" ng-disabled="!selectedProgram"> Export To Excel </button>
+        </div>
+    </div>
+
+    <div id="showdiv" class="row" style="display: none;">
+        <div class="col-md-6 vertical-spacing">
+            <div class="alert alert-warning">No Data Avilable For the Current Selection.</div>
+        </div>
+    </div>
+</div>
+<!-- Selection Parameter -->
+
+<!-- Table Display -->
+
+
+<div id="loader" style="display: none" class="lds-facebook">
+    <div></div>
+    <div></div>
+    <div></div>
+</div>
+<div id="divIdmmm" style="display: none"  class="selcsection">
+
+    <div id ="divId"  class="container" style="margin-left: 2px">
+        <table id="tableid" border="1" class="table table-hover">
+            <tr>
+                <th colspan="{{program.programTrackedEntityAttributes.length+2}}">{{attribute}}</th>
+            </tr>
+            <tr style="background-color:antiquewhite">
+                <th>SN</th>
+                <th ng-repeat="enrol in enrollment">{{enrol}}</th>
+                <th ng-repeat="attr in program.programTrackedEntityAttributes">{{attr.displayName}}</th>
+            </tr>
+
+            <tbody ng-repeat="tei in teiListnew">
+            <tr  ng-repeat="event in eventList[tei] track by $index" >
+                <td  >{{teiEnrollMap[tei+"-enrollDate"]}}</td>
+                <td >{{teiEnrollOrgMap[tei+"-ouname"]}}</td>
+                <td  ng-repeat="attr in program.programTrackedEntityAttributes">{{attrMap[tei+"-"+attr.trackedEntityAttribute.id]}} </td>
+                <td ng-repeat="value in event track by $index">{{value}}</td>
+            </tr>
+
+           </tbody>
+        <tbody>
+           <tr   ng-repeat="tei in teiList" >
+            <td>{{$index+1}}</td>
+            <td  >{{teiEnrollMap[tei+"-enrollDate"]}}</td>
+            <td >{{teiEnrollOrgMap[tei+"-ouname"]}}</td>
+            <td  ng-repeat="attr in program.programTrackedEntityAttributes">{{attrMap[tei+"-"+attr.trackedEntityAttribute.id]}} </td>
+            <td  ng-repeat="emptyval in emptyval track by $index">{{emptyval}}</td>
+
+           </tr>
+        </tbody>
+        </table>
+    </div>
+</div>
+
+
+<div class="row" ng-if="selectedOrgUnit.programs.length > 0 && !selectedProgram">
+    <div class="col-sm-8 col-md-6 vertical-spacing">
+        <div class="alert alert-warning">{{'please_select_program_report'| translate}}</div>
+    </div>
+</div>
