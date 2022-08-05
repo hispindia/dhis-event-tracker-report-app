@@ -23,6 +23,9 @@ var msfReportsApp = angular.module('msfReportsApp',['ui.bootstrap',
         templateUrl:'views/schedule-today.html',
         controller: 'TodayScheduleController'
 
+    }).when('/tracker-event-report-with-date', {
+        templateUrl:'views/tracker-event-report-with-date.html',
+        controller: 'TERWDController'
     }).when('/event-report', {
         templateUrl:'views/event-report.html',
         controller: 'EventReportController'
