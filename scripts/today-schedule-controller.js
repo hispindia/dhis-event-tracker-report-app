@@ -23,6 +23,9 @@ msfReportsApp
         MetadataService) {
 
 
+        $scope.teiEnrollOrgMap = [];
+        $scope.teiEnrollMap = [];
+
         //PSI
         //const SQLVIEW_TEI_PS =  "FcXYoEGIQIR";
         // const SQLVIEW_TEI_ATTR = "WMIMrJEYUxl";
@@ -253,8 +256,6 @@ msfReportsApp
             $scope.eventList = [];
             $scope.maxEventPerTei = [];
 
-            $scope.teiEnrollOrgMap = [];
-            $scope.teiEnrollMap = [];
 
             var teiPsMap = [];
             var teiPsEventMap = [];
@@ -520,7 +521,7 @@ msfReportsApp
                 $scope.stageData = stageData.listGrid;
 
                 MetadataService.getSQLView(SQLViewsName2IdMap["TRACKER_REPORTS_TEI_ATTR_ENROLLED"], param).then(function (attrData) {
-                    $scope.attrData =  attrData.listGrid;;
+                    $scope.attrData =  attrData.listGrid;
                     MetadataService.getALLAttributes().then(function (allattr) {
                         $scope.allattr = allattr;
                         getWithEnroll($scope.stageData, $scope.attrData, $scope.allattr);
@@ -538,8 +539,6 @@ msfReportsApp
             $scope.eventList1 = [];
             $scope.maxEventPerTei = [];
 
-            $scope.teiEnrollOrgMap = [];
-            $scope.teiEnrollMap = [];
 
             var teiPsMap = [];
             var teiPsEventMap = [];
