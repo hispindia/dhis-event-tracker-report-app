@@ -72,16 +72,15 @@
     <div></div>
 </div>
 <div id="divIdmmm" style="display: none" class="selcsection">
-
     <div id="divId" class="container" style="margin-left: 2px">
         <h2>All Enrollments with Events</h2>
         <table id="tableid" border="1" class="table table-hover">
             <tr>
                 <th colspan="{{program.programTrackedEntityAttributes.length+2}}">{{attribute}}</th>
                 <th ng-repeat="ps in program.programStages" colspan="{{ps.programStageDataElements.length+2}}">{{ps.name}}</th>
-
             </tr>
             <tr style="background-color:antiquewhite">
+                <th>SN</th>
                 <th ng-repeat="enrol in enrollment">{{enrol}}</th>
                 <th ng-repeat="attr in program.programTrackedEntityAttributes">{{attr.displayName}}</th>
                 <th ng-repeat="de in psDEs">{{de.dataElement.name}}</th>
@@ -89,16 +88,17 @@
 
             <tbody ng-repeat="tei in teiListnew">
             <tr ng-repeat="event in eventList[tei] track by $index">
+                <td>{{$parent.$index+1}}</td>
                 <td>{{teiEnrollMap[tei+"-enrollDate"]}}</td>
                 <td>{{teiEnrollOrgMap[tei+"-ouname"]}}</td>
                 <td ng-repeat="attr in program.programTrackedEntityAttributes">{{attrMap[tei+"-"+attr.trackedEntityAttribute.id]}}
                 </td>
                 <td ng-repeat="value in event track by $index">{{value}}</td>
             </tr>
-
             </tbody>
-            </tbody>
+            <tbody>
             <tr ng-repeat="tei in teiList">
+                <td>{{$index+1}}</td>
                 <td>{{teiEnrollMap[tei+"-enrollDate"]}}</td>
                 <td>{{teiEnrollOrgMap[tei+"-ouname"]}}</td>
                 <td ng-repeat="attr in program.programTrackedEntityAttributes">{{attrMap[tei+"-"+attr.trackedEntityAttribute.id]}}
@@ -114,6 +114,7 @@
                 <th colspan="{{program.programTrackedEntityAttributes.length+2}}">{{attribute}}</th>
             </tr>
             <tr style="background-color:antiquewhite">
+                <th>SN</th>
                 <th ng-repeat="enrol in enrollment">{{enrol}}</th>
                 <th ng-repeat="attr in program.programTrackedEntityAttributes">{{attr.displayName}}</th>
             </tr>
@@ -130,6 +131,7 @@
             </tbody>
             <tbody>
             <tr ng-repeat="tei in teiList">
+                <td>{{$index+1}}</td>
                 <td>{{teiEnrollMap[tei+"-enrollDate"]}}</td>
                 <td>{{teiEnrollOrgMap[tei+"-ouname"]}}</td>
                 <td ng-repeat="attr in program.programTrackedEntityAttributes">{{attrMap1[tei+"-"+attr.trackedEntityAttribute.id]}}
@@ -141,11 +143,6 @@
         </table>
     </div>
 </div>
-
-
-
-
-
 
 <div class="row" ng-if="selectedOrgUnit.programs.length > 0 && !selectedProgram">
     <div class="col-sm-8 col-md-6 vertical-spacing">
