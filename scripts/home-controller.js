@@ -5,6 +5,4 @@
 msfReportsApp
 .controller('homeController', function( $rootScope,
                                          $scope){
-
-
     });

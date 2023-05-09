@@ -23,6 +23,10 @@ var msfReportsApp = angular.module('msfReportsApp',['ui.bootstrap',
         templateUrl:'views/schedule-today.html',
         controller: 'TodayScheduleController'
 
+    }).when('/event-reports', {
+        templateUrl:'views/EventReport.html',
+        controller: 'EventReportsController'
+
     }).when('/event-report', {
         templateUrl:'views/event-report.html',
         controller: 'EventReportController'

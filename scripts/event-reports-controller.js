@@ -1,6 +1,4 @@
-/**
- * Created by hisp on 2/12/15.
- */
+
 msfReportsApp.directive('calendar', function () {
     return {
         require: 'ngModel',
@@ -17,35 +15,22 @@ msfReportsApp.directive('calendar', function () {
     };
 });
 msfReportsApp
-    .controller('TodayScheduleController', function ($rootScope,
+    .controller('EventReportsController', function ($rootScope,
                                                      $scope,
                                                      $timeout,
                                                      MetadataService) {
-
-
-        //PSI
-        //const SQLVIEW_TEI_PS =  "FcXYoEGIQIR";
-        // const SQLVIEW_TEI_ATTR = "WMIMrJEYUxl";
         var def = $.Deferred();
-        //MSF
         const SQLVIEW_TEI_PS = "Ysi6iyNK1Ha";
         const SQLVIEW_TEI_ATTR = "GoPX942y3eV";
-
         $timeout(function () {
             $scope.date = {};
             $scope.date.startDate = new Date();
             $scope.date.endDate = new Date();
         }, 0);
-
-        //initially load tree
         selection.load();
-
         getAllPrograms();
-
-        // Listen for OU changes
         selection.setListenerFunction(function () {
             $scope.selectedOrgUnitUid = selection.getSelected();
-
             if ($scope.selectedOrgUnitUid == "eK8otXM3M7E")
                 alert("Please select the Level below 1")
             else
@@ -73,42 +58,30 @@ msfReportsApp
 
         $scope.updateStartDate = function (startdate) {
             $scope.startdateSelected = startdate;
-            //  alert("$scope.startdateSelected---"+$scope.startdateSelected);
         };
 
         $scope.updateEndDate = function (enddate) {
             $scope.enddateSelected = enddate;
-            //  alert("$scope.enddateSelected---"+ $scope.enddateSelected);
         };
-
         $scope.fnExcelReport = function () {
 
             var blob = new Blob([document.getElementById('divId').innerHTML], {
                 type: 'text/plain;charset=utf-8'
             });
             saveAs(blob, "Report.xls");
-
         };
-
         $scope.exportData = function (program) {
-            //   exportData($scope.date.startDate,$scope.date.endDate,program,$scope.selectedOrgUnit);
             exportData($scope.startdateSelected, $scope.enddateSelected, program, $scope.selectedOrgUnit);
 
         }
 
         $scope.generateReport = function (prog) {
             $('#loader').attr('style', 'display:block !important');
-            //document.getElementById("loader").style.display="block";
-            // document.getElementById("loader-wrapper").style.display="block";
             $timeout(function () { $scope.createReport(prog) }, 2000);
         }
 
-        // $scope.progval=[]
         $scope.createReport = function (program) {
-            // $scope.progval.push(prog)
-
             $scope.program = program;
-
             for (var i = 0; i < $scope.program.programTrackedEntityAttributes.length; i++) {
                 var str = $scope.program.programTrackedEntityAttributes[i].displayName;
                 var n = str.lastIndexOf('-');
@@ -116,23 +89,28 @@ msfReportsApp
 
             }
             $scope.psDEs = [];
+            $scope.repeatedPSDEs=[];
             $scope.Options = [];
+            $scope.noEvent = [" "," "];
             $scope.attribute = "Attributes";
             $scope.enrollment = ["Enrollment date", "Enrolling orgUnit"];
             var options = [];
-
             var index = 0;
+            $scope.repeatedPSDEs.push({ dataElement: { id: "orgUnit", name: "orgUnit" } });
+            $scope.repeatedPSDEs.push({ dataElement: { id: "eventDate", name: "eventDate" } });
             for (var i = 0; i < $scope.program.programStages.length; i++) {
-
                 var psuid = $scope.program.programStages[i].id;
                 $scope.psDEs.push({ dataElement: { id: "orgUnit", name: "orgUnit", ps: psuid } });
                 $scope.psDEs.push({ dataElement: { id: "eventDate", name: "eventDate", ps: psuid } });
-
                 for (var j = 0; j < $scope.program.programStages[i].programStageDataElements.length; j++) {
-
                     $scope.program.programStages[i].programStageDataElements[j].dataElement.ps = psuid;
                     var de = $scope.program.programStages[i].programStageDataElements[j];
                     $scope.psDEs.push(de);
+                    if(i == 1){
+                      var de = $scope.program.programStages[i].programStageDataElements[j];
+                       $scope.repeatedPSDEs.push(de);
+                       $scope.noEvent.push("")    
+                    }
 
                     if ($scope.program.programStages[i].programStageDataElements[j].dataElement.optionSet != undefined) {
                         if ($scope.program.programStages[i].programStageDataElements[j].dataElement.optionSet.options != undefined) {
@@ -151,11 +129,7 @@ msfReportsApp
 
 
             }
-
-
-            //  var param = "var=program:"+program.id + "&var=orgunit:"+$scope.selectedOrgUnit.id+"&var=startdate:"+moment($scope.date.startDate).format("YYYY-MM-DD")+"&var=enddate:"+moment($scope.date.endDate).format("YYYY-MM-DD");
             var param = "var=program:" + program.id + "&var=orgunit:" + $scope.selectedOrgUnit.id + "&var=startdate:" + $scope.startdateSelected + "&var=enddate:" + $scope.enddateSelected + "&paging=false";
-
             MetadataService.getSQLView(SQLViewsName2IdMap[SQLQUERY_TEI_DATA_VALUE_NAME], param).then(function (stageData) {
                 var changedRow = [];
                 var index = -1;
@@ -208,8 +182,8 @@ msfReportsApp
             $scope.attrMap = [];
             $scope.teiList = [];
             $scope.eventList = [];
+            $scope.uniqueTIEList = [];
             $scope.maxEventPerTei = [];
-
             $scope.teiEnrollOrgMap = [];
             $scope.teiEnrollMap = [];
 
@@ -300,7 +274,6 @@ msfReportsApp
 
                     if (attrkey[1] == optionSetKey[0]) {
                         {
-                            console.log(optionSetKey[1] + "----" + $scope.attrMap[attkey])
                             if (optionSetKey[1] == $scope.attrMap[attkey])
                                 $scope.attrMap[attkey] = $scope.optionsetValue[opskey]
                         }
@@ -376,10 +349,6 @@ msfReportsApp
             $scope.TheRows = [];
             var psDes = $scope.psDEs;
 
-
-
-
-
             for (var i = 0; i < $scope.allteiuid.length; i++) {
                 var returnval = checkteival(teiList, $scope.allteiuid[i])
                 if (returnval == true)
@@ -437,8 +406,6 @@ msfReportsApp
                             if ($scope.TheRows[i] == "false") {
                                 $scope.TheRows[i] = "No";
                             }
-
-
                         }
                         $scope.eventList[teiuid].push($scope.TheRows);
                     }
@@ -447,14 +414,19 @@ msfReportsApp
             for (var i = 0; i < $scope.TheRows.length; i++)
                 $scope.emptyval.push("");
             $('#divIdmmm').attr('style', 'display:block !important');
-
             $scope.teiPerPsEventListMap = teiPerPsEventListMap;
             $scope.teiListnew = Object.keys(teiList);
+            for( let ent in  $scope.eventList){
+                if($scope.eventList[ent].length >1){
+                    $scope.eventList[ent][0].pop();
+                    $scope.eventList[ent]= [...$scope.eventList[ent][0], ...$scope.eventList[ent][1].slice(99,192)]
+                    $scope.uniqueTIEList[ent] = $scope.eventList[ent]
+                }else{
+                    $scope.uniqueTIEList[ent] = [...$scope.eventList[ent][0], ...$scope.noEvent]  
+                }
+            }
             $scope.teiList = $scope.allteiuid;
-
             $scope.teiList = $scope.teiList.filter(val => !$scope.teiListnew.includes(val));
-
-
             var param = "var=program:" + program.id + "&var=orgunit:" + $scope.selectedOrgUnit.id + "&var=startdate:" + $scope.startdateSelected + "&var=enddate:" + $scope.enddateSelected + "&paging=false";
             MetadataService.getSQLView(SQLViewsName2IdMap[SQLQUERY_TEI_DATA_VALUE_NAME], param).then(function (stageData) {
                 var changedRow = [];
@@ -598,17 +570,8 @@ msfReportsApp
             var eventToMiscMap = [];
             eventToMiscMap["dummy"] = { ou: "", evDate: "" };
             var teiList1 = [];
-
-
-
-
             $scope.TheRows = [];
             var psDes = $scope.psDEs;
-
-
-
-
-
             for (var i = 0; i < $scope.allteiuid.length; i++) {
                 var returnval = checkteival(teiList1, $scope.allteiuid[i])
                 if (returnval == true)
@@ -666,17 +629,17 @@ msfReportsApp
 
             $scope.teiPerPsEventListMap = teiPerPsEventListMap;
             $scope.teiListnew1 = Object.keys(teiList1);
+            console.log('dfd 33', $scope.teiListnew)
             $scope.teiList1 = $scope.allteiuid;
 
             $scope.teiList1 = $scope.teiList1.filter(val => !$scope.teiListnew1.includes(val));
             document.getElementById("loader").style.display = "none";
 
         }
-
         checkteival = function (teiList1, allteiuid) {
             var value = teiList1[allteiuid]
 
             return value;
         }
-
     });
+

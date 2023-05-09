@@ -17,4 +17,7 @@ msfReportsApp.controller('LeftBarMenuController',
         $scope.showPatientReferrelReport = function(){
             $window.open('http://172.105.47.158/hp/dhis-web-reporting/getReportParams.action?uid=vBVVuET6zwY&mode=report&type=HTML', '_self')
         };
+        $scope.showNewEventReport = function(){
+            $location.path('/event-reports').search();
+        };
     });
