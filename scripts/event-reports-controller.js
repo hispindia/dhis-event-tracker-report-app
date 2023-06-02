@@ -417,12 +417,18 @@ msfReportsApp
             $scope.teiPerPsEventListMap = teiPerPsEventListMap;
             $scope.teiListnew = Object.keys(teiList);
             for( let ent in  $scope.eventList){
-                if($scope.eventList[ent].length >1){
+                if($scope.eventList[ent].length == 2){
                     $scope.eventList[ent][0].pop();
-                    $scope.eventList[ent]= [...$scope.eventList[ent][0], ...$scope.eventList[ent][1].slice(99,192)]
+                    $scope.eventList[ent]= [...$scope.eventList[ent][0], ...$scope.eventList[ent][1].slice(99,192), ...$scope.noEvent]
+                    $scope.uniqueTIEList[ent] = $scope.eventList[ent]
+                }else if($scope.eventList[ent].length == 3){
+                    $scope.eventList[ent][0].pop();
+                    let arr = $scope.eventList[ent][1].slice(99,192)
+                    arr.pop()
+                    $scope.eventList[ent]= [...$scope.eventList[ent][0], ...arr, ...$scope.eventList[ent][2].slice(99,192)]
                     $scope.uniqueTIEList[ent] = $scope.eventList[ent]
                 }else{
-                    $scope.uniqueTIEList[ent] = [...$scope.eventList[ent][0], ...$scope.noEvent]  
+                    $scope.uniqueTIEList[ent] = [...$scope.eventList[ent][0], ...$scope.noEvent, ...$scope.noEvent]  
                 }
             }
             $scope.teiList = $scope.allteiuid;

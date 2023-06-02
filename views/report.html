@@ -77,13 +77,15 @@
             <tr>
                 <th colspan="{{program.programTrackedEntityAttributes.length+3}}">{{attribute}}</th>
                 <th ng-repeat="ps in program.programStages" colspan="{{ps.programStageDataElements.length+2}}">{{ps.name}}</th>
-                <th colspan="94">Second Follow up visit</th>
+                <th colspan="92">Second Follow up visit</th>
+                <th colspan="94">Third Follow up visit</th>
             </tr>
             <tr style="background-color:antiquewhite">
                 <th>SN</th>
                 <th ng-repeat="enrol in enrollment">{{enrol}}</th>
                 <th ng-repeat="attr in program.programTrackedEntityAttributes">{{attr.displayName}}</th>
                 <th ng-repeat="de in psDEs">{{de.dataElement.name}}</th>
+                <th ng-repeat="de in repeatedPSDEs">{{de.dataElement.name}}</th>
                 <th ng-repeat="de in repeatedPSDEs">{{de.dataElement.name}}</th>
             </tr>
             <tbody >
