@@ -147,7 +147,7 @@ function getAllSQLViews(){
         type: "GET",
         dataType: "json",
         contentType: "application/json",
-        url: '../../sqlViews?fields=[id,name]&paging=false',
+        url: '../../sqlViews?fields=id,name&paging=false',
         success: function (data) {
             def.resolve(data.sqlViews);
         },
