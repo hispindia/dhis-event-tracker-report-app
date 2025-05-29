@@ -232,8 +232,8 @@ msfReportsApp
                 
                 MetadataService.getSQLView(SQLViewsName2IdMap[SQLQUERY_TEI_ATTR_NAME], param).then(function (attrData) {
                     $scope.attrData = attrData.listGrid;
-
-                    MetadataService.getSQLView(SQLViewsName2IdMap["OptionValue"], " ").then(function (optionsetValue) {
+                    var selViewParam = "paging=false";
+                    MetadataService.getSQLView(SQLViewsName2IdMap["OptionValue"], selViewParam).then(function (optionsetValue) {
                         $scope.optionsetValue = optionsetValue.listGrid.rows;
                         MetadataService.getALLAttributes().then(function (allattr) {
                             $scope.allattr = allattr;

@@ -1,5 +1,5 @@
 
--- TRACKER_REPORTS_TEI_ATTR_ENROLLED
+-- TRACKER_REPORTS_TEI_ATTR_ENROLLED ( manually to be add ) default not added
 select tei.uid tei ,min(tea.name) attrname,tea.uid attruid,min(teav.value) attrvalue,ou.name,tei.created,pi.enrollmentdate enrolldate 
 from programinstance pi 
 INNER JOIN trackedentityinstance tei ON  pi.trackedentityinstanceid = tei.trackedentityinstanceid 
@@ -111,13 +111,17 @@ psi.executiondate::DATE, psi.eventdatavalues from programstageinstance psi
  group by ps.uid,psi.uid,psi.executiondate,de.uid,ou.name, psi.executiondate
  order by psi.executiondate;
 
--- TRACKER_REPORT_OPTION_VALUE
+-- TRACKER_REPORT_OPTION_VALUE -- ( manually to be add )
 SELECT optvalue.name,optvalue.code, tea.uid from optionvalue optvalue
 INNER JOIN trackedentityattribute tea ON tea.optionsetid  = optvalue.optionsetid
 INNER JOIN optionset opt ON opt.optionsetid = optvalue.optionsetid
-INNER JOIN dataelement de ON de.optionsetid = optvalue.optionsetid ;
+INNER JOIN dataelement de ON de.optionsetid = optvalue.optionsetid;
 
--- OptionValue
+-- OptionValue -- ( manually to be add )
 SELECT optvalue.name,optvalue.code, tea.uid from optionvalue optvalue
 INNER JOIN trackedentityattribute tea ON tea.optionsetid  = optvalue.optionsetid
 INNER JOIN optionset opt ON opt.optionsetid = optvalue.optionsetid;
+
+
+-- TRACKER_REPORT_TEI_ENROLLED_ATTR_VALUE as on 23/05/2025 ( manually to be add )
+select tei.uid tei ,min(tea.name) attrname,tea.uid attruid,min(teav.value) attrvalue,ou.name,tei.created,pi.enrollmentdate enrolldate from programinstance pi INNER JOIN trackedentityinstance tei ON  pi.trackedentityinstanceid = tei.trackedentityinstanceid INNER JOIN trackedentityattributevalue teav ON  teav.trackedentityinstanceid = pi.trackedentityinstanceid INNER JOIN trackedentityattribute  tea ON teav.trackedentityattributeid = tea.trackedentityattributeid INNER JOIN organisationunit ou ON ou.organisationunitid = pi.organisationunitid WHERE pi.programid IN (select programid from program where uid = '${program}') and pi.organisationunitid IN (select organisationunitid from organisationunit where path like '%${orgunit}%') and pi.enrollmentdate::DATE >='${startdate}' and pi.enrollmentdate::DATE <= '${enddate}' group by tei.uid,pi.enrollmentdate,tea.uid,ou.name,tei.created order by pi.enrollmentdate;
